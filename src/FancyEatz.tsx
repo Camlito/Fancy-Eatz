@@ -321,6 +321,7 @@ export default function FancyEatz() {
         </button>
         <nav>
           <button onClick={() => navigate('experience')}>Experience</button>
+          <button onClick={() => navigate('leftovers')}>Leftovers → Luxury</button>
           <button onClick={() => navigate('recipes')}>Recipes</button>
           <button onClick={() => navigate('pantry')}>Pantry Chef</button>
           <button onClick={() => navigate('planner')}>Weekly Planner</button>
@@ -360,6 +361,30 @@ export default function FancyEatz() {
             <button className="primary full" onClick={() => generateMeal()} disabled={loading}>{loading ? 'Chef is creating…' : 'Make It Fancy'}</button>
             <button className="ghost full secondary-action" onClick={() => generateMeal(true)} disabled={loading}>Surprise Me</button>
             {mealError && <p className="error">{mealError}</p>}
+          </div>
+        </section>
+      )}
+
+      {tab === 'leftovers' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">SECOND NIGHT, FIRST-CLASS PLATE</p><h2>Leftovers → Luxury</h2><p>Tell Fancy Eatz what is already cooked. We’ll turn it into a different elevated meal instead of simply reheating dinner.</p></div>
+          <div className="generator-grid">
+            <div className="panel">
+              <label>What leftovers do you have?</label>
+              <textarea value={pantry} onChange={e => setPantry(e.target.value)} placeholder="Leftover chicken, rice, broccoli, roasted potatoes..." />
+              <div className="form-grid">
+                <label>New meal type<select value={mealType} onChange={e => setMealType(e.target.value)}><option>Breakfast</option><option>Lunch</option><option>Dinner</option></select></label>
+                <label>Style<select value={style} onChange={e => setStyle(e.target.value)}><option>Chef's choice</option><option>Southern upscale</option><option>Italian inspired</option><option>Fresh & light</option><option>Comfort food</option></select></label>
+                <label>Dietary preference<select value={diet} onChange={e => setDiet(e.target.value)}><option>No restriction</option><option>Vegetarian</option><option>Vegan</option><option>Pescatarian</option><option>Gluten-conscious</option><option>Dairy-free</option><option>Lower-carb</option></select></label>
+                <label>Time<select value={time} onChange={e => setTime(e.target.value)}><option>20 minutes</option><option>30 minutes</option><option>45 minutes</option></select></label>
+              </div>
+              <button className="primary full" onClick={() => generateMeal(false, 'LEFTOVERS TO LUXURY: Transform these already-cooked leftovers into a distinctly different meal: ' + pantry, mealType)} disabled={loading}><Sparkles size={18}/>{loading ? 'Transforming…' : 'Transform My Leftovers'}</button>
+              {mealError && <p className="error">{mealError}</p>}
+            </div>
+            <div className="panel">
+              <p className="eyebrow">SMART REINVENTION</p><h3>Waste less. Eat better.</h3><p>Fancy Eatz treats your cooked food as the starting point, then changes the format, flavor direction and presentation for a new dining experience.</p>
+              <div className="plating"><b>Examples</b><p>Roast chicken → luxe pasta · Rice → crispy rice bowl · Steak → elevated brunch hash · Vegetables → chef-style soup or flatbread.</p></div>
+            </div>
           </div>
         </section>
       )}
@@ -478,8 +503,8 @@ export default function FancyEatz() {
 
       {tab === 'favorites' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">YOUR COLLECTION</p><h2>Saved Favorites</h2><p>Keep the meals worth making again. Favorites stay saved on this device.</p></div>
-          {favorites.length === 0 ? <div className="empty panel"><Heart size={40} /><h3>No favorites yet</h3><p>Generate a meal in Pantry Chef and tap Save Favorite.</p></div> : <div className="cards">{favorites.map(f => <article className="recipe-card saved-card" key={f.title}><div className="card-body"><small>SAVED MEAL</small><h3>{f.title}</h3><p>{f.description}</p><button onClick={() => { setMeal(f); navigate('pantry'); }}>Open recipe →</button><button className="remove-favorite" onClick={() => setFavorites(p => p.filter(x => x.title !== f.title))}>Remove</button></div></article>)}</div>}
+          <div className="section-head"><p className="eyebrow">MY FANCY COOKBOOK</p><h2>Your Personal Recipe Collection</h2><p>Save the meals worth making again and build your own evolving Fancy Eatz cookbook. Saved recipes stay on this device.</p></div>
+          {favorites.length === 0 ? <div className="empty panel"><Heart size={40} /><h3>Your cookbook is ready</h3><p>Generate a meal in Pantry Chef and tap Save Favorite to add your first recipe.</p></div> : <div className="cards">{favorites.map(f => <article className="recipe-card saved-card" key={f.title}><div className="card-body"><small>SAVED MEAL</small><h3>{f.title}</h3><p>{f.description}</p><button onClick={() => { setMeal(f); navigate('pantry'); }}>Open recipe →</button><button className="remove-favorite" onClick={() => setFavorites(p => p.filter(x => x.title !== f.title))}>Remove</button></div></article>)}</div>}
         </section>
       )}
 
