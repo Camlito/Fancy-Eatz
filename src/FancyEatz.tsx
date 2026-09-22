@@ -159,15 +159,16 @@ export default function FancyEatz() {
 
   const requestSettings = { occasion, servings, time, style, mealType, diet, budget };
 
-  async function generateMeal(useFallback = false) {
-    if (!pantry.trim() && !useFallback) {
+  async function generateMeal(useFallback = false, pantryOverride?: string, mealTypeOverride?: string) {
+    const pantryForRequest = pantryOverride ?? pantry;
+    if (!pantryForRequest.trim() && !useFallback) {
       setMealError('Add at least a few ingredients you have at home.');
       return;
     }
     setLoading(true);
     setMealError('');
     try {
-      const r = await api.post('/api/generate-meal', { pantry: pantry || 'common home pantry staples', ...requestSettings });
+      const r = await api.post('/api/generate-meal', { pantry: pantryForRequest || 'common home pantry staples', ...requestSettings, mealType: mealTypeOverride ?? mealType });
       setMeal(r.data.meal as Meal);
       navigate('pantry');
     } catch {
@@ -232,13 +233,14 @@ export default function FancyEatz() {
         </nav>
       </header>
 
-      {tab !== 'home' && (
-        <div className="backbar">
-          <button className="back-button" onClick={goBack} aria-label="Go back">
-            <ArrowLeft size={18} /> Back
-          </button>
-        </div>
-      )}
+      <div className="backbar">
+        <button className="back-button" onClick={() => {
+          if (tab !== 'home') goBack();
+          else if (window.history.length > 1) window.history.back();
+        }} aria-label="Go back">
+          <ArrowLeft size={18} /> Back
+        </button>
+      </div>
 
       {tab === 'home' && (
         <section className="hero">
@@ -328,7 +330,7 @@ export default function FancyEatz() {
             <div className="filter-row">{['All', 'Breakfast', 'Lunch', 'Dinner', 'Dessert'].map(x => <button className={recipeType === x ? 'active' : ''} key={x} onClick={() => setRecipeType(x)}>{x}</button>)}</div>
           </div>
           <div className="cards">
-            {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p><button onClick={() => { setPantry(r.title + ' ingredients'); setMealType(r.mealType); setMeal(null); navigate('pantry'); window.setTimeout(() => generateMeal(true), 0); }}>Make My Version →</button></div></article>)}
+            {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p><button onClick={() => { const recipePrompt = r.title + ' ingredients'; setPantry(recipePrompt); setMealType(r.mealType); setMeal(null); navigate('pantry'); void generateMeal(true, recipePrompt, r.mealType); }}>Make My Version →</button></div></article>)}
           </div>
           {filteredRecipes.length === 0 && <div className="empty panel"><Search size={36} /><h3>No exact match yet</h3><p>Try another search, or use Pantry Chef to generate the meal you have in mind.</p></div>}
           <div className="source-note"><BookOpen size={20} /><div><b>Ultimate Collection of Seafood Recipes</b><p>The seafood collection is available as a source library alongside Fancy Eatz generated ideas.</p><a href="./resources/seafood-recipes.pdf" target="_blank" rel="noreferrer">Open source collection</a></div></div>
