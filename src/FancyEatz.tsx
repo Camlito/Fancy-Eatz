@@ -54,14 +54,30 @@ type Recipe = {
 };
 
 const featured: Recipe[] = [
-  { title: 'Grilled Salmon with Honey Mustard Glaze', tag: 'Seafood', time: '30 min', note: 'Sweet-savory glaze, elegant weeknight finish.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
-  { title: 'Crab Cakes with Basil Mayonnaise', tag: 'Crab', time: '35 min', note: 'Crisp edges, tender center, bright herb finish.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
-  { title: 'Fish Piccata', tag: 'Fish', time: '25 min', note: 'Lemon, capers and a polished pan sauce.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
-  { title: 'Pesto Salmon & Sea Scallops with Lemon/Garlic', tag: 'Chef Pick', time: '40 min', note: 'A restaurant-style surf pairing for date night.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
-  { title: 'Creamy Tomato Bisque with Lump Crabmeat', tag: 'Comfort', time: '45 min', note: 'Silky bisque with a luxurious crab finish.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$$' },
-  { title: 'Grilled Fish Tacos with Green Salsa', tag: 'Fresh', time: '30 min', note: 'Bright, vibrant and easy to customize.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$' },
-  { title: 'Luxe Shrimp & Grits Brunch Bowl', tag: 'Southern Luxe', time: '35 min', note: 'Creamy grits, seasoned shrimp and a polished brunch finish.', mealType: 'Breakfast', diet: 'Pescatarian', budget: '$$' },
-  { title: 'Lemon Berry Mascarpone Parfait', tag: 'Dessert', time: '15 min', note: 'A no-fuss layered dessert that still feels special.', mealType: 'Dessert', diet: 'Vegetarian', budget: '$' },
+  { title: 'Grilled Salmon with Honey Mustard Glaze', tag: 'Salmon', time: '30 min', note: 'Sweet-savory glaze with an elegant grilled finish.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Crab Cakes with Basil Mayonnaise', tag: 'Crab', time: '35 min', note: 'Crisp crab cakes paired with a bright basil mayonnaise.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Fish Piccata', tag: 'Fish', time: '25 min', note: 'A bright fish dinner with lemon-forward piccata character.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Pesto Salmon & Sea Scallops with Lemon/Garlic', tag: 'Chef Pick', time: '40 min', note: 'Salmon and scallops with pesto, lemon and garlic.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Creamy Tomato Bisque with Lump Crabmeat', tag: 'Comfort', time: '45 min', note: 'Creamy tomato bisque finished with lump crabmeat.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Grilled Fish Tacos with Green Salsa', tag: 'Fresh', time: '30 min', note: 'Grilled fish tacos paired with a bright green salsa.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$' },
+  { title: 'Luxe Shrimp & Grits Brunch Bowl', tag: 'Southern Luxe', time: '35 min', note: 'A Fancy Eatz brunch idea built around shrimp and creamy grits.', mealType: 'Breakfast', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Lemon Berry Mascarpone Parfait', tag: 'Dessert', time: '15 min', note: 'A Fancy Eatz layered dessert with lemon, berries and mascarpone.', mealType: 'Dessert', diet: 'Vegetarian', budget: '$' },
+  { title: 'Fresh Corn Seafood Chowder', tag: 'Chowder', time: '40 min', note: 'Fresh corn, crab, shrimp and crawfish come together in a rich seafood chowder.', mealType: 'Dinner', diet: 'No restriction', budget: '$$$' },
+  { title: 'Fresh Salmon With Tricolored Peppercorn Sauce', tag: 'Salmon', time: '30 min', note: 'Salmon finished with Dijon, lemon, crushed peppercorns and fresh dill.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Grilled Salmon With Lemon & Thyme', tag: 'Salmon', time: '30 min', note: 'A grilled salmon option centered on lemon and thyme.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Grilled Salmon With Potato & Watercress Salad', tag: 'Salmon', time: '40 min', note: 'Grilled salmon paired with potato and watercress salad.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Grilled Scallops & Kale With A Fresh Beet Salad', tag: 'Scallops', time: '35 min', note: 'Grilled scallops and kale with a fresh beet salad.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Grilled Seafood Kabobs', tag: 'Seafood', time: '35 min', note: 'A mixed-seafood grill option designed for kabob-style serving.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Grilled Swordfish With Citrus Salsa', tag: 'Swordfish', time: '35 min', note: 'Grilled swordfish brightened with citrus salsa.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Grilled Tuna Salad With Wasabi Dressing', tag: 'Tuna', time: '30 min', note: 'Grilled tuna served as a salad with wasabi dressing.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Grilled Wasabi-Crusted Tuna', tag: 'Tuna', time: '30 min', note: 'Tuna with a bold wasabi crust and grilled finish.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Haddock & Sweetcorn Chowder', tag: 'Chowder', time: '40 min', note: 'A comforting haddock and sweetcorn chowder.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Holiday Seafood Bisque', tag: 'Bisque', time: '45 min', note: 'A seafood bisque option suited to a celebratory table.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Honey Broiled Sea Scallops', tag: 'Scallops', time: '25 min', note: 'Sea scallops with a honey-forward broiled finish.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Hot & Sour Seafood Soup', tag: 'Soup', time: '40 min', note: 'A seafood soup with hot-and-sour flavor direction.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Italian Fish Soup', tag: 'Italian', time: '45 min', note: 'A seafood-forward Italian-style fish soup.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Italian Tuna Salad With Olives & Sun-Dried Tomatoes', tag: 'Tuna', time: '20 min', note: 'Tuna salad with olives and sun-dried tomato flavor.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$' },
+  { title: 'Risotto With Crabmeat & Basil', tag: 'Crab', time: '45 min', note: 'Creamy risotto paired with crabmeat and basil.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
 ];
 
 const starterLists = {
