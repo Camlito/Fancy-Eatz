@@ -54,6 +54,22 @@ Reuse ingredients intelligently to reduce waste and spending. grocery must be on
   return parseJson(extractText(result));
 }
 
+async function createExperience(env: Env, body: any) {
+  const prompt = `You are the Fancy Eatz private dining concierge. Design one complete upscale home dining experience.
+Return ONLY valid JSON:
+{"title":"string","appetizer":"string","entree":"string","sides":["string"],"dessert":"string","pairing":"non-alcoholic drink pairing","timeline":["string"],"plating":"string","tableSetting":"string","groceries":["string"],"estimatedCost":"string"}
+On hand: ${body.pantry}
+Occasion: ${body.occasion}
+Guests: ${body.guests}
+Total budget target: ${body.budget}
+Time available: ${body.minutes} minutes
+Diet: ${body.diet}
+Style: ${body.style}
+Use on-hand ingredients first, respect dietary restrictions, keep the plan achievable at home, and treat all costs as rough estimates rather than live prices.`;
+  const result = await env.AI.run("@cf/meta/llama-3.2-3b-instruct", { prompt, max_tokens: 2200, temperature: 0.7 });
+  return parseJson(extractText(result));
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -61,6 +77,10 @@ export default {
     if (request.method === "POST" && url.pathname === "/api/generate-meal") {
       try { return json({ meal: await createMeal(env, await request.json()) }); }
       catch (error) { return json({ error: "Meal generation failed", detail: String(error) }, 500); }
+    }
+    if (request.method === "POST" && url.pathname === "/api/generate-experience") {
+      try { return json({ experience: await createExperience(env, await request.json()) }); }
+      catch (error) { return json({ error: "Experience generation failed", detail: String(error) }, 500); }
     }
     if (request.method === "POST" && url.pathname === "/api/generate-plan") {
       try { return json({ plan: await createPlan(env, await request.json()) }); }
