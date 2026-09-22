@@ -179,7 +179,12 @@ export default function FancyEatz() {
     const q = search.toLowerCase();
     return (recipeType === 'All' || r.mealType === recipeType) &&
       (!q || (r.title + ' ' + r.tag + ' ' + r.note).toLowerCase().includes(q));
-  }), [search, recipeType]);
+  }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType]);
+
+  const alphabetizedFavorites = useMemo(
+    () => [...favorites].sort((a, b) => a.title.localeCompare(b.title)),
+    [favorites]
+  );
 
   const grouped = useMemo(() => {
     const c: Record<string, string[]> = { 'Produce & Herbs': [], 'Proteins & Seafood': [], 'Dairy & Chilled': [], 'Pantry & Spices': [] };
@@ -344,16 +349,32 @@ export default function FancyEatz() {
         <button className="brand" onClick={() => navigate('home')}>
           <span>F</span><div><b>FANCY EATZ</b><small>Elevate what you already have.</small></div>
         </button>
-        <nav>
-          <button onClick={() => navigate('experience')}>Experience</button>
-          <button onClick={() => navigate('leftovers')}>Leftovers → Luxury</button>
-          <button onClick={() => navigate('photo')}>Photo My Fridge</button>
-          <button onClick={() => navigate('recipes')}>Recipes</button>
-          <button onClick={() => navigate('pantry')}>Pantry Chef</button>
-          <button onClick={() => navigate('planner')}>Weekly Planner</button>
-          <button onClick={() => navigate('ideas')}>Meal Ideas</button>
-          <button onClick={() => navigate('grocery')}>Grocery Lists</button>
-          <button onClick={() => navigate('favorites')}>Favorites</button>
+        <nav className="main-nav">
+          <button onClick={() => navigate('home')}>Home</button>
+          <details className="nav-dropdown">
+            <summary>Cook ▾</summary>
+            <div className="nav-menu">
+              <button onClick={() => navigate('pantry')}>Pantry Chef</button>
+              <button onClick={() => navigate('photo')}>Photo My Fridge</button>
+              <button onClick={() => navigate('leftovers')}>Leftovers → Luxury</button>
+              <button onClick={() => navigate('ideas')}>Meal Ideas</button>
+            </div>
+          </details>
+          <details className="nav-dropdown">
+            <summary>Plan ▾</summary>
+            <div className="nav-menu">
+              <button onClick={() => navigate('experience')}>Full Dining Experience</button>
+              <button onClick={() => navigate('planner')}>Weekly Planner</button>
+              <button onClick={() => navigate('grocery')}>Grocery Lists</button>
+            </div>
+          </details>
+          <details className="nav-dropdown">
+            <summary>Cookbook ▾</summary>
+            <div className="nav-menu">
+              <button onClick={() => navigate('recipes')}>A–Z Recipe Vault</button>
+              <button onClick={() => navigate('favorites')}>My Fancy Cookbook</button>
+            </div>
+          </details>
         </nav>
       </header>
 
@@ -530,7 +551,7 @@ export default function FancyEatz() {
 
       {tab === 'recipes' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>Search the growing vault, filter by meal type, or send any idea to Pantry Chef for a personalized version.</p></div>
+          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>Browse the recipe vault A–Z, search by ingredient or title, filter by meal type, or send any idea to Pantry Chef for a personalized version.</p></div>
           <div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search salmon, crab, brunch..." /></label>
             <div className="filter-row">{['All', 'Breakfast', 'Lunch', 'Dinner', 'Dessert'].map(x => <button className={recipeType === x ? 'active' : ''} key={x} onClick={() => setRecipeType(x)}>{x}</button>)}</div>
@@ -554,7 +575,7 @@ export default function FancyEatz() {
       {tab === 'favorites' && (
         <section className="page">
           <div className="section-head"><p className="eyebrow">MY FANCY COOKBOOK</p><h2>Your Personal Recipe Collection</h2><p>Save the meals worth making again and build your own evolving Fancy Eatz cookbook. Saved recipes stay on this device.</p></div>
-          {favorites.length === 0 ? <div className="empty panel"><Heart size={40} /><h3>Your cookbook is ready</h3><p>Generate a meal in Pantry Chef and tap Save Favorite to add your first recipe.</p></div> : <div className="cards">{favorites.map(f => <article className="recipe-card saved-card" key={f.title}><div className="card-body"><small>SAVED MEAL</small><h3>{f.title}</h3><p>{f.description}</p><button onClick={() => { setMeal(f); navigate('pantry'); }}>Open recipe →</button><button className="remove-favorite" onClick={() => setFavorites(p => p.filter(x => x.title !== f.title))}>Remove</button></div></article>)}</div>}
+          {favorites.length === 0 ? <div className="empty panel"><Heart size={40} /><h3>Your cookbook is ready</h3><p>Generate a meal in Pantry Chef and tap Save Favorite to add your first recipe.</p></div> : <div className="cards">{alphabetizedFavorites.map(f => <article className="recipe-card saved-card" key={f.title}><div className="card-body"><small>SAVED MEAL</small><h3>{f.title}</h3><p>{f.description}</p><button onClick={() => { setMeal(f); navigate('pantry'); }}>Open recipe →</button><button className="remove-favorite" onClick={() => setFavorites(p => p.filter(x => x.title !== f.title))}>Remove</button></div></article>)}</div>}
         </section>
       )}
 
