@@ -187,7 +187,7 @@ export default function FancyEatz() {
     return (recipeType === 'All' || r.mealType === recipeType || r.category === recipeType) &&
       (recipeLetter === 'All' || r.title.toUpperCase().startsWith(recipeLetter)) &&
       (!q || (r.title + ' ' + r.tag + ' ' + r.note).toLowerCase().includes(q));
-  }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType]);
+  }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType, recipeLetter]);
 
   const alphabetizedFavorites = useMemo(
     () => [...favorites].sort((a, b) => a.title.localeCompare(b.title)),
