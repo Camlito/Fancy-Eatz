@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 const api = { post: async (url: string, body: unknown) => { const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }); if (!response.ok) throw new Error('Request failed'); return { data: await response.json() }; } };
 import {
+  ArrowLeft,
   BookOpen,
   CalendarDays,
   Check,
@@ -73,6 +74,27 @@ const moods = ['Date Night at Home', 'Southern Luxe', 'Under $25', '20-Minute Fa
 
 export default function FancyEatz() {
   const [tab, setTab] = useState('home');
+  const [tabHistory, setTabHistory] = useState<string[]>([]);
+
+  function navigate(nextTab: string) {
+    if (nextTab === tab) return;
+    setTabHistory(history => [...history, tab]);
+    setTab(nextTab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goBack() {
+    setTabHistory(history => {
+      if (history.length === 0) {
+        setTab('home');
+        return [];
+      }
+      const previous = history[history.length - 1];
+      setTab(previous);
+      return history.slice(0, -1);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   const [pantry, setPantry] = useState('');
   const [occasion, setOccasion] = useState('Elevated Weeknight');
   const [servings, setServings] = useState('2');
@@ -131,7 +153,7 @@ export default function FancyEatz() {
     try {
       const r = await api.post('/api/generate-meal', { pantry: pantry || 'common home pantry staples', ...requestSettings });
       setMeal(r.data.meal as Meal);
-      setTab('pantry');
+      navigate('pantry');
     } catch {
       setMealError('The chef could not generate a meal right now. Please try again.');
     } finally {
@@ -161,7 +183,7 @@ export default function FancyEatz() {
   function addItems(items: string[], name: string) {
     setGrocery(p => Array.from(new Set([...p, ...items])));
     setListName(name);
-    setTab('grocery');
+    navigate('grocery');
   }
 
   function saveFavorite() {
@@ -175,24 +197,32 @@ export default function FancyEatz() {
     if (m === '20-Minute Fancy') setTime('20 minutes');
     if (m === 'Healthy but Fancy') setStyle('Fresh & light');
     if (m === 'Seafood Night') setStyle('Seafood-forward');
-    setTab('pantry');
+    navigate('pantry');
   }
 
   return (
     <main>
       <header className="topbar">
-        <button className="brand" onClick={() => setTab('home')}>
+        <button className="brand" onClick={() => navigate('home')}>
           <span>F</span><div><b>FANCY EATZ</b><small>Elevate what you already have.</small></div>
         </button>
         <nav>
-          <button onClick={() => setTab('recipes')}>Recipes</button>
-          <button onClick={() => setTab('pantry')}>Pantry Chef</button>
-          <button onClick={() => setTab('planner')}>Weekly Planner</button>
-          <button onClick={() => setTab('ideas')}>Meal Ideas</button>
-          <button onClick={() => setTab('grocery')}>Grocery Lists</button>
-          <button onClick={() => setTab('favorites')}>Favorites</button>
+          <button onClick={() => navigate('recipes')}>Recipes</button>
+          <button onClick={() => navigate('pantry')}>Pantry Chef</button>
+          <button onClick={() => navigate('planner')}>Weekly Planner</button>
+          <button onClick={() => navigate('ideas')}>Meal Ideas</button>
+          <button onClick={() => navigate('grocery')}>Grocery Lists</button>
+          <button onClick={() => navigate('favorites')}>Favorites</button>
         </nav>
       </header>
+
+      {tab !== 'home' && (
+        <div className="backbar">
+          <button className="back-button" onClick={goBack} aria-label="Go back">
+            <ArrowLeft size={18} /> Back
+          </button>
+        </div>
+      )}
 
       {tab === 'home' && (
         <section className="hero">
@@ -201,8 +231,8 @@ export default function FancyEatz() {
             <h1>Turn what you have into something <em>fancy.</em></h1>
             <p className="lede">Build an upscale meal from your kitchen, budget, dietary needs and schedule—or let Fancy Eatz plan the whole week and combine the shopping list.</p>
             <div className="hero-actions">
-              <button className="primary" onClick={() => setTab('pantry')}><Sparkles size={18} /> What Can I Make Right Now?</button>
-              <button className="ghost" onClick={() => setTab('planner')}><CalendarDays size={18} /> Plan My Week</button>
+              <button className="primary" onClick={() => navigate('pantry')}><Sparkles size={18} /> What Can I Make Right Now?</button>
+              <button className="ghost" onClick={() => navigate('planner')}><CalendarDays size={18} /> Plan My Week</button>
             </div>
             <div className="quick-chips">
               {['Under $25', 'Date Night', 'Family Dinner', 'Healthy but Fancy', 'Seafood Night', '20-Minute Fancy'].map(x => <button key={x} onClick={() => applyMood(x)}>{x}</button>)}
@@ -282,7 +312,7 @@ export default function FancyEatz() {
             <div className="filter-row">{['All', 'Breakfast', 'Lunch', 'Dinner', 'Dessert'].map(x => <button className={recipeType === x ? 'active' : ''} key={x} onClick={() => setRecipeType(x)}>{x}</button>)}</div>
           </div>
           <div className="cards">
-            {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p><button onClick={() => { setPantry(r.title + ' ingredients'); setMealType(r.mealType); setTab('pantry'); }}>Make My Version →</button></div></article>)}
+            {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p><button onClick={() => { setPantry(r.title + ' ingredients'); setMealType(r.mealType); navigate('pantry'); }}>Make My Version →</button></div></article>)}
           </div>
           {filteredRecipes.length === 0 && <div className="empty panel"><Search size={36} /><h3>No exact match yet</h3><p>Try another search, or use Pantry Chef to generate the meal you have in mind.</p></div>}
           <div className="source-note"><BookOpen size={20} /><div><b>Ultimate Collection of Seafood Recipes</b><p>The seafood collection is available as a source library alongside Fancy Eatz generated ideas.</p><a href="./resources/seafood-recipes.pdf" target="_blank" rel="noreferrer">Open source collection</a></div></div>
@@ -300,7 +330,7 @@ export default function FancyEatz() {
       {tab === 'favorites' && (
         <section className="page">
           <div className="section-head"><p className="eyebrow">YOUR COLLECTION</p><h2>Saved Favorites</h2><p>Keep the meals worth making again. Favorites stay saved on this device.</p></div>
-          {favorites.length === 0 ? <div className="empty panel"><Heart size={40} /><h3>No favorites yet</h3><p>Generate a meal in Pantry Chef and tap Save Favorite.</p></div> : <div className="cards">{favorites.map(f => <article className="recipe-card saved-card" key={f.title}><div className="card-body"><small>SAVED MEAL</small><h3>{f.title}</h3><p>{f.description}</p><button onClick={() => { setMeal(f); setTab('pantry'); }}>Open recipe →</button><button className="remove-favorite" onClick={() => setFavorites(p => p.filter(x => x.title !== f.title))}>Remove</button></div></article>)}</div>}
+          {favorites.length === 0 ? <div className="empty panel"><Heart size={40} /><h3>No favorites yet</h3><p>Generate a meal in Pantry Chef and tap Save Favorite.</p></div> : <div className="cards">{favorites.map(f => <article className="recipe-card saved-card" key={f.title}><div className="card-body"><small>SAVED MEAL</small><h3>{f.title}</h3><p>{f.description}</p><button onClick={() => { setMeal(f); navigate('pantry'); }}>Open recipe →</button><button className="remove-favorite" onClick={() => setFavorites(p => p.filter(x => x.title !== f.title))}>Remove</button></div></article>)}</div>}
         </section>
       )}
 
