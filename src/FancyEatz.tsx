@@ -74,7 +74,7 @@ type Recipe = {
 
 const featured: Recipe[] = [
   { title: 'Grilled Salmon with Honey Mustard Glaze', tag: 'Salmon', time: '30 min', note: 'Sweet-savory glaze with an elegant grilled finish.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
-  { title: 'Crab Cakes with Basil Mayonnaise', tag: 'Crab', time: '35 min', note: 'Crisp crab cakes paired with a bright basil mayonnaise.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$,
+  { title: 'Crab Cakes with Basil Mayonnaise', tag: 'Crab', time: '35 min', note: 'Crisp crab cakes paired with a bright basil mayonnaise.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$', category: 'Appetizers', servings: '12 cakes', ingredients: ['40 basil leaves','1 1/2 cups mayonnaise','2 tsp Dijon mustard','2 tsp lemon juice','cayenne pepper','2 tbsp olive oil','2 celery stalks, finely chopped','2/3 cup onion, finely chopped','1 lb lump crabmeat, picked clean','2 2/3 cups dry breadcrumbs','1/4 cup chopped chives','2 tbsp chopped parsley','6 tbsp flour','3 large eggs','2 tbsp vegetable oil'], method: ['Blanch basil leaves for 30 seconds, cool in ice water, pat dry and finely chop.','Mix mayonnaise, mustard, lemon juice and cayenne. Reserve 1/2 cup for the crab cakes; mix basil into the remainder and refrigerate.','Sauté celery and onion in olive oil until tender, about 5 minutes. Transfer to a bowl.','Stir in crabmeat, 2/3 cup breadcrumbs, chives and reserved mayonnaise; season to taste. Form twelve cakes.','Bread each cake in flour, egg and remaining breadcrumbs.','Pan-cook in vegetable oil over medium heat until golden, working in batches. Serve with basil mayonnaise.'] },
   { title: 'Fish Piccata', tag: 'Fish', time: '25 min', note: 'A bright fish dinner with lemon-forward piccata character.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$', category: 'Entrées', servings: '2', ingredients: ['9–12 oz snapper, skinless catfish or other fish fillets','salt and pepper','1 tbsp flour','1 tbsp butter or margarine','2 tbsp lemon juice','2 tbsp minced parsley','4 thin lemon slices, for garnish'], method: ['Cut fish into serving-size pieces, season lightly and dredge in flour, shaking off excess.','Heat butter in a nonstick skillet over moderate heat until bubbling. Cook fish for 3 minutes.','Turn and continue cooking until the fish begins to flake when tested with a fork.','Transfer to warm plates. Add lemon juice and parsley to the pan and cook for 30 seconds while loosening the pan contents.','Pour the sauce over the fish and garnish with lemon slices.'] },
   { title: 'Pesto Salmon & Sea Scallops with Lemon/Garlic', tag: 'Chef Pick', time: '40 min', note: 'Salmon and scallops with pesto, lemon and garlic.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
   { title: 'Creamy Tomato Bisque with Lump Crabmeat', tag: 'Comfort', time: '45 min', note: 'Creamy tomato bisque finished with lump crabmeat.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$$' },
@@ -173,6 +173,7 @@ export default function FancyEatz() {
   const [search, setSearch] = useState('');
   const [recipeType, setRecipeType] = useState('All');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [recipeLetter, setRecipeLetter] = useState('All');
   const [favorites, setFavorites] = useState<Meal[]>(() => {
     try { return JSON.parse(localStorage.getItem('fancy-eatz-favorites') || '[]') as Meal[]; } catch { return []; }
   });
@@ -184,6 +185,7 @@ export default function FancyEatz() {
   const filteredRecipes = useMemo(() => featured.filter(r => {
     const q = search.toLowerCase();
     return (recipeType === 'All' || r.mealType === recipeType || r.category === recipeType) &&
+      (recipeLetter === 'All' || r.title.toUpperCase().startsWith(recipeLetter)) &&
       (!q || (r.title + ' ' + r.tag + ' ' + r.note).toLowerCase().includes(q));
   }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType]);
 
@@ -561,6 +563,7 @@ export default function FancyEatz() {
           <div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search salmon, crab, brunch..." /></label>
             <label>Category<select value={recipeType} onChange={e => setRecipeType(e.target.value)}><option>All</option><option>Appetizers</option><option>Entrées</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
+          <div className="plating"><b>BROWSE A–Z</b><div className="filter-row">{['All',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(x => <button className={recipeLetter === x ? 'active' : ''} key={x} onClick={() => setRecipeLetter(x)}>{x}</button>)}</div></div>
           </div>
           <div className="cards">
             {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p>{r.ingredients?.length ? <button className="ghost" onClick={() => setSelectedRecipe(r)}><BookOpen size={16}/>Open Full Recipe</button> : <small>Full recipe details being added from the source collection.</small>}<button onClick={() => { const recipePrompt = r.title + ' ingredients'; setPantry(recipePrompt); setMealType(r.mealType); setMeal(null); navigate('pantry'); void generateMeal(true, recipePrompt, r.mealType); }}>Make My Version →</button></div></article>)}
@@ -576,6 +579,9 @@ export default function FancyEatz() {
             <div className="result-actions">
               {selectedRecipe.ingredients && <button className="ghost" onClick={() => addItems(selectedRecipe.ingredients || [], selectedRecipe.title)}><ShoppingBasket size={18}/>Add Ingredients to Grocery List</button>}
               <button className="ghost" onClick={() => { const p=selectedRecipe.title+' ingredients'; setPantry(p); setMealType(selectedRecipe.mealType); navigate('pantry'); void generateMeal(true,p,selectedRecipe.mealType); }}><Sparkles size={18}/>Make My Version</button>
+              <button className="ghost" onClick={() => { if (!selectedRecipe) return; const saved: Meal = { title:selectedRecipe.title, description:selectedRecipe.note, ingredients:selectedRecipe.ingredients || [], steps:selectedRecipe.method || [], plating:'Serve with an elevated Fancy Eatz presentation.', missing:[] }; setFavorites(prev => prev.some(x=>x.title===saved.title) ? prev : [...prev,saved]); }}><Heart size={18}/>Save to My Cookbook</button>
+              <button className="ghost" onClick={() => window.print()}>Print Recipe</button>
+              <button className="ghost" onClick={async () => { if (navigator.share && selectedRecipe) await navigator.share({title:selectedRecipe.title,text:selectedRecipe.note,url:window.location.href}); }}>Share Recipe</button>
               <button className="ghost" onClick={() => setSelectedRecipe(null)}>Close Recipe</button>
             </div>
           </div>}
