@@ -574,3 +574,8 @@ footer p {
     flex-direction: column;
   }
 }
+
+.backbar { max-width: 1240px; margin: 0 auto; padding: 22px 28px 0; }
+.back-button { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #4b443b; background: #171614; color: #f5eee3; border-radius: 5px; padding: 10px 14px; cursor: pointer; font-weight: 700; }
+.back-button:hover { border-color: #d5aa60; color: #d8b46c; }
+@media (max-width: 800px) { .backbar { padding: 16px 18px 0; } .back-button { min-height: 44px; } }
