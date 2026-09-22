@@ -154,6 +154,9 @@ export default function FancyEatz() {
   const [experienceGuests, setExperienceGuests] = useState('2');
   const [experienceBudget, setExperienceBudget] = useState('$75');
   const [experienceMinutes, setExperienceMinutes] = useState('90');
+  const [photoPreview, setPhotoPreview] = useState('');
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoItems, setPhotoItems] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [planLoading, setPlanLoading] = useState(false);
   const [mealError, setMealError] = useState('');
@@ -254,6 +257,28 @@ export default function FancyEatz() {
     }
   }
 
+  async function analyzeKitchenPhoto(file: File) {
+    setPhotoBusy(true);
+    setPhotoItems([]);
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      setPhotoPreview(dataUrl);
+      const r = await api.post('/api/analyze-kitchen-photo', { image: dataUrl });
+      const items = Array.isArray(r.data.items) ? r.data.items : [];
+      setPhotoItems(items);
+      if (items.length) setPantry(items.join(', '));
+    } catch {
+      setPhotoItems([]);
+    } finally {
+      setPhotoBusy(false);
+    }
+  }
+
   async function generateExperience() {
     setExperienceLoading(true);
     const safe = fallbackProtein(pantry || '', diet);
@@ -322,6 +347,7 @@ export default function FancyEatz() {
         <nav>
           <button onClick={() => navigate('experience')}>Experience</button>
           <button onClick={() => navigate('leftovers')}>Leftovers → Luxury</button>
+          <button onClick={() => navigate('photo')}>Photo My Fridge</button>
           <button onClick={() => navigate('recipes')}>Recipes</button>
           <button onClick={() => navigate('pantry')}>Pantry Chef</button>
           <button onClick={() => navigate('planner')}>Weekly Planner</button>
@@ -361,6 +387,30 @@ export default function FancyEatz() {
             <button className="primary full" onClick={() => generateMeal()} disabled={loading}>{loading ? 'Chef is creating…' : 'Make It Fancy'}</button>
             <button className="ghost full secondary-action" onClick={() => generateMeal(true)} disabled={loading}>Surprise Me</button>
             {mealError && <p className="error">{mealError}</p>}
+          </div>
+        </section>
+      )}
+
+      {tab === 'photo' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">SEE IT. SCAN IT. COOK IT.</p><h2>Photo My Fridge / Pantry</h2><p>Take or upload a photo of your food. Fancy Eatz identifies visible ingredients, then sends them directly into Pantry Chef.</p></div>
+          <div className="generator-grid">
+            <div className="panel">
+              <label className="primary full" style={{cursor:'pointer', textAlign:'center'}}>
+                <span>{photoBusy ? 'Analyzing your kitchen…' : '📸 Take or Choose Photo'}</span>
+                <input type="file" accept="image/*" capture="environment" style={{display:'none'}} onChange={e => { const f=e.target.files?.[0]; if(f) void analyzeKitchenPhoto(f); }} />
+              </label>
+              {photoPreview && <img src={photoPreview} alt="Kitchen ingredients preview" style={{width:'100%',maxHeight:360,objectFit:'cover',borderRadius:18,marginTop:18}} />}
+              {photoItems.length > 0 && <div className="plating"><b>Ingredients I can see</b><p>{photoItems.join(' · ')}</p></div>}
+              {!photoBusy && photoPreview && photoItems.length === 0 && <p className="error">I couldn't confidently identify ingredients in that photo. Try a brighter, closer photo or enter them manually.</p>}
+            </div>
+            <div className="panel">
+              <p className="eyebrow">FROM CAMERA TO DINNER</p><h3>Turn the scan into a meal</h3>
+              <label>Detected / editable ingredients</label>
+              <textarea value={pantry} onChange={e => setPantry(e.target.value)} placeholder="Detected ingredients will appear here…" />
+              <button className="primary full" onClick={() => { setMeal(null); navigate('pantry'); void generateMeal(true, pantry, mealType); }} disabled={!pantry.trim()}><Sparkles size={18}/>Make Something Fancy</button>
+              <p className="fine-print">Always confirm detected ingredients yourself, especially for allergies or dietary restrictions.</p>
+            </div>
           </div>
         </section>
       )}
