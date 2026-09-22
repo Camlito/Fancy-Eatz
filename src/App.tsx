@@ -1,0 +1,1 @@
+import FancyEatz from './FancyEatz';export default function App(){return <div className="app"><FancyEatz /></div>;}
