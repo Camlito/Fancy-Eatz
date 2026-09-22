@@ -54,6 +54,20 @@ Reuse ingredients intelligently to reduce waste and spending. grocery must be on
   return parseJson(extractText(result));
 }
 
+async function analyzeKitchenPhoto(env: Env, body: any) {
+  if (!body?.image || typeof body.image !== "string") throw new Error("Image is required");
+  const match = body.image.match(/^data:image\/[^;]+;base64,(.+)$/);
+  if (!match) throw new Error("Unsupported image");
+  const bytes = Uint8Array.from(atob(match[1]), c => c.charCodeAt(0));
+  const result: any = await env.AI.run("@cf/llava-hf/llava-1.5-7b-hf", {
+    image: [...bytes],
+    prompt: "Identify only visible food ingredients in this refrigerator, pantry, countertop, or grocery photo. Do not guess hidden items or brands. Return a concise comma-separated list only."
+  });
+  const text = extractText(result);
+  const items = text.split(/,|\n/).map(x => x.replace(/^[-*\d.\s]+/, "").trim()).filter(Boolean).slice(0, 40);
+  return { items };
+}
+
 async function createExperience(env: Env, body: any) {
   const prompt = `You are the Fancy Eatz private dining concierge. Design one complete upscale home dining experience.
 Return ONLY valid JSON:
@@ -77,6 +91,10 @@ export default {
     if (request.method === "POST" && url.pathname === "/api/generate-meal") {
       try { return json({ meal: await createMeal(env, await request.json()) }); }
       catch (error) { return json({ error: "Meal generation failed", detail: String(error) }, 500); }
+    }
+    if (request.method === "POST" && url.pathname === "/api/analyze-kitchen-photo") {
+      try { return json(await analyzeKitchenPhoto(env, await request.json())); }
+      catch (error) { return json({ error: "Photo analysis failed", detail: String(error) }, 500); }
     }
     if (request.method === "POST" && url.pathname === "/api/generate-experience") {
       try { return json({ experience: await createExperience(env, await request.json()) }); }
