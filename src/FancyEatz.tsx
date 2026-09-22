@@ -43,6 +43,20 @@ type WeeklyPlan = {
   estimatedTotal: string;
 };
 
+type Experience = {
+  title: string;
+  appetizer: string;
+  entree: string;
+  sides: string[];
+  dessert: string;
+  pairing: string;
+  timeline: string[];
+  plating: string;
+  tableSetting: string;
+  groceries: string[];
+  estimatedCost: string;
+};
+
 type Recipe = {
   title: string;
   tag: string;
@@ -134,6 +148,12 @@ export default function FancyEatz() {
   const [budget, setBudget] = useState('$25');
   const [meal, setMeal] = useState<Meal | null>(null);
   const [weeklyPlan, setWeeklyPlan] = useState<WeeklyPlan | null>(null);
+  const [experience, setExperience] = useState<Experience | null>(null);
+  const [experienceLoading, setExperienceLoading] = useState(false);
+  const [experienceOccasion, setExperienceOccasion] = useState('Date Night at Home');
+  const [experienceGuests, setExperienceGuests] = useState('2');
+  const [experienceBudget, setExperienceBudget] = useState('$75');
+  const [experienceMinutes, setExperienceMinutes] = useState('90');
   const [loading, setLoading] = useState(false);
   const [planLoading, setPlanLoading] = useState(false);
   const [mealError, setMealError] = useState('');
@@ -234,6 +254,39 @@ export default function FancyEatz() {
     }
   }
 
+  async function generateExperience() {
+    setExperienceLoading(true);
+    const safe = fallbackProtein(pantry || '', diet);
+    try {
+      const r = await api.post('/api/generate-experience', {
+        pantry: pantry || 'common home pantry staples',
+        occasion: experienceOccasion,
+        guests: experienceGuests,
+        budget: experienceBudget,
+        minutes: experienceMinutes,
+        diet,
+        style
+      });
+      setExperience(r.data.experience as Experience);
+    } catch {
+      setExperience({
+        title: experienceOccasion + ' · Fancy Eatz Experience',
+        appetizer: 'Chef-inspired starter using seasonal pantry ingredients',
+        entree: `Elevated ${safe.primary.replace(/\b\w/g, m => m.toUpperCase())} Dinner`,
+        sides: ['Seasonal vegetable accompaniment', 'Herb-finished rice or potatoes'],
+        dessert: diet === 'Vegan' ? 'Fresh berry citrus parfait' : 'Lemon berry parfait',
+        pairing: 'Sparkling citrus and herb refresher',
+        timeline: ['Prep ingredients and set the table.', 'Start the longest-cooking side.', 'Prepare the appetizer.', 'Cook and rest the entrée.', 'Plate the main course and finish dessert.'],
+        plating: 'Use warm plates, negative space, a neat sauce finish, and one fresh garnish.',
+        tableSetting: 'Low lighting, uncluttered place settings, cloth napkins, and a simple centerpiece.',
+        groceries: [],
+        estimatedCost: `Designed around a ${experienceBudget} target using on-hand ingredients first.`
+      });
+    } finally {
+      setExperienceLoading(false);
+    }
+  }
+
   function loadList(name: keyof typeof starterLists) {
     setListName(name);
     setGrocery(starterLists[name]);
@@ -267,6 +320,7 @@ export default function FancyEatz() {
           <span>F</span><div><b>FANCY EATZ</b><small>Elevate what you already have.</small></div>
         </button>
         <nav>
+          <button onClick={() => navigate('experience')}>Experience</button>
           <button onClick={() => navigate('recipes')}>Recipes</button>
           <button onClick={() => navigate('pantry')}>Pantry Chef</button>
           <button onClick={() => navigate('planner')}>Weekly Planner</button>
@@ -294,6 +348,7 @@ export default function FancyEatz() {
             <div className="hero-actions">
               <button className="primary" onClick={() => navigate('pantry')}><Sparkles size={18} /> What Can I Make Right Now?</button>
               <button className="ghost" onClick={() => navigate('planner')}><CalendarDays size={18} /> Plan My Week</button>
+              <button className="ghost" onClick={() => navigate('experience')}><Sparkles size={18} /> Plan My Entire Experience</button>
             </div>
             <div className="quick-chips">
               {['Under $25', 'Date Night', 'Family Dinner', 'Healthy but Fancy', 'Seafood Night', '20-Minute Fancy'].map(x => <button key={x} onClick={() => applyMood(x)}>{x}</button>)}
@@ -305,6 +360,39 @@ export default function FancyEatz() {
             <button className="primary full" onClick={() => generateMeal()} disabled={loading}>{loading ? 'Chef is creating…' : 'Make It Fancy'}</button>
             <button className="ghost full secondary-action" onClick={() => generateMeal(true)} disabled={loading}>Surprise Me</button>
             {mealError && <p className="error">{mealError}</p>}
+          </div>
+        </section>
+      )}
+
+      {tab === 'experience' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">YOUR PRIVATE DINING CONCIERGE</p><h2>Plan My Entire Experience</h2><p>Build the menu, timing, presentation and shopping plan for an elevated night at home.</p></div>
+          <div className="generator-grid">
+            <div className="panel">
+              <label>What do you already have?</label>
+              <textarea value={pantry} onChange={e => setPantry(e.target.value)} placeholder="Steak, shrimp, potatoes, asparagus, berries..." />
+              <div className="form-grid">
+                <label>Occasion<select value={experienceOccasion} onChange={e => setExperienceOccasion(e.target.value)}><option>Date Night at Home</option><option>Anniversary</option><option>Birthday Dinner</option><option>Girls Night In</option><option>Sunday Family Table</option><option>Celebration</option></select></label>
+                <label>Guests<select value={experienceGuests} onChange={e => setExperienceGuests(e.target.value)}><option>2</option><option>4</option><option>6</option><option>8</option><option>10</option><option>12</option></select></label>
+                <label>Total budget<select value={experienceBudget} onChange={e => setExperienceBudget(e.target.value)}><option>$50</option><option>$75</option><option>$100</option><option>$150</option><option>$200</option><option>$300</option></select></label>
+                <label>Time available<select value={experienceMinutes} onChange={e => setExperienceMinutes(e.target.value)}><option value="60">60 minutes</option><option value="90">90 minutes</option><option value="120">2 hours</option><option value="180">3 hours</option></select></label>
+                <label>Dietary preference<select value={diet} onChange={e => setDiet(e.target.value)}><option>No restriction</option><option>Vegetarian</option><option>Vegan</option><option>Pescatarian</option><option>Gluten-conscious</option><option>Dairy-free</option><option>Lower-carb</option></select></label>
+                <label>Style<select value={style} onChange={e => setStyle(e.target.value)}><option>Chef's choice</option><option>Southern upscale</option><option>Italian inspired</option><option>Fresh & light</option><option>Comfort food</option><option>Seafood-forward</option></select></label>
+              </div>
+              <button className="primary full" onClick={generateExperience} disabled={experienceLoading}><Sparkles size={18}/>{experienceLoading ? 'Designing your evening…' : 'Create My Experience'}</button>
+            </div>
+            <div className="result panel">
+              {!experience ? <div className="empty"><Sparkles size={44}/><h3>Your complete evening appears here</h3><p>Menu, pairing, timeline, plating, table setting and shopping plan.</p></div> : <div>
+                <p className="eyebrow">FANCY EATZ SIGNATURE EXPERIENCE</p><h2>{experience.title}</h2>
+                <h3>Appetizer</h3><p>{experience.appetizer}</p><h3>Entrée</h3><p>{experience.entree}</p>
+                <h3>Sides</h3><ul>{experience.sides.map(x => <li key={x}>{x}</li>)}</ul>
+                <h3>Dessert</h3><p>{experience.dessert}</p><h3>Pairing</h3><p>{experience.pairing}</p>
+                <h3>Preparation Timeline</h3><ol>{experience.timeline.map(x => <li key={x}>{x}</li>)}</ol>
+                <div className="plating"><b>Plating</b><p>{experience.plating}</p><b>Table Setting</b><p>{experience.tableSetting}</p></div>
+                <p><b>Budget:</b> {experience.estimatedCost}</p>
+                {experience.groceries.length > 0 && <button className="ghost" onClick={() => addItems(experience.groceries, experience.title)}><ShoppingBasket size={18}/>Add Groceries</button>}
+              </div>}
+            </div>
           </div>
         </section>
       )}
