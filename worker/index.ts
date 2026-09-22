@@ -35,7 +35,7 @@ Style: ${body.style || "Chef's choice"}
 Dietary preference: ${body.diet || "No restriction"}
 Target grocery budget: ${body.budget || "$25"}
 Use on-hand ingredients as much as possible. Respect dietary preference. Missing must contain only groceries genuinely needed. Give clear food-safe cooking steps and elegant achievable plating. estimatedCost is a rough grocery estimate, never live local pricing. Do not claim the recipe is copied verbatim from a cookbook.`;
-  const result = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", { prompt, max_tokens: 1800, temperature: 0.7 });
+  const result = await env.AI.run("@cf/meta/llama-3.2-3b-instruct", { prompt, max_tokens: 1800, temperature: 0.7 });
   return parseJson(extractText(result));
 }
 
@@ -50,7 +50,7 @@ Style: ${body.style || "Chef's choice"}
 Dietary preference: ${body.diet || "No restriction"}
 Target budget per meal: ${body.budget || "$25"}
 Reuse ingredients intelligently to reduce waste and spending. grocery must be one deduplicated combined shopping list, excluding pantry items when possible. All costs are rough estimates only.`;
-  const result = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", { prompt, max_tokens: 2600, temperature: 0.65 });
+  const result = await env.AI.run("@cf/meta/llama-3.2-3b-instruct", { prompt, max_tokens: 2600, temperature: 0.65 });
   return parseJson(extractText(result));
 }
 
