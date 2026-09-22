@@ -88,6 +88,19 @@ const starterLists = {
 
 const moods = ['Date Night at Home', 'Southern Luxe', 'Under $25', '20-Minute Fancy', 'Seafood Night', 'Sunday Family Table', 'Healthy but Fancy', 'Girls Night In'];
 
+function fallbackProtein(pantryText: string, diet: string) {
+  const items = pantryText.split(',').map(x => x.trim()).filter(Boolean);
+  const forbidden = diet === 'Vegan' ? /chicken|beef|pork|turkey|fish|salmon|shrimp|crab|scallop|tuna|cheese|butter|cream|milk|egg/i
+    : diet === 'Vegetarian' ? /chicken|beef|pork|turkey|fish|salmon|shrimp|crab|scallop|tuna/i
+    : diet === 'Pescatarian' ? /chicken|beef|pork|turkey/i : /$^/;
+  const safe = items.filter(x => !forbidden.test(x));
+  if (safe.length) return { primary: safe[0], items: safe };
+  if (diet === 'Vegan') return { primary: 'chickpeas', items: ['chickpeas', 'rice', 'seasonal vegetables'] };
+  if (diet === 'Vegetarian') return { primary: 'mushrooms', items: ['mushrooms', 'pasta', 'seasonal vegetables'] };
+  if (diet === 'Pescatarian') return { primary: 'salmon', items: ['salmon', 'rice', 'seasonal vegetables'] };
+  return { primary: items[0] || 'chicken', items: items.length ? items : ['chicken', 'rice', 'seasonal vegetables'] };
+}
+
 export default function FancyEatz() {
   const [tab, setTab] = useState('home');
   const [tabHistory, setTabHistory] = useState<string[]>([]);
@@ -172,8 +185,9 @@ export default function FancyEatz() {
       setMeal(r.data.meal as Meal);
       navigate('pantry');
     } catch {
-      const base = (pantryForRequest || 'chicken, rice, garlic, butter, seasonal vegetables').split(',').map(x => x.trim()).filter(Boolean);
-      const protein = base.find(x => /shrimp|salmon|fish|chicken|beef|pork|turkey|tofu|scallop|crab/i.test(x)) || base[0] || 'seasonal vegetables';
+      const safeFallback = fallbackProtein(pantryForRequest || '', diet);
+      const base = safeFallback.items;
+      const protein = safeFallback.primary;
       const accents = base.filter(x => x.toLowerCase() !== protein.toLowerCase()).slice(0, 4);
       const fallbackMeal: Meal = {
         title: `Southern Upscale ${protein.replace(/\b\w/g, m => m.toUpperCase())} Plate`,
@@ -191,7 +205,7 @@ export default function FancyEatz() {
       };
       setMeal(fallbackMeal);
       setMealError('');
-      navigate('pantry');
+      if (tab !== 'pantry') navigate('pantry');
     } finally {
       setLoading(false);
     }
