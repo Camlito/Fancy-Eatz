@@ -1,0 +1,322 @@
+import { useEffect, useMemo, useState } from 'react';
+const api = { post: async (url: string, body: unknown) => { const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }); if (!response.ok) throw new Error('Request failed'); return { data: await response.json() }; } };
+import {
+  BookOpen,
+  CalendarDays,
+  Check,
+  ChefHat,
+  Clock3,
+  Heart,
+  Plus,
+  Search,
+  ShoppingBasket,
+  Sparkles,
+  Trash2,
+  Users,
+  UtensilsCrossed,
+  WalletCards,
+} from 'lucide-react';
+
+type Meal = {
+  title: string;
+  description: string;
+  ingredients: string[];
+  steps: string[];
+  plating: string;
+  missing: string[];
+  estimatedCost?: string;
+};
+
+type PlanDay = {
+  day: string;
+  meal: string;
+  description: string;
+  estimatedCost: string;
+  groceries: string[];
+};
+
+type WeeklyPlan = {
+  title: string;
+  days: PlanDay[];
+  grocery: string[];
+  estimatedTotal: string;
+};
+
+type Recipe = {
+  title: string;
+  tag: string;
+  time: string;
+  note: string;
+  mealType: string;
+  diet: string;
+  budget: string;
+};
+
+const featured: Recipe[] = [
+  { title: 'Grilled Salmon with Honey Mustard Glaze', tag: 'Seafood', time: '30 min', note: 'Sweet-savory glaze, elegant weeknight finish.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Crab Cakes with Basil Mayonnaise', tag: 'Crab', time: '35 min', note: 'Crisp edges, tender center, bright herb finish.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Fish Piccata', tag: 'Fish', time: '25 min', note: 'Lemon, capers and a polished pan sauce.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Pesto Salmon & Sea Scallops with Lemon/Garlic', tag: 'Chef Pick', time: '40 min', note: 'A restaurant-style surf pairing for date night.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
+  { title: 'Creamy Tomato Bisque with Lump Crabmeat', tag: 'Comfort', time: '45 min', note: 'Silky bisque with a luxurious crab finish.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Grilled Fish Tacos with Green Salsa', tag: 'Fresh', time: '30 min', note: 'Bright, vibrant and easy to customize.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$' },
+  { title: 'Luxe Shrimp & Grits Brunch Bowl', tag: 'Southern Luxe', time: '35 min', note: 'Creamy grits, seasoned shrimp and a polished brunch finish.', mealType: 'Breakfast', diet: 'Pescatarian', budget: '$$' },
+  { title: 'Lemon Berry Mascarpone Parfait', tag: 'Dessert', time: '15 min', note: 'A no-fuss layered dessert that still feels special.', mealType: 'Dessert', diet: 'Vegetarian', budget: '$' },
+];
+
+const starterLists = {
+  'Date Night': ['salmon fillets', 'jumbo scallops', 'lemons', 'fresh herbs', 'baby potatoes', 'asparagus', 'butter'],
+  'Seafood Night': ['white fish', 'lump crabmeat', 'shrimp', 'garlic', 'lemons', 'parsley', 'rice'],
+  'Family Dinner': ['chicken breasts', 'pasta', 'broccoli', 'parmesan', 'cream', 'garlic', 'salad greens'],
+};
+
+const moods = ['Date Night at Home', 'Southern Luxe', 'Under $25', '20-Minute Fancy', 'Seafood Night', 'Sunday Family Table', 'Healthy but Fancy', 'Girls Night In'];
+
+export default function FancyEatz() {
+  const [tab, setTab] = useState('home');
+  const [pantry, setPantry] = useState('');
+  const [occasion, setOccasion] = useState('Elevated Weeknight');
+  const [servings, setServings] = useState('2');
+  const [time, setTime] = useState('45 minutes');
+  const [style, setStyle] = useState("Chef's choice");
+  const [mealType, setMealType] = useState('Dinner');
+  const [diet, setDiet] = useState('No restriction');
+  const [budget, setBudget] = useState('$25');
+  const [meal, setMeal] = useState<Meal | null>(null);
+  const [weeklyPlan, setWeeklyPlan] = useState<WeeklyPlan | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [planLoading, setPlanLoading] = useState(false);
+  const [mealError, setMealError] = useState('');
+  const [planError, setPlanError] = useState('');
+  const [listName, setListName] = useState('Date Night');
+  const [grocery, setGrocery] = useState<string[]>(starterLists['Date Night']);
+  const [checked, setChecked] = useState<string[]>([]);
+  const [newItem, setNewItem] = useState('');
+  const [search, setSearch] = useState('');
+  const [recipeType, setRecipeType] = useState('All');
+  const [favorites, setFavorites] = useState<Meal[]>(() => {
+    try { return JSON.parse(localStorage.getItem('fancy-eatz-favorites') || '[]') as Meal[]; } catch { return []; }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('fancy-eatz-favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  const filteredRecipes = useMemo(() => featured.filter(r => {
+    const q = search.toLowerCase();
+    return (recipeType === 'All' || r.mealType === recipeType) &&
+      (!q || (r.title + ' ' + r.tag + ' ' + r.note).toLowerCase().includes(q));
+  }), [search, recipeType]);
+
+  const grouped = useMemo(() => {
+    const c: Record<string, string[]> = { 'Produce & Herbs': [], 'Proteins & Seafood': [], 'Dairy & Chilled': [], 'Pantry & Spices': [] };
+    grocery.forEach(item => {
+      const s = item.toLowerCase();
+      if (/salmon|fish|crab|shrimp|scallop|chicken|beef|pork|turkey/.test(s)) c['Proteins & Seafood'].push(item);
+      else if (/butter|cream|cheese|parmesan|milk|yogurt/.test(s)) c['Dairy & Chilled'].push(item);
+      else if (/lemon|lime|herb|parsley|asparagus|broccoli|potato|greens|garlic|onion|pepper|avocado|berry/.test(s)) c['Produce & Herbs'].push(item);
+      else c['Pantry & Spices'].push(item);
+    });
+    return c;
+  }, [grocery]);
+
+  const requestSettings = { occasion, servings, time, style, mealType, diet, budget };
+
+  async function generateMeal(useFallback = false) {
+    if (!pantry.trim() && !useFallback) {
+      setMealError('Add at least a few ingredients you have at home.');
+      return;
+    }
+    setLoading(true);
+    setMealError('');
+    try {
+      const r = await api.post('/api/generate-meal', { pantry: pantry || 'common home pantry staples', ...requestSettings });
+      setMeal(r.data.meal as Meal);
+      setTab('pantry');
+    } catch {
+      setMealError('The chef could not generate a meal right now. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function generatePlan() {
+    setPlanLoading(true);
+    setPlanError('');
+    try {
+      const r = await api.post('/api/generate-plan', { pantry: pantry || 'common home pantry staples', ...requestSettings });
+      setWeeklyPlan(r.data.plan as WeeklyPlan);
+    } catch {
+      setPlanError('The weekly planner could not build your menu right now. Please try again.');
+    } finally {
+      setPlanLoading(false);
+    }
+  }
+
+  function loadList(name: keyof typeof starterLists) {
+    setListName(name);
+    setGrocery(starterLists[name]);
+    setChecked([]);
+  }
+
+  function addItems(items: string[], name: string) {
+    setGrocery(p => Array.from(new Set([...p, ...items])));
+    setListName(name);
+    setTab('grocery');
+  }
+
+  function saveFavorite() {
+    if (!meal || favorites.some(f => f.title === meal.title)) return;
+    setFavorites(p => [...p, meal]);
+  }
+
+  function applyMood(m: string) {
+    setOccasion(m);
+    if (m === 'Under $25') setBudget('$25');
+    if (m === '20-Minute Fancy') setTime('20 minutes');
+    if (m === 'Healthy but Fancy') setStyle('Fresh & light');
+    if (m === 'Seafood Night') setStyle('Seafood-forward');
+    setTab('pantry');
+  }
+
+  return (
+    <main>
+      <header className="topbar">
+        <button className="brand" onClick={() => setTab('home')}>
+          <span>F</span><div><b>FANCY EATZ</b><small>Elevate what you already have.</small></div>
+        </button>
+        <nav>
+          <button onClick={() => setTab('recipes')}>Recipes</button>
+          <button onClick={() => setTab('pantry')}>Pantry Chef</button>
+          <button onClick={() => setTab('planner')}>Weekly Planner</button>
+          <button onClick={() => setTab('ideas')}>Meal Ideas</button>
+          <button onClick={() => setTab('grocery')}>Grocery Lists</button>
+          <button onClick={() => setTab('favorites')}>Favorites</button>
+        </nav>
+      </header>
+
+      {tab === 'home' && (
+        <section className="hero">
+          <div className="hero-copy">
+            <p className="eyebrow">YOUR AI KITCHEN CONCIERGE</p>
+            <h1>Turn what you have into something <em>fancy.</em></h1>
+            <p className="lede">Build an upscale meal from your kitchen, budget, dietary needs and schedule—or let Fancy Eatz plan the whole week and combine the shopping list.</p>
+            <div className="hero-actions">
+              <button className="primary" onClick={() => setTab('pantry')}><Sparkles size={18} /> What Can I Make Right Now?</button>
+              <button className="ghost" onClick={() => setTab('planner')}><CalendarDays size={18} /> Plan My Week</button>
+            </div>
+            <div className="quick-chips">
+              {['Under $25', 'Date Night', 'Family Dinner', 'Healthy but Fancy', 'Seafood Night', '20-Minute Fancy'].map(x => <button key={x} onClick={() => applyMood(x)}>{x}</button>)}
+            </div>
+          </div>
+          <div className="chef-card">
+            <ChefHat size={38} /><p>TONIGHT'S PROMPT</p><h3>What's already in your kitchen?</h3>
+            <textarea value={pantry} onChange={e => setPantry(e.target.value)} placeholder="Example: salmon, rice, lemon, spinach, garlic, butter..." />
+            <button className="primary full" onClick={() => generateMeal()} disabled={loading}>{loading ? 'Chef is creating…' : 'Make It Fancy'}</button>
+            <button className="ghost full secondary-action" onClick={() => generateMeal(true)} disabled={loading}>Surprise Me</button>
+            {mealError && <p className="error">{mealError}</p>}
+          </div>
+        </section>
+      )}
+
+      {tab === 'pantry' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">PANTRY → PLATE</p><h2>Fancy Eatz Pantry Chef</h2><p>Set the rules. Fancy Eatz handles the menu.</p></div>
+          <div className="generator-grid">
+            <div className="panel">
+              <label>What ingredients do you have?</label>
+              <textarea value={pantry} onChange={e => setPantry(e.target.value)} placeholder="Chicken, pasta, tomatoes, cream, garlic, spinach..." />
+              <div className="form-grid">
+                <label>Meal type<select value={mealType} onChange={e => setMealType(e.target.value)}><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
+                <label>Occasion<select value={occasion} onChange={e => setOccasion(e.target.value)}><option>Elevated Weeknight</option><option>Date Night</option><option>Family Dinner</option><option>Brunch</option><option>Celebration</option></select></label>
+                <label>Family / servings<select value={servings} onChange={e => setServings(e.target.value)}><option>1</option><option>2</option><option>4</option><option>6</option><option>8</option></select></label>
+                <label>Max budget<select value={budget} onChange={e => setBudget(e.target.value)}><option>$15</option><option>$25</option><option>$40</option><option>$60</option><option>$100</option></select></label>
+                <label>Dietary preference<select value={diet} onChange={e => setDiet(e.target.value)}><option>No restriction</option><option>Vegetarian</option><option>Vegan</option><option>Pescatarian</option><option>Gluten-conscious</option><option>Dairy-free</option><option>Lower-carb</option></select></label>
+                <label>Time<select value={time} onChange={e => setTime(e.target.value)}><option>20 minutes</option><option>30 minutes</option><option>45 minutes</option><option>60 minutes</option></select></label>
+                <label>Style<select value={style} onChange={e => setStyle(e.target.value)}><option>Chef's choice</option><option>Southern upscale</option><option>Italian inspired</option><option>Fresh & light</option><option>Comfort food</option><option>Seafood-forward</option></select></label>
+              </div>
+              <button className="primary full" onClick={() => generateMeal()} disabled={loading}><Sparkles size={18} />{loading ? 'Creating your menu…' : 'Generate Upscale Meal'}</button>
+              {mealError && <p className="error">{mealError}</p>}
+            </div>
+            <div className="result panel">
+              {!meal ? <div className="empty"><UtensilsCrossed size={44} /><h3>Your custom meal appears here</h3><p>Recipe, budget-aware ingredients, plating notes and only the groceries you still need.</p></div> : (
+                <div>
+                  <p className="eyebrow">CHEF-CREATED FOR YOU</p><h2>{meal.title}</h2><p>{meal.description}</p>
+                  <div className="meta"><span><Users size={16} />{servings} servings</span><span><Clock3 size={16} />{time}</span>{meal.estimatedCost && <span><WalletCards size={16} />{meal.estimatedCost}</span>}</div>
+                  <h3>Ingredients</h3><ul>{meal.ingredients.map(x => <li key={x}>{x}</li>)}</ul>
+                  <h3>Method</h3><ol>{meal.steps.map(x => <li key={x}>{x}</li>)}</ol>
+                  <div className="plating"><b>Fancy Finish</b><p>{meal.plating}</p></div>
+                  <div className="result-actions">
+                    <button className="ghost" onClick={saveFavorite}><Heart size={18} />{favorites.some(f => f.title === meal.title) ? 'Saved' : 'Save Favorite'}</button>
+                    {meal.missing.length > 0 && <button className="ghost" onClick={() => addItems(meal.missing, meal.title)}><ShoppingBasket size={18} />Add Missing Items</button>}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {tab === 'planner' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">7 DAYS, ONE SMART SHOP</p><h2>Weekly Meal Planner</h2><p>Use your Pantry Chef settings to create seven upscale-but-practical meals and one combined grocery list.</p></div>
+          <div className="planner-controls panel">
+            <div><b>{servings} servings</b><span>{diet} · {budget} target per meal · {style}</span></div>
+            <button className="primary" onClick={generatePlan} disabled={planLoading}><CalendarDays size={18} />{planLoading ? 'Planning your week…' : 'Generate My Week'}</button>
+          </div>
+          {planError && <p className="error">{planError}</p>}
+          {weeklyPlan && (
+            <>
+              <div className="plan-summary"><div><small>WEEKLY PLAN</small><h2>{weeklyPlan.title}</h2></div><strong>Estimated total {weeklyPlan.estimatedTotal}</strong></div>
+              <div className="week-grid">{weeklyPlan.days.map(d => <article className="day-card" key={d.day}><small>{d.day}</small><h3>{d.meal}</h3><p>{d.description}</p><b>{d.estimatedCost}</b></article>)}</div>
+              <button className="primary combined" onClick={() => addItems(weeklyPlan.grocery, 'Weekly Combined List')}><ShoppingBasket size={18} />Build One Combined Grocery List</button>
+            </>
+          )}
+        </section>
+      )}
+
+      {tab === 'recipes' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>Search the growing vault, filter by meal type, or send any idea to Pantry Chef for a personalized version.</p></div>
+          <div className="recipe-tools">
+            <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search salmon, crab, brunch..." /></label>
+            <div className="filter-row">{['All', 'Breakfast', 'Lunch', 'Dinner', 'Dessert'].map(x => <button className={recipeType === x ? 'active' : ''} key={x} onClick={() => setRecipeType(x)}>{x}</button>)}</div>
+          </div>
+          <div className="cards">
+            {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p><button onClick={() => { setPantry(r.title + ' ingredients'); setMealType(r.mealType); setTab('pantry'); }}>Make My Version →</button></div></article>)}
+          </div>
+          {filteredRecipes.length === 0 && <div className="empty panel"><Search size={36} /><h3>No exact match yet</h3><p>Try another search, or use Pantry Chef to generate the meal you have in mind.</p></div>}
+          <div className="source-note"><BookOpen size={20} /><div><b>Ultimate Collection of Seafood Recipes</b><p>The seafood collection is available as a source library alongside Fancy Eatz generated ideas.</p><a href="./resources/seafood-recipes.pdf" target="_blank" rel="noreferrer">Open source collection</a></div></div>
+        </section>
+      )}
+
+      {tab === 'ideas' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">NO IDEA WHAT TO COOK?</p><h2>Choose a vibe. Fancy Eatz does the rest.</h2><p>Each experience carries its settings into Pantry Chef so you can personalize before generating.</p></div>
+          <div className="mood-grid">{moods.map(m => <button key={m} className="mood" onClick={() => applyMood(m)}><Sparkles size={22} /><b>{m}</b><span>Build a menu →</span></button>)}</div>
+          <button className="primary surprise" onClick={() => generateMeal(true)} disabled={loading}>{loading ? 'Creating…' : 'Surprise Me With Dinner'}</button>
+        </section>
+      )}
+
+      {tab === 'favorites' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">YOUR COLLECTION</p><h2>Saved Favorites</h2><p>Keep the meals worth making again. Favorites stay saved on this device.</p></div>
+          {favorites.length === 0 ? <div className="empty panel"><Heart size={40} /><h3>No favorites yet</h3><p>Generate a meal in Pantry Chef and tap Save Favorite.</p></div> : <div className="cards">{favorites.map(f => <article className="recipe-card saved-card" key={f.title}><div className="card-body"><small>SAVED MEAL</small><h3>{f.title}</h3><p>{f.description}</p><button onClick={() => { setMeal(f); setTab('pantry'); }}>Open recipe →</button><button className="remove-favorite" onClick={() => setFavorites(p => p.filter(x => x.title !== f.title))}>Remove</button></div></article>)}</div>}
+        </section>
+      )}
+
+      {tab === 'grocery' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">SHOP SMARTER</p><h2>Specialized Grocery Lists</h2><p>Start curated, add meal gaps, or combine an entire week into one list.</p></div>
+          <div className="list-tabs">{(Object.keys(starterLists) as (keyof typeof starterLists)[]).map(n => <button className={listName === n ? 'active' : ''} key={n} onClick={() => loadList(n)}>{n}</button>)}</div>
+          <div className="grocery panel">
+            <div className="grocery-title"><div><small>ACTIVE LIST</small><h2>{listName}</h2></div><span>{grocery.length - checked.length} left</span></div>
+            <div className="add-row"><input value={newItem} onChange={e => setNewItem(e.target.value)} placeholder="Add an item…" onKeyDown={e => { if (e.key === 'Enter' && newItem.trim()) { setGrocery([...grocery, newItem.trim()]); setNewItem(''); } }} /><button onClick={() => { if (newItem.trim()) { setGrocery([...grocery, newItem.trim()]); setNewItem(''); } }}><Plus size={18} /></button></div>
+            {Object.entries(grouped).map(([cat, items]) => items.length > 0 && <div className="category" key={cat}><h3>{cat}</h3>{items.map(item => <div className={'grocery-item ' + (checked.includes(item) ? 'done' : '')} key={item}><button className="check" onClick={() => setChecked(p => p.includes(item) ? p.filter(x => x !== item) : [...p, item])}>{checked.includes(item) && <Check size={15} />}</button><span>{item}</span><button className="trash" onClick={() => setGrocery(p => p.filter(x => x !== item))}><Trash2 size={16} /></button></div>)}</div>)}
+          </div>
+        </section>
+      )}
+
+      <footer><div className="brand footer-brand"><span>F</span><div><b>FANCY EATZ</b><small>Everyday ingredients. Elevated experiences.</small></div></div><p>Cook beautifully. Shop intentionally. Eat fancy.</p></footer>
+    </main>
+  );
+}
