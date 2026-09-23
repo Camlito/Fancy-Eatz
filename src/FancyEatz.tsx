@@ -457,26 +457,32 @@ export default function FancyEatz() {
       </div>
 
       {tab === 'home' && (
-        <section className="hero">
-          <div className="hero-copy">
-            <p className="eyebrow">YOUR AI KITCHEN CONCIERGE</p>
-            <h1>Turn what you have into something <em>fancy.</em></h1>
-            <p className="lede">Build an upscale meal from your kitchen, budget, dietary needs and schedule—or let Fancy Eatz plan the whole week and combine the shopping list.</p>
-            <div className="hero-actions">
-              <button className="primary" onClick={() => navigate('pantry')}><Sparkles size={18} /> What Can I Make Right Now?</button>
-              <button className="ghost" onClick={() => navigate('planner')}><CalendarDays size={18} /> Plan My Week</button>
-              <button className="ghost" onClick={() => navigate('experience')}><Sparkles size={18} /> Plan My Entire Experience</button>
+        <section className="home-showcase">
+          <div className="home-hero">
+            <div className="hero-copy">
+              <p className="eyebrow">REAL RECIPES · AI-POWERED POSSIBILITIES</p>
+              <h1>Real Recipes.<br/>Real Flavor.<br/><em>Real Possibilities.</em></h1>
+              <p className="lede">Cookbook recipes · AI Meal Generator · Mix & Match · Grocery Lists · Meal Plans</p>
+              <button className="primary" onClick={()=>navigate('recipes')}>Find Your Next Meal →</button>
             </div>
-            <div className="quick-chips">
-              {['Under $25', 'Date Night', 'Family Dinner', 'Healthy but Fancy', 'Seafood Night', '20-Minute Fancy'].map(x => <button key={x} onClick={() => applyMood(x)}>{x}</button>)}
-            </div>
+            <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"><div><b>Good Food.<br/>Better Living.</b><span>Simple ingredients. Extraordinary meals.</span></div></div>
           </div>
-          <div className="chef-card">
-            <ChefHat size={38} /><p>TONIGHT'S PROMPT</p><h3>What's already in your kitchen?</h3>
-            <textarea value={pantry} onChange={e => setPantry(e.target.value)} placeholder="Example: salmon, rice, lemon, spinach, garlic, butter..." />
-            <button className="primary full" onClick={() => generateMeal()} disabled={loading}>{loading ? 'Chef is creating…' : 'Make It Fancy'}</button>
-            <button className="ghost full secondary-action" onClick={() => generateMeal(true)} disabled={loading}>Surprise Me</button>
-            {mealError && <p className="error">{mealError}</p>}
+          <div className="home-search-row">
+            <label className="search-box"><Search size={18}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search recipes (salmon, chicken, pasta, healthy...)" /><button onClick={()=>navigate('recipes')}>Search</button></label>
+            <button className="ai-generator-callout" onClick={()=>navigate('pantry')}><ChefHat size={30}/><span><b>AI Meal Generator</b><small>Enter what you have and get 22–35 meal ideas</small></span><strong>Generate Meals →</strong></button>
+          </div>
+          <div className="home-feature-grid">
+            <button className="visual-feature pantry-feature" onClick={()=>navigate('pantry')}><span><b>Cook with What You Have</b><small>Enter your ingredients and get 22–35 custom meal ideas.</small><strong>Open Pantry Chef →</strong></span></button>
+            <button className="visual-feature mix-feature" onClick={()=>navigate('pantry')}><span><b>Mix & Match Your Meal</b><small>Choose your entrée, sauce, vegetable, starch, side and finish.</small><strong>Build a Custom Meal →</strong></span></button>
+            <button className="visual-feature book-feature" onClick={()=>navigate('recipes')}><span><b>Browse the Full Cookbook</b><small>Explore the source cookbook plus converted interactive recipes.</small><strong>Open Full Cookbook →</strong></span></button>
+          </div>
+          <div className="home-recipe-section"><div className="home-section-title"><h2>Featured Recipes</h2><button onClick={()=>navigate('recipes')}>View All Recipes →</button></div>
+            <div className="home-recipe-strip">{featured.filter(r=>r.image).slice(0,6).map(r=><button className="home-recipe-card" key={r.title} onClick={()=>{setSelectedRecipe(r);navigate('recipes')}}><div style={{backgroundImage:`url("${r.image}")`}}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div>
+          </div>
+          <div className="home-tools">
+            <button onClick={()=>navigate('planner')}><CalendarDays/><span><b>Meal Planner</b><small>Plan your week and build one smart shopping list.</small></span></button>
+            <button onClick={()=>navigate('grocery')}><ShoppingBasket/><span><b>Grocery Lists</b><small>Add ingredients with one click and shop in seconds.</small></span></button>
+            <button onClick={()=>navigate('favorites')}><BookOpen/><span><b>My Cookbook</b><small>Save favorite recipes and custom creations.</small></span></button>
           </div>
         </section>
       )}
