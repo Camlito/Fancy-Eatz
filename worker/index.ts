@@ -34,7 +34,15 @@ Time limit: ${body.time || "45 minutes"}
 Style: ${body.style || "Chef's choice"}
 Dietary preference: ${body.diet || "No restriction"}
 Target grocery budget: ${body.budget || "$25"}
-Use on-hand ingredients as much as possible. Respect dietary preference. Missing must contain only groceries genuinely needed. Give clear food-safe cooking steps and elegant achievable plating. estimatedCost is a rough grocery estimate, never live local pricing. Do not claim the recipe is copied verbatim from a cookbook.`;
+Use on-hand ingredients as much as possible. Respect dietary preference. Missing must contain only groceries genuinely needed.
+CRITICAL RECIPE QUALITY RULES:
+- ingredients MUST be a complete measured ingredient list with realistic quantities for the requested serving count. Never return bare ingredient names without quantities unless quantity truly is "to taste".
+- steps MUST be specific executable cooking directions, not generic advice. State prep/cuts, pan or oven method, heat level or oven temperature, approximate cook times, when each ingredient is added, and clear doneness cues.
+- Never write vague instructions such as "cook until properly done", "adjust time for thickness", "add a simple side", "season to taste" as the main method, or "prepare as desired".
+- If the pantry item is a prepared food such as pizza, leftovers, rotisserie chicken, cooked rice, etc., create a genuine transformation recipe with specific additions and steps rather than pretending the prepared food is a raw protein.
+- The title must accurately describe what is actually being cooked.
+- Return at least 5 useful cooking steps for a generated meal unless the dish genuinely requires fewer.
+Give food-safe directions and elegant achievable plating. estimatedCost is a rough grocery estimate, never live local pricing. Do not claim the recipe is copied verbatim from a cookbook.`;
   const result = await env.AI.run("@cf/meta/llama-3.2-3b-instruct", { prompt, max_tokens: 1800, temperature: 0.7 });
   return parseJson(extractText(result));
 }
