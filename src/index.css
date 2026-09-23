@@ -626,3 +626,23 @@ footer p {
   .recipe-tools .filter-row button { padding:8px 4px; font-size:11px; }
   .recipe-card .ghost { display:inline-flex; }
 }
+
+
+/* Fancy Eatz premium food photography */
+.food-art { background-size:cover; background-position:center; transition:transform .35s ease, filter .35s ease; }
+.recipe-card { transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.recipe-card:hover { transform:translateY(-4px); border-color:#765f39; box-shadow:0 20px 55px rgba(0,0,0,.35); }
+.recipe-card:hover .food-art { filter:saturate(1.08) contrast(1.04); }
+.recipe-hero-photo {
+  min-height:420px; border-radius:9px; margin:-10px -10px 28px; padding:22px;
+  background-size:cover; background-position:center; display:flex; align-items:flex-start;
+  box-shadow:inset 0 -90px 100px rgba(0,0,0,.35);
+}
+.recipe-hero-photo span {
+  background:#d5aa60; color:#17120c; border-radius:999px; padding:8px 12px;
+  font-size:10px; font-weight:900; letter-spacing:.13em;
+}
+.recipe-detail .section-head h2 { font-size:clamp(38px,5vw,64px); }
+@media(max-width:800px){
+  .recipe-hero-photo { min-height:280px; margin:-8px -8px 24px; }
+}
