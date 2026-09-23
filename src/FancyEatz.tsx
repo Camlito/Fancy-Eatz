@@ -320,6 +320,16 @@ export default function FancyEatz() {
         plating: 'Use warm plates, negative space, a neat sauce finish, and one fresh garnish.',
         tableSetting: 'Low lighting, uncluttered place settings, cloth napkins, and a simple centerpiece.',
         groceries: [],
+        ingredients: safe.items.map((x, i) => i === 0 ? `1 main portion ${x}` : `1 portion ${x}`),
+        steps: [
+          `Prep all ingredients for the ${experienceOccasion.toLowerCase()} menu before cooking; wash produce, measure ingredients, and preheat the oven or pan as needed.`,
+          `Prepare the appetizer first and hold it for serving.`,
+          `Cook the longest-cooking side until tender, then keep warm.`,
+          `Season and cook the ${safe.primary} until properly cooked through, then rest briefly before plating.`,
+          `Finish the remaining side dishes and taste for seasoning.`,
+          `Assemble the dessert and chill or hold until the main course is finished.`,
+          `Plate the entrée with the sides, add the final garnish, and serve the appetizer, main course, and dessert in sequence.`
+        ],
         estimatedCost: `Designed around a ${experienceBudget} target using on-hand ingredients first.`
       });
     } finally {
