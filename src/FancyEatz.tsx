@@ -54,6 +54,8 @@ type Experience = {
   plating: string;
   tableSetting: string;
   groceries: string[];
+  ingredients: string[];
+  steps: string[];
   estimatedCost: string;
 };
 
@@ -491,7 +493,7 @@ export default function FancyEatz() {
                 <h3>Appetizer</h3><p>{experience.appetizer}</p><h3>Entrée</h3><p>{experience.entree}</p>
                 <h3>Sides</h3><ul>{experience.sides.map(x => <li key={x}>{x}</li>)}</ul>
                 <h3>Dessert</h3><p>{experience.dessert}</p><h3>Pairing</h3><p>{experience.pairing}</p>
-                <h3>Preparation Timeline</h3><ol>{experience.timeline.map(x => <li key={x}>{x}</li>)}</ol>
+                <h3>Ingredients</h3><ul>{experience.ingredients.map(x => <li key={x}>{x}</li>)}</ul><h3>Method / Directions</h3><ol>{experience.steps.map(x => <li key={x}>{x}</li>)}</ol><h3>Preparation Timeline</h3><ol>{experience.timeline.map(x => <li key={x}>{x}</li>)}</ol>
                 <div className="plating"><b>Plating</b><p>{experience.plating}</p><b>Table Setting</b><p>{experience.tableSetting}</p></div>
                 <p><b>Budget:</b> {experience.estimatedCost}</p>
                 {experience.groceries.length > 0 && <button className="ghost" onClick={() => addItems(experience.groceries, experience.title)}><ShoppingBasket size={18}/>Add Groceries</button>}
