@@ -180,6 +180,7 @@ export default function FancyEatz() {
   const [search, setSearch] = useState('');
   const [recipeType, setRecipeType] = useState('All');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [showSourceLibrary, setShowSourceLibrary] = useState(false);
   const [recipeLetter, setRecipeLetter] = useState('All');
   const [favorites, setFavorites] = useState<Meal[]>(() => {
     try { return JSON.parse(localStorage.getItem('fancy-eatz-favorites') || '[]') as Meal[]; } catch { return []; }
@@ -629,23 +630,24 @@ export default function FancyEatz() {
 
       {tab === 'recipes' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>Browse the recipe vault A–Z, search by ingredient or title, filter by meal type, or send any idea to Pantry Chef for a personalized version.</p></div>
+          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p><b>{featured.length} recipes are currently converted into interactive Fancy Eatz cards.</b> The complete seafood source collection contains 1,048 pages and is available below while recipes are converted into searchable ingredients + directions.</p><button className="primary" onClick={()=>setShowSourceLibrary(v=>!v)}><BookOpen size={18}/>{showSourceLibrary?'Hide Full Source Cookbook':'Open Full 1,048-Page Cookbook'}</button></div>
+          {showSourceLibrary && <div className="source-reader panel"><iframe title="Ultimate Collection of Seafood Recipes" src="/resources/seafood-recipes.pdf#view=FitH" /><p>If your browser does not display the PDF inline, use the source collection link below.</p></div>}
           <div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search salmon, crab, brunch..." /></label>
             <label>Category<select value={recipeType} onChange={e => setRecipeType(e.target.value)}><option>All</option><option>Appetizers</option><option>Entrées</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
           <div className="plating"><b>BROWSE A–Z</b><div className="filter-row">{['All',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(x => <button className={recipeLetter === x ? 'active' : ''} key={x} onClick={() => setRecipeLetter(x)}>{x}</button>)}</div></div>
           </div>
           <div className="cards">
-            {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)} style={r.image ? {backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.35)),url("${r.image}")`,backgroundSize:'cover',backgroundPosition:'center'} : undefined}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p>{r.ingredients?.length ? <button className="ghost" onClick={() => setSelectedRecipe(r)}><BookOpen size={16}/>Open Full Recipe</button> : <small>Full recipe details being added from the source collection.</small>}<button onClick={() => { const recipePrompt = r.title + ' ingredients'; setPantry(recipePrompt); setMealType(r.mealType); setMeal(null); navigate('pantry'); void generateMeal(true, recipePrompt, r.mealType); }}>Make My Version →</button></div></article>)}
+            {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)} style={r.image ? {backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.35)),url("${r.image}")`,backgroundSize:'cover',backgroundPosition:'center'} : undefined}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p>{r.ingredients?.length ? <button className="ghost" onClick={() => { setSelectedRecipe(r); setTimeout(()=>document.getElementById('full-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),50); }}><BookOpen size={16}/>Open Full Recipe</button> : <small>Full recipe details being added from the source collection.</small>}<button onClick={() => { const recipePrompt = r.title + ' ingredients'; setPantry(recipePrompt); setMealType(r.mealType); setMeal(null); navigate('pantry'); void generateMeal(true, recipePrompt, r.mealType); }}>Make My Version →</button></div></article>)}
           </div>
           {filteredRecipes.length === 0 && <div className="empty panel"><Search size={36} /><h3>No exact match yet</h3><p>Try another search, or use Pantry Chef to generate the meal you have in mind.</p></div>}
-          {selectedRecipe && <div className="panel recipe-detail" style={{marginTop:24}}>
+          {selectedRecipe && <div id="full-recipe" className="panel recipe-detail" style={{marginTop:24}}>
             {selectedRecipe.image && <div className="recipe-hero-photo" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.48)),url("${selectedRecipe.image}")`}}><span>FANCY EATZ SIGNATURE RECIPE</span></div>}
             <div className="section-head"><p className="eyebrow">{selectedRecipe.category || selectedRecipe.mealType}</p><h2>{selectedRecipe.title}</h2><p>{selectedRecipe.note}</p></div>
             <div className="meta"><span><Clock3 size={16}/>{selectedRecipe.time}</span>{selectedRecipe.servings && <span><Users size={16}/>{selectedRecipe.servings}</span>}</div>
             <div className="generator-grid">
-              <div><h3>Ingredients</h3><ul>{selectedRecipe.ingredients?.map(x => <li key={x}>{x}</li>)}</ul></div>
-              <div><h3>Method</h3><ol>{selectedRecipe.method?.map(x => <li key={x}>{x}</li>)}</ol></div>
+              <div><h3>Ingredients</h3>{selectedRecipe.ingredients?.length ? <ul>{selectedRecipe.ingredients.map(x => <li key={x}>{x}</li>)}</ul> : <p>Ingredients have not yet been converted from the source cookbook.</p>}</div>
+              <div><h3>Method / Directions</h3>{selectedRecipe.method?.length ? <ol>{selectedRecipe.method.map(x => <li key={x}>{x}</li>)}</ol> : <p>Directions have not yet been converted from the source cookbook.</p>}</div>
             </div>
             <div className="result-actions">
               {selectedRecipe.ingredients && <button className="ghost" onClick={() => addItems(selectedRecipe.ingredients || [], selectedRecipe.title)}><ShoppingBasket size={18}/>Add Ingredients to Grocery List</button>}
