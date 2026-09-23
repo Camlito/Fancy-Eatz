@@ -71,7 +71,7 @@ async function analyzeKitchenPhoto(env: Env, body: any) {
 async function createExperience(env: Env, body: any) {
   const prompt = `You are the Fancy Eatz private dining concierge. Design one complete upscale home dining experience.
 Return ONLY valid JSON:
-{"title":"string","appetizer":"string","entree":"string","sides":["string"],"dessert":"string","pairing":"non-alcoholic drink pairing","timeline":["string"],"plating":"string","tableSetting":"string","groceries":["string"],"estimatedCost":"string"}
+{"title":"string","appetizer":"string","entree":"string","sides":["string"],"dessert":"string","pairing":"non-alcoholic drink pairing","timeline":["string"],"plating":"string","tableSetting":"string","groceries":["string"],"ingredients":["string"],"steps":["string"],"estimatedCost":"string"}
 On hand: ${body.pantry}
 Occasion: ${body.occasion}
 Guests: ${body.guests}
@@ -79,7 +79,7 @@ Total budget target: ${body.budget}
 Time available: ${body.minutes} minutes
 Diet: ${body.diet}
 Style: ${body.style}
-Use on-hand ingredients first, respect dietary restrictions, keep the plan achievable at home, and treat all costs as rough estimates rather than live prices.`;
+Use on-hand ingredients first, respect dietary restrictions, keep the plan achievable at home, and treat all costs as rough estimates rather than live prices. ingredients MUST be a complete measured ingredient list for the full menu, including quantities for the requested guest count. steps MUST be complete numbered cooking directions covering appetizer, entree, sides and dessert in a practical cooking order. Never return a dining experience without both ingredients and steps.`;
   const result = await env.AI.run("@cf/meta/llama-3.2-3b-instruct", { prompt, max_tokens: 2200, temperature: 0.7 });
   return parseJson(extractText(result));
 }
