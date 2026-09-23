@@ -291,30 +291,29 @@ export default function FancyEatz() {
       setMealChoices([{...primary, category:'Chef Pick'}, ...sourceMatches].slice(0,35));
       navigate('pantry');
     } catch {
-      const safeFallback = fallbackProtein(pantryForRequest || '', diet);
-      const base = safeFallback.items;
-      const protein = safeFallback.primary;
-      const accents = base.filter(x => x.toLowerCase() !== protein.toLowerCase()).slice(0, 4);
-      const fallbackMeal: Meal = {
-        title: `Southern Upscale ${protein.replace(/\b\w/g, m => m.toUpperCase())} Plate`,
-        description: `A polished ${mealTypeOverride ?? mealType} built around ${protein}, designed for ${occasion.toLowerCase()} and adapted to the ingredients you have on hand.`,
-        ingredients: Array.from(new Set([...base, 'olive oil', 'salt', 'black pepper'])),
-        steps: [
-          `Season the ${protein} with salt and black pepper. Heat a skillet over medium-high heat with a small amount of olive oil.`,
-          `Cook the ${protein} until properly done and food-safe; adjust the exact cook time for the ingredient and its thickness.`,
-          accents.length ? `Add or prepare ${accents.join(', ')} alongside the main ingredient, seasoning to taste.` : 'Add a simple vegetable or starch from your pantry and season to taste.',
-          'Finish with a small amount of butter or olive oil, taste for seasoning, and serve immediately.'
-        ],
-        plating: 'Plate the main ingredient slightly off-center, arrange the sides neatly, and finish with a light drizzle of pan juices or olive oil for an upscale presentation.',
-        missing: [],
-        estimatedCost: 'Uses primarily on-hand ingredients; any added groceries are optional.'
-      };
-      setMeal(fallbackMeal);
-      const sourceMatches = featured.filter(x => x.ingredients?.length && x.method?.length).slice(0, 34).map(x => ({
-        title:x.title, description:x.note, ingredients:x.ingredients || [], steps:x.method || [], plating:'Finish with a polished Fancy Eatz presentation.', missing:[], estimatedCost:x.budget, category:x.category || x.mealType
+      const pantryItems = (pantryForRequest || '').split(',').map(x=>x.trim()).filter(Boolean);
+      const sourceRecipe = featured.find(r => r.ingredients?.length && r.method?.length && pantryItems.some(item => {
+        const key=item.toLowerCase().replace(/[^a-z ]/g,'').trim();
+        return key.length > 2 && ([r.title,r.tag,r.note,...(r.ingredients||[])].join(' ').toLowerCase().includes(key));
       }));
-      setMealChoices([{...fallbackMeal, category:'Chef Pick'}, ...sourceMatches].slice(0,35));
-      setMealError('');
+      if (sourceRecipe) {
+        const verifiedMeal: Meal = {
+          title: sourceRecipe.title,
+          description: sourceRecipe.note,
+          ingredients: sourceRecipe.ingredients || [],
+          steps: sourceRecipe.method || [],
+          plating: 'Serve neatly using the finished dish as the centerpiece; garnish only with ingredients appropriate to the recipe.',
+          missing: [],
+          estimatedCost: sourceRecipe.budget
+        };
+        setMeal(verifiedMeal);
+        setMealChoices(featured.filter(x=>x.ingredients?.length && x.method?.length).slice(0,35).map(x=>({title:x.title,description:x.note,ingredients:x.ingredients||[],steps:x.method||[],plating:'Serve neatly and finish according to the recipe.',missing:[],estimatedCost:x.budget,category:x.category||x.mealType})));
+        setMealError('AI generation was unavailable, so Fancy Eatz loaded a complete cookbook recipe instead of showing incomplete directions.');
+      } else {
+        setMeal(null);
+        setMealChoices([]);
+        setMealError('I could not create a complete recipe with measured ingredients and real cooking directions. Please try Generate Upscale Meal again or choose a complete recipe from the Cookbook.');
+      }
       if (tab !== 'pantry') navigate('pantry');
     } finally {
       setLoading(false);
