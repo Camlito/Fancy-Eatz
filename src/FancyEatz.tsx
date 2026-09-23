@@ -29,6 +29,7 @@ type Meal = {
 };
 
 type MealChoice = Meal & { category: string; selected?: boolean };
+type MixComponent = { name:string; kind:'Entrée'|'Sauce'|'Vegetable'|'Starch'|'Side'|'Finish'; source:string };
 
 type PlanDay = {
   day: string;
@@ -157,6 +158,7 @@ export default function FancyEatz() {
   const [budget, setBudget] = useState('$25');
   const [meal, setMeal] = useState<Meal | null>(null);
   const [mealChoices, setMealChoices] = useState<MealChoice[]>([]);
+  const [mixSelections, setMixSelections] = useState<Record<string,string>>({});
   const [weeklyPlan, setWeeklyPlan] = useState<WeeklyPlan | null>(null);
   const [experience, setExperience] = useState<Experience | null>(null);
   const [experienceLoading, setExperienceLoading] = useState(false);
@@ -210,6 +212,40 @@ export default function FancyEatz() {
     });
     return c;
   }, [grocery]);
+
+  const mixLibrary = useMemo<MixComponent[]>(() => {
+    const out: MixComponent[] = [];
+    const seen = new Set<string>();
+    const add = (name:string, kind:MixComponent['kind'], source:string) => {
+      const clean=name.trim(); const key=kind+'|'+clean.toLowerCase();
+      if(clean && !seen.has(key)){ seen.add(key); out.push({name:clean,kind,source}); }
+    };
+    featured.filter(r=>r.ingredients?.length && r.method?.length).forEach(r=>{
+      add(r.title,'Entrée',r.title);
+      const text=[...(r.ingredients||[]),r.note,r.title].join(' ').toLowerCase();
+      if(/lemon|lime|citrus/.test(text)) add('Bright Citrus Finish','Sauce',r.title);
+      if(/honey|mustard/.test(text)) add('Honey Mustard Glaze','Sauce',r.title);
+      if(/pesto|basil/.test(text)) add('Basil Pesto Finish','Sauce',r.title);
+      if(/garlic/.test(text)) add('Roasted Garlic Finish','Sauce',r.title);
+      if(/potato/.test(text)) add('Herbed Potatoes','Starch',r.title);
+      if(/rice|risotto/.test(text)) add('Seasoned Rice / Risotto','Starch',r.title);
+      if(/cabbage|kale|watercress|salad/.test(text)) add('Fresh Greens','Vegetable',r.title);
+      if(/corn|sweetcorn/.test(text)) add('Sweet Corn','Vegetable',r.title);
+      if(/tomato/.test(text)) add('Tomato Herb Side','Side',r.title);
+    });
+    ['Chef Plating','Fresh Herb Garnish','Lemon Wedge + Microgreens','Fancy Eatz Restaurant Finish'].forEach(x=>add(x,'Finish','Fancy Eatz'));
+    return out;
+  }, []);
+
+  const mixKinds: MixComponent['kind'][] = ['Entrée','Sauce','Vegetable','Starch','Side','Finish'];
+
+  function applyMix() {
+    if(!meal) return;
+    const chosen=Object.entries(mixSelections).filter(([,v])=>v);
+    if(!chosen.length) return;
+    const description=chosen.map(([k,v])=>`${k}: ${v}`).join(' · ');
+    setMeal({...meal,title:`My Fancy Eatz: ${mixSelections['Entrée'] || meal.title}`,description:`${meal.description} Customized with ${description}.`,plating:mixSelections['Finish'] || meal.plating});
+  }
 
   const requestSettings = { occasion, servings, time, style, mealType, diet, budget };
 
@@ -553,6 +589,11 @@ export default function FancyEatz() {
                     <div className="choice-heading"><div><small>MIX & MATCH STUDIO</small><h3>{mealChoices.length} meal choices</h3></div><span>Tap any choice to make it your active recipe</span></div>
                     <div className="choice-scroll">{mealChoices.map((choice,i)=><button key={choice.title+i} className={choice.title===meal.title?'meal-choice active':'meal-choice'} onClick={()=>setMeal(choice)}><small>{choice.category}</small><b>{choice.title}</b><span>{choice.description}</span></button>)}</div>
                     <p className="mix-note">Mix & match your favorite entrée, sides, flavor direction and plating idea, then save the version you want to your cookbook.</p>
+                    <div className="component-builder">
+                      <h3>Build Your Own Plate</h3><p>Choose components from the cookbook-powered library. Only components found in completed recipe entries are used for food selections.</p>
+                      <div className="component-grid">{mixKinds.map(kind=><label key={kind}><span>{kind}</span><select value={mixSelections[kind]||''} onChange={e=>setMixSelections(v=>({...v,[kind]:e.target.value}))}><option value="">Chef's choice</option>{mixLibrary.filter(x=>x.kind===kind).slice(0,35).map(x=><option key={kind+x.name} value={x.name}>{x.name}</option>)}</select></label>)}</div>
+                      <button className="primary full" onClick={applyMix}><Sparkles size={18}/>Create My Mix & Match Plate</button>
+                    </div>
                   </div>}
                   <h3>Ingredients</h3><ul>{meal.ingredients.map(x => <li key={x}>{x}</li>)}</ul>
                   <h3>Method</h3><ol>{meal.steps.map(x => <li key={x}>{x}</li>)}</ol>
