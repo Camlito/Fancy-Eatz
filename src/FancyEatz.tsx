@@ -28,6 +28,8 @@ type Meal = {
   estimatedCost?: string;
 };
 
+type MealChoice = Meal & { category: string; selected?: boolean };
+
 type PlanDay = {
   day: string;
   meal: string;
@@ -76,7 +78,7 @@ type Recipe = {
 
 const featured: Recipe[] = [
   { title: 'Grilled Salmon with Honey Mustard Glaze', tag: 'Salmon', time: '30 min', note: 'Sweet-savory glaze with an elegant grilled finish.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$', category:'Entrées', servings:'1 per fillet', image:'https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=1200&q=85', ingredients:['6 oz salmon fillet, lightly brushed with oil','2 tbsp honey','2 pinches dry Coleman’s mustard','2 tbsp warm water','2 tsp soy sauce','salt, to taste','black pepper, to taste'], method:['Combine honey, mustard, warm water and soy sauce; season with salt and pepper.','Brush salmon lightly with oil and season with salt and pepper.','Grill 2–3 minutes per side, turning carefully only once.','Brush the flesh side with honey-mustard glaze just before removing from the grill.','Serve immediately.'] },
-  { title: 'Crab Cakes with Basil Mayonnaise', tag: 'Crab', time: '35 min', note: 'Crisp crab cakes paired with a bright basil mayonnaise.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$ ingredients: ['40 basil leaves','1 1/2 cups mayonnaise','2 tsp Dijon mustard','2 tsp lemon juice','cayenne pepper','2 tbsp olive oil','2 celery stalks, finely chopped','2/3 cup onion, finely chopped','1 lb lump crabmeat, picked clean','2 2/3 cups dry breadcrumbs','1/4 cup chopped chives','2 tbsp chopped parsley','6 tbsp flour','3 large eggs','2 tbsp vegetable oil'], method: ['Blanch basil leaves for 30 seconds, cool in ice water, pat dry and finely chop.','Mix mayonnaise, mustard, lemon juice and cayenne. Reserve 1/2 cup for the crab cakes; mix basil into the remainder and refrigerate.','Sauté celery and onion in olive oil until tender, about 5 minutes. Transfer to a bowl.','Stir in crabmeat, 2/3 cup breadcrumbs, chives and reserved mayonnaise; season to taste. Form twelve cakes.','Bread each cake in flour, egg and remaining breadcrumbs.','Pan-cook in vegetable oil over medium heat until golden, working in batches. Serve with basil mayonnaise.'] },
+  { title: 'Crab Cakes with Basil Mayonnaise', tag: 'Crab', time: '35 min', note: 'Crisp crab cakes paired with a bright basil mayonnaise.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$', category: 'Appetizers', servings: '12 cakes', image: 'https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=1200&q=85', ingredients: ['40 basil leaves','1 1/2 cups mayonnaise','2 tsp Dijon mustard','2 tsp lemon juice','cayenne pepper','2 tbsp olive oil','2 celery stalks, finely chopped','2/3 cup onion, finely chopped','1 lb lump crabmeat, picked clean','2 2/3 cups dry breadcrumbs','1/4 cup chopped chives','2 tbsp chopped parsley','6 tbsp flour','3 large eggs','2 tbsp vegetable oil'], method: ['Blanch basil leaves for 30 seconds, cool in ice water, pat dry and finely chop.','Mix mayonnaise, mustard, lemon juice and cayenne. Reserve 1/2 cup for the crab cakes; mix basil into the remainder and refrigerate.','Sauté celery and onion in olive oil until tender, about 5 minutes. Transfer to a bowl.','Stir in crabmeat, 2/3 cup breadcrumbs, chives and reserved mayonnaise; season to taste. Form twelve cakes.','Bread each cake in flour, egg and remaining breadcrumbs.','Pan-cook in vegetable oil over medium heat until golden, working in batches. Serve with basil mayonnaise.'] },
   { title: 'Fish Piccata', tag: 'Fish', time: '25 min', note: 'A bright fish dinner with lemon-forward piccata character.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$', category: 'Entrées', servings: '2', ingredients: ['9–12 oz snapper, skinless catfish or other fish fillets','salt and pepper','1 tbsp flour','1 tbsp butter or margarine','2 tbsp lemon juice','2 tbsp minced parsley','4 thin lemon slices, for garnish'], method: ['Cut fish into serving-size pieces, season lightly and dredge in flour, shaking off excess.','Heat butter in a nonstick skillet over moderate heat until bubbling. Cook fish for 3 minutes.','Turn and continue cooking until the fish begins to flake when tested with a fork.','Transfer to warm plates. Add lemon juice and parsley to the pan and cook for 30 seconds while loosening the pan contents.','Pour the sauce over the fish and garnish with lemon slices.'] },
   { title: 'Pesto Salmon & Sea Scallops with Lemon/Garlic', tag: 'Chef Pick', time: '40 min', note: 'Salmon and scallops with pesto, lemon and garlic.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
   { title: 'Creamy Tomato Bisque with Lump Crabmeat', tag: 'Comfort', time: '45 min', note: 'Creamy tomato bisque finished with lump crabmeat.', mealType: 'Lunch', diet: 'Pescatarian', budget: '$$' },
@@ -154,6 +156,7 @@ export default function FancyEatz() {
   const [diet, setDiet] = useState('No restriction');
   const [budget, setBudget] = useState('$25');
   const [meal, setMeal] = useState<Meal | null>(null);
+  const [mealChoices, setMealChoices] = useState<MealChoice[]>([]);
   const [weeklyPlan, setWeeklyPlan] = useState<WeeklyPlan | null>(null);
   const [experience, setExperience] = useState<Experience | null>(null);
   const [experienceLoading, setExperienceLoading] = useState(false);
@@ -220,7 +223,12 @@ export default function FancyEatz() {
     setMealError('');
     try {
       const r = await api.post('/api/generate-meal', { pantry: pantryForRequest || 'common home pantry staples', ...requestSettings, mealType: mealTypeOverride ?? mealType });
-      setMeal(r.data.meal as Meal);
+      const primary = r.data.meal as Meal;
+      setMeal(primary);
+      const sourceMatches = featured.filter(x => x.ingredients?.length && x.method?.length).slice(0, 34).map(x => ({
+        title:x.title, description:x.note, ingredients:x.ingredients || [], steps:x.method || [], plating:'Finish with a polished Fancy Eatz presentation.', missing:[], estimatedCost:x.budget, category:x.category || x.mealType
+      }));
+      setMealChoices([{...primary, category:'Chef Pick'}, ...sourceMatches].slice(0,35));
       navigate('pantry');
     } catch {
       const safeFallback = fallbackProtein(pantryForRequest || '', diet);
@@ -242,6 +250,10 @@ export default function FancyEatz() {
         estimatedCost: 'Uses primarily on-hand ingredients; any added groceries are optional.'
       };
       setMeal(fallbackMeal);
+      const sourceMatches = featured.filter(x => x.ingredients?.length && x.method?.length).slice(0, 34).map(x => ({
+        title:x.title, description:x.note, ingredients:x.ingredients || [], steps:x.method || [], plating:'Finish with a polished Fancy Eatz presentation.', missing:[], estimatedCost:x.budget, category:x.category || x.mealType
+      }));
+      setMealChoices([{...fallbackMeal, category:'Chef Pick'}, ...sourceMatches].slice(0,35));
       setMealError('');
       if (tab !== 'pantry') navigate('pantry');
     } finally {
@@ -537,6 +549,11 @@ export default function FancyEatz() {
                 <div>
                   <p className="eyebrow">CHEF-CREATED FOR YOU</p><h2>{meal.title}</h2><p>{meal.description}</p>
                   <div className="meta"><span><Users size={16} />{servings} servings</span><span><Clock3 size={16} />{time}</span>{meal.estimatedCost && <span><WalletCards size={16} />{meal.estimatedCost}</span>}</div>
+                  {mealChoices.length > 1 && <div className="choice-studio">
+                    <div className="choice-heading"><div><small>MIX & MATCH STUDIO</small><h3>{mealChoices.length} meal choices</h3></div><span>Tap any choice to make it your active recipe</span></div>
+                    <div className="choice-scroll">{mealChoices.map((choice,i)=><button key={choice.title+i} className={choice.title===meal.title?'meal-choice active':'meal-choice'} onClick={()=>setMeal(choice)}><small>{choice.category}</small><b>{choice.title}</b><span>{choice.description}</span></button>)}</div>
+                    <p className="mix-note">Mix & match your favorite entrée, sides, flavor direction and plating idea, then save the version you want to your cookbook.</p>
+                  </div>}
                   <h3>Ingredients</h3><ul>{meal.ingredients.map(x => <li key={x}>{x}</li>)}</ul>
                   <h3>Method</h3><ol>{meal.steps.map(x => <li key={x}>{x}</li>)}</ol>
                   <div className="plating"><b>Fancy Finish</b><p>{meal.plating}</p></div>
