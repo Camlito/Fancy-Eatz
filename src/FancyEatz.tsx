@@ -148,6 +148,7 @@ function fallbackProtein(pantryText: string, diet: string) {
   return { primary: items[0] || 'chicken', items: items.length ? items : ['chicken', 'rice', 'seasonal vegetables'] };
 }
 
+// Build marker: repaired-source-20260923-0045
 export default function FancyEatz() {
   const [tab, setTab] = useState('home');
   const [tabHistory, setTabHistory] = useState<string[]>([]);
