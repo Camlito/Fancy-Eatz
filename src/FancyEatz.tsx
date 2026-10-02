@@ -239,6 +239,7 @@ export default function FancyEatz() {
   const [groceryMode, setGroceryMode] = useState<'list'|'basics'>('basics');
   const [search, setSearch] = useState('');
   const [recipeType, setRecipeType] = useState('All');
+  const [cookStyleFilter, setCookStyleFilter] = useState('All');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [showSourceLibrary, setShowSourceLibrary] = useState(false);
   const [recipeLetter, setRecipeLetter] = useState('All');
@@ -252,10 +253,17 @@ export default function FancyEatz() {
 
   const filteredRecipes = useMemo(() => featured.filter(r => {
     const q = search.toLowerCase();
-    return (recipeType === 'All' || r.mealType === recipeType || r.category === recipeType) &&
+    const styleText=(r.title+' '+r.tag+' '+r.note+' '+r.category+' '+r.mealType).toLowerCase();
+    const styleMatch = cookStyleFilter === 'All' ||
+      (cookStyleFilter === 'Fancy Dining' && /crab|scallop|salmon|risotto|bisque|benedict|artichoke/.test(styleText)) ||
+      (cookStyleFilter === 'Grill Master' && /grill|burger|steak|salmon|fish|shrimp|tuna/.test(styleText)) ||
+      (cookStyleFilter === 'Everyday Mom' && /casserole|pasta|soup|chowder|sandwich|burger|family|chicken/.test(styleText)) ||
+      (cookStyleFilter === "Chef's Kitchen" && /crab|seafood|sauce|risotto|bisque|appetizer|brunch/.test(styleText)) ||
+      (cookStyleFilter === 'Pastry Chef' && /dessert|cake|pie|tart|cookie|chocolate|sweet|pastry/.test(styleText));
+    return styleMatch && (recipeType === 'All' || r.mealType === recipeType || r.category === recipeType) &&
       (recipeLetter === 'All' || r.title.toUpperCase().startsWith(recipeLetter)) &&
       (!q || (r.title + ' ' + r.tag + ' ' + r.note).toLowerCase().includes(q));
-  }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType, recipeLetter]);
+  }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType, recipeLetter, cookStyleFilter]);
 
   const alphabetizedFavorites = useMemo(
     () => [...favorites].sort((a, b) => a.title.localeCompare(b.title)),
@@ -780,6 +788,9 @@ export default function FancyEatz() {
         <section className="page">
           <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>The Cookbook is the deep recipe library. Browse the converted interactive recipes below with A–Z search, ingredients and directions.</p><div className="vault-stats"><span><b>1,048</b><small>source pages</small></span><span><b>{featured.length}</b><small>interactive recipes converted</small></span><span><b>A–Z</b><small>cookbook browsing</small></span></div></div>
           
+          <div className="cook-style-filter">
+            {['All','Fancy Dining','Grill Master','Everyday Mom',"Chef's Kitchen",'Pastry Chef'].map(x=><button key={x} className={cookStyleFilter===x?'active':''} onClick={()=>setCookStyleFilter(x)}>{x}</button>)}
+          </div>
           <div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search salmon, crab, brunch..." /></label>
             <label>Category<select value={recipeType} onChange={e => setRecipeType(e.target.value)}><option>All</option><option>Appetizers</option><option>Entrées</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
