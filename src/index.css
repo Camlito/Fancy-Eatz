@@ -732,3 +732,11 @@ footer p {
  .list-tabs button,.list-label{white-space:nowrap}
  .add-row input{min-width:0}
 }
+
+/* Grocery basics checklist */
+.basics-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.basics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.basic-check{display:flex;align-items:center;gap:12px;text-align:left;min-height:54px;padding:10px 12px;border:1px solid #39342d;border-radius:8px;background:#11100e;color:#eee6da;cursor:pointer;text-transform:capitalize}
+.basic-check.done{opacity:.62;text-decoration:line-through}
+.basic-check .check{flex:0 0 25px;width:25px;height:25px;border:1px solid #6a5a43;border-radius:50%;display:grid;place-items:center;color:#d5aa60}
+@media(max-width:800px){.basics-actions{display:grid;grid-template-columns:1fr 1fr}.basics-actions .primary{grid-column:1/-1}.basics-grid{grid-template-columns:1fr 1fr;padding:14px}.basic-check{font-size:13px}}
