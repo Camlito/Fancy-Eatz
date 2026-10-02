@@ -156,6 +156,7 @@ export default function FancyEatz() {
   const [drinkSearch, setDrinkSearch] = useState('');
   const [drinkCategory, setDrinkCategory] = useState('All');
   const [selectedDrink, setSelectedDrink] = useState<(typeof drinks)[number] | null>(null);
+  const [drinkPantryOnly, setDrinkPantryOnly] = useState(false);
   const [experienceDrinkMode, setExperienceDrinkMode] = useState('Both');
 
   function navigate(nextTab: string) {
@@ -676,6 +677,8 @@ export default function FancyEatz() {
             <div className="recipe-tools">
               <label className="search-box"><Search size={18}/><input value={drinkSearch} onChange={e=>setDrinkSearch(e.target.value)} placeholder="Search vodka, lime, martini, rum..." /></label>
               <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option><option>Mocktails & Punches</option></select></label>
+              <label>What do you have?<input value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="vodka, lime, cranberry juice..." /></label>
+              <button className={drinkPantryOnly ? 'primary' : 'ghost'} onClick={()=>setDrinkPantryOnly(v=>!v)}>{drinkPantryOnly ? 'Showing what I can make' : 'Show what I can make'}</button>
             </div>
             <div className="plating"><b>21+ RESPONSIBLE SERVICE</b><p>Alcoholic recipes are for adults of legal drinking age. Serve responsibly and never drink and drive.</p></div>
           </div>
@@ -684,7 +687,9 @@ export default function FancyEatz() {
               const q=drinkSearch.trim().toLowerCase();
               const matchesCategory=drinkCategory==='All'||d.category===drinkCategory;
               const matchesSearch=!q||d.title.toLowerCase().includes(q)||d.ingredients.some(i=>i.toLowerCase().includes(q));
-              return matchesCategory&&matchesSearch;
+              const have=pantry.toLowerCase().split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
+              const matchesPantry=!drinkPantryOnly||have.length===0||d.ingredients.some(i=>have.some(h=>i.toLowerCase().includes(h)));
+              return matchesCategory&&matchesSearch&&matchesPantry;
             }).map(d => <article className="recipe-card" key={d.title}>
               <div className="card-body"><small>{d.category} · {d.glassware}</small><h3>{d.title}</h3><p>{d.ingredients.slice(0,3).join(' · ')}</p><button className="ghost" onClick={()=>setSelectedDrink(d)}><BookOpen size={16}/>Open Drink Recipe</button></div>
             </article>)}
