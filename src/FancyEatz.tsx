@@ -747,8 +747,8 @@ export default function FancyEatz() {
 
       {tab === 'recipes' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>The Cookbook is the deep recipe library. Browse converted interactive recipes below, or open the complete 1,048-page seafood collection with its extensive A–Z recipe contents.</p><div className="vault-stats"><span><b>1,048</b><small>source pages</small></span><span><b>{featured.length}</b><small>interactive recipes converted</small></span><span><b>A–Z</b><small>cookbook browsing</small></span></div><button className="primary" onClick={()=>setShowSourceLibrary(v=>!v)}><BookOpen size={18}/>{showSourceLibrary?'Hide Full Source Cookbook':'Open Full 1,048-Page Cookbook'}</button></div>
-          {showSourceLibrary && <div className="source-reader panel"><iframe title="Ultimate Collection of Seafood Recipes" src="/resources/seafood-recipes.pdf#view=FitH" /><p>If your browser does not display the PDF inline, use the source collection link below.</p></div>}
+          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>The Cookbook is the deep recipe library. Browse the converted interactive recipes below with A–Z search, ingredients and directions.</p><div className="vault-stats"><span><b>1,048</b><small>source pages</small></span><span><b>{featured.length}</b><small>interactive recipes converted</small></span><span><b>A–Z</b><small>cookbook browsing</small></span></div></div>
+          
           <div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search salmon, crab, brunch..." /></label>
             <label>Category<select value={recipeType} onChange={e => setRecipeType(e.target.value)}><option>All</option><option>Appetizers</option><option>Entrées</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
