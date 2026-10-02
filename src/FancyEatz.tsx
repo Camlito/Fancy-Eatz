@@ -694,7 +694,7 @@ export default function FancyEatz() {
               <label>What ingredients do you have?</label>
               <textarea value={pantry} onChange={e => setPantry(e.target.value)} placeholder="Chicken, pasta, tomatoes, cream, garlic, spinach..." />
               <div className="form-grid">
-                <label>Meal type<select value={mealType} onChange={e => setMealType(e.target.value)}><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
+                <label>Meal type<select value={mealType} onChange={e => setMealType(e.target.value)}><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option><option>Family Meals</option><option>Grill</option><option>Fine Dining</option><option>Chef Techniques</option><option>Pastry</option><option>Southern</option><option>Seafood</option></select></label>
                 <label>Occasion<select value={occasion} onChange={e => setOccasion(e.target.value)}><option>Elevated Weeknight</option><option>Date Night</option><option>Family Dinner</option><option>Brunch</option><option>Celebration</option></select></label>
                 <label>Family / servings<select value={servings} onChange={e => setServings(e.target.value)}><option>1</option><option>2</option><option>4</option><option>6</option><option>8</option></select></label>
                 <label>Max budget<select value={budget} onChange={e => setBudget(e.target.value)}><option>$15</option><option>$25</option><option>$40</option><option>$60</option><option>$100</option></select></label>
@@ -815,17 +815,17 @@ export default function FancyEatz() {
 
       {tab === 'recipes' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>The Cookbook is the deep recipe library. Browse the converted interactive recipes below with A–Z search, ingredients and directions.</p><div className="vault-stats"><span><b>1,048</b><small>source pages</small></span><span><b>{featured.length}</b><small>interactive recipes converted</small></span><span><b>A–Z</b><small>cookbook browsing</small></span></div></div>
+          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>One growing Fancy Eatz cookbook for every kind of meal — family favorites, grilling, fine dining, chef techniques, desserts, pastries, seafood and more.</p><div className="vault-stats"><span><b>{featured.length}</b><small>complete interactive recipes</small></span><span><b>All Styles</b><small>one unified cookbook</small></span><span><b>A–Z</b><small>recipe browsing</small></span></div></div>
           
           <div className="cook-style-filter">
             {['All','Fancy Dining','Grill Master','Everyday Mom',"Chef's Kitchen",'Pastry Chef'].map(x=><button key={x} className={cookStyleFilter===x?'active':''} onClick={()=>setCookStyleFilter(x)}>{x}</button>)}
           </div>
           <div className="recipe-tools">
-            <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search salmon, crab, brunch..." /></label>
+            <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search chicken, steak, pasta, seafood, dessert..." /></label>
             <label>Category<select value={recipeType} onChange={e => setRecipeType(e.target.value)}><option>All</option><option>Appetizers</option><option>Entrées</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
           <div className="plating"><b>BROWSE A–Z</b><div className="filter-row">{['All',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(x => <button className={recipeLetter === x ? 'active' : ''} key={x} onClick={() => setRecipeLetter(x)}>{x}</button>)}</div></div>
           </div>
-          <div className="vault-banner"><BookOpen size={28}/><div><b>Ultimate Collection of Seafood Recipes</b><span>The source cookbook's contents begin with recipes such as Grilled Glazed Tuna Steaks, Tuna Burgers, Crawfish, crab dishes, salmon, scallops, oysters, chowders and more. Use the full reader for the complete collection.</span></div></div>
+          
           <div className="cards">
             {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)} style={r.image ? {backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.35)),url("${r.image}")`,backgroundSize:'cover',backgroundPosition:'center'} : undefined}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p>{r.ingredients?.length ? <button className="ghost" onClick={() => { setSelectedRecipe(r); setTimeout(()=>document.getElementById('full-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),50); }}><BookOpen size={16}/>Open Full Recipe</button> : <small>Full recipe details being added from the source collection.</small>}<button onClick={() => { const recipePrompt = r.title + ' ingredients'; setPantry(recipePrompt); setMealType(r.mealType); setMeal(null); navigate('pantry'); void generateMeal(true, recipePrompt, r.mealType); }}>Make My Version →</button></div></article>)}
           </div>
