@@ -11,9 +11,12 @@ function mealFrom(body: any, variant = 0) {
   const second = base[(variant + 1) % base.length] || 'seasonal vegetables';
   const third = base[(variant + 2) % base.length] || 'rice';
   const servings = Math.max(1, Number.parseInt(String(body.servings || '2'), 10) || 2);
-  const styles = ['Skillet', 'Roasted', 'Bistro'];
+  const requestedStyle = String(body.style || '');
+  const isGrill = /grill/i.test(requestedStyle);
+  const isDessert = /dessert/i.test(requestedStyle) || /dessert/i.test(String(body.mealType || ''));
+  const styles = isGrill ? ['Grilled', 'Flame-Kissed', 'Backyard Bistro'] : isDessert ? ['Elegant', 'Decadent', 'Patisserie-Style'] : ['Skillet', 'Roasted', 'Bistro'];
   const titles = [
-    `Fancy ${styles[variant % styles.length]} ${primary}`,
+    isDessert ? `Fancy ${styles[variant % styles.length]} ${primary} Dessert` : `Fancy ${styles[variant % styles.length]} ${primary}`,
     `Elevated ${primary} & ${second} Bowl`,
     `Chef-Style ${primary} with ${second}`
   ];
@@ -25,7 +28,7 @@ function mealFrom(body: any, variant = 0) {
     ingredients,
     steps: [
       `Prep ${primary}, ${second} and ${third}; cut solid ingredients into even bite-size pieces so they cook evenly.`,
-      'Heat a large skillet over medium heat for 2 minutes, add the oil, then add the firmest/raw ingredients first.',
+      isGrill ? 'Preheat the grill to medium-high heat, clean and lightly oil the grates, then place the main ingredient over direct heat.' : isDessert ? 'Preheat or chill the required equipment for the dessert method, then combine the measured base ingredients evenly.' : 'Heat a large skillet over medium heat for 2 minutes, add the oil, then add the firmest/raw ingredients first.',
       'Cook, stirring or turning as needed, until vegetables are tender and any raw protein reaches a safe doneness for that ingredient.',
       'Add quicker-cooking or already-cooked pantry ingredients during the final 3–5 minutes so they heat through without overcooking.',
       'Taste, season with salt and black pepper, then rest off heat for 2 minutes before serving.',
