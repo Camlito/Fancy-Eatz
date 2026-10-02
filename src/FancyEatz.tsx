@@ -208,6 +208,7 @@ export default function FancyEatz() {
   const [grocery, setGrocery] = useState<string[]>(starterLists['Date Night']);
   const [checked, setChecked] = useState<string[]>([]);
   const [newItem, setNewItem] = useState('');
+  const [grocerySearch, setGrocerySearch] = useState('');
   const [search, setSearch] = useState('');
   const [recipeType, setRecipeType] = useState('All');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
@@ -797,12 +798,23 @@ export default function FancyEatz() {
 
       {tab === 'grocery' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">SHOP SMARTER</p><h2>Specialized Grocery Lists</h2><p>Start curated, add meal gaps, or combine an entire week into one list.</p></div>
-          <div className="list-tabs">{(Object.keys(starterLists) as (keyof typeof starterLists)[]).map(n => <button className={listName === n ? 'active' : ''} key={n} onClick={() => loadList(n)}>{n}</button>)}</div>
+          <div className="section-head"><p className="eyebrow">SMART SHOPPING</p><h2>My Grocery Command Center</h2><p>Build one clean shopping list from recipes, weekly plans, or your own items. Check things off as you shop and keep the list organized by aisle.</p></div>
+          <div className="grocery-quickbar">
+            <button className="primary" onClick={()=>{setListName('My Grocery List');setGrocery([]);setChecked([])}}>+ Start Fresh List</button>
+            <button className="ghost" onClick={()=>setChecked(grocery)}>Check All</button>
+            <button className="ghost" onClick={()=>{setGrocery(p=>p.filter(x=>!checked.includes(x)));setChecked([])}}>Clear Checked</button>
+          </div>
+          <div className="list-tabs"><span className="list-label">Quick starts</span>{(Object.keys(starterLists) as (keyof typeof starterLists)[]).map(n => <button className={listName === n ? 'active' : ''} key={n} onClick={() => loadList(n)}>{n}</button>)}</div>
           <div className="grocery panel">
-            <div className="grocery-title"><div><small>ACTIVE LIST</small><h2>{listName}</h2></div><span>{grocery.length - checked.length} left</span></div>
-            <div className="add-row"><input value={newItem} onChange={e => setNewItem(e.target.value)} placeholder="Add an item…" onKeyDown={e => { if (e.key === 'Enter' && newItem.trim()) { setGrocery([...grocery, newItem.trim()]); setNewItem(''); } }} /><button onClick={() => { if (newItem.trim()) { setGrocery([...grocery, newItem.trim()]); setNewItem(''); } }}><Plus size={18} /></button></div>
-            {Object.entries(grouped).map(([cat, items]) => items.length > 0 && <div className="category" key={cat}><h3>{cat}</h3>{items.map(item => <div className={'grocery-item ' + (checked.includes(item) ? 'done' : '')} key={item}><button className="check" onClick={() => setChecked(p => p.includes(item) ? p.filter(x => x !== item) : [...p, item])}>{checked.includes(item) && <Check size={15} />}</button><span>{item}</span><button className="trash" onClick={() => setGrocery(p => p.filter(x => x !== item))}><Trash2 size={16} /></button></div>)}</div>)}
+            <div className="grocery-title"><div><small>ACTIVE SHOPPING LIST</small><h2>{listName}</h2><p>{checked.length} in cart · {grocery.length - checked.length} left</p></div><strong>{grocery.length ? Math.round((checked.length/grocery.length)*100) : 0}%</strong></div>
+            <div className="grocery-progress"><span style={{width:`${grocery.length ? (checked.length/grocery.length)*100 : 0}%`}} /></div>
+            <div className="add-row"><input value={newItem} onChange={e => setNewItem(e.target.value)} placeholder="Add milk, salmon, lemons…" onKeyDown={e => { if (e.key === 'Enter' && newItem.trim()) { setGrocery(p=>Array.from(new Set([...p, newItem.trim()]))); setNewItem(''); } }} /><button aria-label="Add grocery item" onClick={() => { if (newItem.trim()) { setGrocery(p=>Array.from(new Set([...p, newItem.trim()]))); setNewItem(''); } }}><Plus size={18} /></button></div>
+            <label className="grocery-filter"><Search size={17}/><input value={grocerySearch} onChange={e=>setGrocerySearch(e.target.value)} placeholder="Find an item in this list…" /></label>
+            {Object.entries(grouped).map(([cat, items]) => {
+              const visible=items.filter(item=>!grocerySearch.trim()||item.toLowerCase().includes(grocerySearch.toLowerCase()));
+              return visible.length > 0 && <div className="category" key={cat}><h3>{cat}<small>{visible.filter(x=>!checked.includes(x)).length} left</small></h3>{visible.map(item => <div className={'grocery-item ' + (checked.includes(item) ? 'done' : '')} key={item}><button className="check" aria-label={'Check '+item} onClick={() => setChecked(p => p.includes(item) ? p.filter(x => x !== item) : [...p, item])}>{checked.includes(item) && <Check size={15} />}</button><span>{item}</span><button className="trash" aria-label={'Remove '+item} onClick={() => {setGrocery(p => p.filter(x => x !== item));setChecked(p=>p.filter(x=>x!==item))}}><Trash2 size={16} /></button></div>)}</div>
+            })}
+            {grocery.length===0 && <div className="empty grocery-empty"><ShoppingBasket size={34}/><h3>Your list is empty</h3><p>Add items above, choose a Quick Start, or send missing ingredients here from any Fancy Eatz recipe.</p></div>}
           </div>
         </section>
       )}
