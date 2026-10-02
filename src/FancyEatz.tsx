@@ -730,16 +730,16 @@ export default function FancyEatz() {
               const matchesPantry=!drinkPantryOnly||have.length===0||d.ingredients.some(i=>have.some(h=>i.toLowerCase().includes(h)));
               return matchesCategory&&matchesSearch&&matchesPantry;
             }).map(d => <article className="recipe-card" key={d.title}>
-              <div className="card-body"><small>{d.category} · {d.glassware}</small><h3>{d.title}</h3><p>{d.ingredients.slice(0,3).join(' · ')}</p><button className="ghost" onClick={()=>setSelectedDrink(d)}><BookOpen size={16}/>Open Drink Recipe</button></div>
+              <div className="card-body"><small>{d.category} · {d.glassware}</small><h3>{d.title}</h3><p>{d.ingredients.slice(0,3).join(' · ')}</p><button className="ghost" onClick={()=>{setSelectedDrink(d);setTimeout(()=>document.getElementById('full-drink-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),50)}}><BookOpen size={16}/>Open Full Recipe</button></div>
             </article>)}
           </div>
-          {selectedDrink && <div className="panel recipe-detail" style={{marginTop:24}}>
+          {selectedDrink && <div id="full-drink-recipe" className="panel recipe-detail" style={{marginTop:24}}>
             <div className="section-head"><p className="eyebrow">{selectedDrink.category}</p><h2>{selectedDrink.title}</h2><p>Glassware: {selectedDrink.glassware}{selectedDrink.garnish ? ' · Garnish: '+selectedDrink.garnish : ''}</p></div>
             <div className="generator-grid">
               <div><h3>Ingredients / Measurements</h3><ul>{selectedDrink.ingredients.map(x=><li key={x}>{x}</li>)}</ul></div>
               <div><h3>How to Make It</h3><ol>{selectedDrink.method.map(x=><li key={x}>{x}</li>)}</ol></div>
             </div>
-            <div className="result-actions"><button className="ghost" onClick={()=>setSelectedDrink(null)}>Close Drink Recipe</button></div>
+            <div className="plating"><b>COMPLETE METHOD</b><p>Follow the measured ingredients and preparation steps above in order. Glassware and garnish are shown exactly with the recipe where available.</p></div><div className="result-actions"><button className="ghost" onClick={()=>setSelectedDrink(null)}>Close Drink Recipe</button></div>
           </div>}
           <div className="source-note"><BookOpen size={20}/><div><b>Bartending For Beginners</b><p>This section is being expanded from the source bartender collection with cocktails, martinis, mocktails, punches and additional drink categories.</p></div></div>
         </section>
