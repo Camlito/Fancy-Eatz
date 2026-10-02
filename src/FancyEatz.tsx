@@ -221,19 +221,26 @@ export default function FancyEatz() {
   const [experienceDrinkMode, setExperienceDrinkMode] = useState('Both');
 
   const drinkMatches = useMemo(() => {
-    const stop = new Set(['oz','cup','cups','tbsp','tsp','shot','shots','part','parts','fresh','chilled','cold','hot','optional','ice','to','taste','or','and','of','a','an','the','whole','small','large','medium','dash','splash','drops','slice','slices','wedge','wedges']);
-    const normalize = (v:string) => v.toLowerCase().replace(/[0-9¼½¾⅓⅔./–—-]+/g,' ').replace(/[^a-zà-ÿ\s]/g,' ').split(/\s+/).filter(x=>x.length>2&&!stop.has(x));
-    const haveRaw = pantry.toLowerCase().split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
-    const haveTokens = new Set(haveRaw.flatMap(normalize));
-    const basics = new Set(['ice','water','sugar','salt']);
+    const clean = (v:string) => v.toLowerCase().replace(/\([^)]*\)/g,' ').replace(/\b\d+(?:[ ./-]\d+)?\b/g,' ').replace(/[^a-zà-ÿ\s-]/g,' ').replace(/\s+/g,' ').trim();
+    const pantryItems = pantry.split(/[,\n]/).map(clean).filter(Boolean);
+    const pantryText = ' '+pantryItems.join(' ')+' ';
+    const aliases:Record<string,string[]>={
+      'lime juice':['lime'],'lemon juice':['lemon'],'orange juice':['orange'],'cranberry juice':['cranberry'],
+      'pineapple juice':['pineapple'],'grapefruit juice':['grapefruit'],'simple syrup':['sugar','syrup'],
+      'club soda':['soda water','sparkling water'],'ginger ale':['ginger ale'],'greek yogurt':['yogurt'],
+      'half-and-half':['cream','half and half'],'crème de cacao':['creme de cacao'],'blue curaçao':['blue curacao','curacao']
+    };
+    const isOwned=(ingredient:string)=>{
+      const ing=clean(ingredient);
+      if (/^(ice|water|salt|sugar)(\b|$)/.test(ing)) return true;
+      return pantryItems.some(p=>p.length>2&&(ing.includes(p)||p.includes(ing))) ||
+        Object.entries(aliases).some(([key,vals])=>ing.includes(key)&&vals.some(v=>pantryText.includes(' '+v+' ')));
+    };
     return allDrinks.map(d => {
-      const required = d.ingredients.map(ingredient => {
-        const tokens=normalize(ingredient).filter(t=>!basics.has(t));
-        return {ingredient,tokens};
-      }).filter(x=>x.tokens.length);
-      const owned = required.filter(r=>r.tokens.some(t=>haveTokens.has(t)));
-      const missing = required.filter(r=>!r.tokens.some(t=>haveTokens.has(t))).map(r=>r.ingredient);
-      const coverage = required.length ? Math.round((owned.length/required.length)*100) : 0;
+      const required=d.ingredients.filter(i=>!/\b(optional|garnish)\b/i.test(i));
+      const owned=required.filter(isOwned);
+      const missing=required.filter(i=>!isOwned(i));
+      const coverage=required.length?Math.round(owned.length/required.length*100):0;
       return {...d,ownedCount:owned.length,requiredCount:required.length,missing,coverage,canMake:required.length>0&&missing.length===0};
     }).sort((a,b)=>Number(b.canMake)-Number(a.canMake)||a.missing.length-b.missing.length||b.coverage-a.coverage||a.title.localeCompare(b.title));
   }, [allDrinks, pantry]);
