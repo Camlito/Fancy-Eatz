@@ -470,7 +470,7 @@ export default function FancyEatz() {
               <button onClick={() => navigate('grocery')}>Grocery Lists</button>
             </div>
           </details>
-          <button onClick={() => navigate('drinks')}>Drinks</button>
+          <button onClick={() => navigate('grill')}>Grill Master</button><button onClick={() => navigate('desserts')}>Fancy Desserts</button><button onClick={() => navigate('drinks')}>Drinks</button>
           <details className="nav-dropdown">
             <summary>Cookbook ▾</summary>
             <div className="nav-menu">
@@ -667,6 +667,27 @@ export default function FancyEatz() {
               <button className="primary combined" onClick={() => addItems(weeklyPlan.grocery, 'Weekly Combined List')}><ShoppingBasket size={18} />Build One Combined Grocery List</button>
             </>
           )}
+        </section>
+      )}
+
+
+      {tab === 'grill' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">FIRE · SMOKE · FLAVOR</p><h2>Fancy Eatz Grill Master</h2><p>Source-backed grilling inspiration plus Pantry Chef generation for steak, chicken, seafood, vegetables and more.</p></div>
+          <div className="home-feature-grid">
+            <button className="visual-feature pantry-feature" onClick={()=>{setStyle('Chef\'s choice');setMealType('Dinner');navigate('pantry')}}><span><b>Grill What You Have</b><small>Enter meat, seafood, vegetables or sides and build a complete grill meal.</small><strong>Open Grill Generator →</strong></span></button>
+            <button className="visual-feature mix-feature" onClick={()=>{setSearch('grill');navigate('recipes')}}><span><b>Grill Recipe Vault</b><small>Browse grilled and barbecue recipes already in the source collection.</small><strong>Browse Grill Recipes →</strong></span></button>
+          </div>
+        </section>
+      )}
+
+      {tab === 'desserts' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">THE SWEET FINISH</p><h2>Fancy Desserts</h2><p>Elegant desserts, celebration sweets and pantry-first dessert ideas.</p></div>
+          <div className="home-feature-grid">
+            <button className="visual-feature book-feature" onClick={()=>{setMealType('Dessert');navigate('pantry')}}><span><b>Create a Dessert From What You Have</b><small>Use chocolate, fruit, cream, cookies, cake ingredients and more.</small><strong>Generate Dessert →</strong></span></button>
+            <button className="visual-feature pantry-feature" onClick={()=>{setSearch('dessert');navigate('recipes')}}><span><b>Fancy Dessert Vault</b><small>Browse complete desserts with ingredients and directions.</small><strong>Browse Desserts →</strong></span></button>
+          </div>
         </section>
       )}
 
