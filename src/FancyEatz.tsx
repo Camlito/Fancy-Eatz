@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { drinks } from './drinks';
 const api = { post: async (url: string, body: unknown) => { const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }); if (!response.ok) throw new Error('Request failed'); return { data: await response.json() }; } };
 import {
   ArrowLeft,
@@ -152,6 +153,9 @@ function fallbackProtein(pantryText: string, diet: string) {
 export default function FancyEatz() {
   const [tab, setTab] = useState('home');
   const [tabHistory, setTabHistory] = useState<string[]>([]);
+  const [drinkSearch, setDrinkSearch] = useState('');
+  const [drinkCategory, setDrinkCategory] = useState('All');
+  const [selectedDrink, setSelectedDrink] = useState<(typeof drinks)[number] | null>(null);
 
   function navigate(nextTab: string) {
     if (nextTab === tab) return;
@@ -460,6 +464,7 @@ export default function FancyEatz() {
               <button onClick={() => navigate('grocery')}>Grocery Lists</button>
             </div>
           </details>
+          <button onClick={() => navigate('drinks')}>Drinks</button>
           <details className="nav-dropdown">
             <summary>Cookbook ▾</summary>
             <div className="nav-menu">
@@ -654,6 +659,42 @@ export default function FancyEatz() {
               <button className="primary combined" onClick={() => addItems(weeklyPlan.grocery, 'Weekly Combined List')}><ShoppingBasket size={18} />Build One Combined Grocery List</button>
             </>
           )}
+        </section>
+      )}
+
+      {tab === 'drinks' && (
+        <section className="page">
+          <div className="section-head">
+            <p className="eyebrow">FANCY EATZ BAR & DRINKS</p>
+            <h2>Make the drink. Know the method.</h2>
+            <p>Search the bartender collection by drink name or by an ingredient you already have. Recipes below are converted from the Fancy Eatz source bartender book.</p>
+          </div>
+          <div className="panel">
+            <div className="recipe-tools">
+              <label className="search-box"><Search size={18}/><input value={drinkSearch} onChange={e=>setDrinkSearch(e.target.value)} placeholder="Search vodka, lime, martini, rum..." /></label>
+              <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option></select></label>
+            </div>
+            <div className="plating"><b>21+ RESPONSIBLE SERVICE</b><p>Alcoholic recipes are for adults of legal drinking age. Serve responsibly and never drink and drive.</p></div>
+          </div>
+          <div className="cards">
+            {drinks.filter(d => {
+              const q=drinkSearch.trim().toLowerCase();
+              const matchesCategory=drinkCategory==='All'||d.category===drinkCategory;
+              const matchesSearch=!q||d.title.toLowerCase().includes(q)||d.ingredients.some(i=>i.toLowerCase().includes(q));
+              return matchesCategory&&matchesSearch;
+            }).map(d => <article className="recipe-card" key={d.title}>
+              <div className="card-body"><small>{d.category} · {d.glassware}</small><h3>{d.title}</h3><p>{d.ingredients.slice(0,3).join(' · ')}</p><button className="ghost" onClick={()=>setSelectedDrink(d)}><BookOpen size={16}/>Open Drink Recipe</button></div>
+            </article>)}
+          </div>
+          {selectedDrink && <div className="panel recipe-detail" style={{marginTop:24}}>
+            <div className="section-head"><p className="eyebrow">{selectedDrink.category}</p><h2>{selectedDrink.title}</h2><p>Glassware: {selectedDrink.glassware}{selectedDrink.garnish ? ' · Garnish: '+selectedDrink.garnish : ''}</p></div>
+            <div className="generator-grid">
+              <div><h3>Ingredients / Measurements</h3><ul>{selectedDrink.ingredients.map(x=><li key={x}>{x}</li>)}</ul></div>
+              <div><h3>How to Make It</h3><ol>{selectedDrink.method.map(x=><li key={x}>{x}</li>)}</ol></div>
+            </div>
+            <div className="result-actions"><button className="ghost" onClick={()=>setSelectedDrink(null)}>Close Drink Recipe</button></div>
+          </div>}
+          <div className="source-note"><BookOpen size={20}/><div><b>Bartending For Beginners</b><p>This section is being expanded from the source bartender collection with cocktails, martinis and additional drink categories.</p></div></div>
         </section>
       )}
 
