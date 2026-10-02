@@ -228,6 +228,7 @@ export default function FancyEatz() {
   const [checked, setChecked] = useState<string[]>([]);
   const [newItem, setNewItem] = useState('');
   const [grocerySearch, setGrocerySearch] = useState('');
+  const [groceryMode, setGroceryMode] = useState<'list'|'basics'>('basics');
   const [search, setSearch] = useState('');
   const [recipeType, setRecipeType] = useState('All');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
@@ -843,6 +844,18 @@ export default function FancyEatz() {
       {tab === 'grocery' && (
         <section className="page">
           <div className="section-head"><p className="eyebrow">SMART SHOPPING</p><h2>My Grocery Command Center</h2><p>Build one clean shopping list from recipes, weekly plans, or your own items. Check things off as you shop and keep the list organized by aisle.</p></div>
+          <div className="grocery-mode-tabs">
+            <button className={groceryMode==='basics'?'active':''} onClick={()=>setGroceryMode('basics')}>Basic Grocery Checklist</button>
+            <button className={groceryMode==='list'?'active':''} onClick={()=>setGroceryMode('list')}>My Shopping List</button>
+          </div>
+          {groceryMode==='basics' && <div className="basics-categories grocery-basics-inline">
+            {Object.entries(basicGroceryCategories).map(([category,items])=><section className="basics-category panel" key={category}>
+              <div className="basics-category-head"><h3>{category}</h3><small>{items.filter(item=>checked.includes('basic:'+item)).length}/{items.length} have</small></div>
+              <div className="basics-grid">{items.map(item=>{const key='basic:'+item;const have=checked.includes(key);return <button key={item} className={'basic-check '+(have?'done':'')} onClick={()=>setChecked(p=>have?p.filter(x=>x!==key):[...p,key])}><span className="check">{have&&<Check size={15}/>}</span><span>{item}</span></button>})}</div>
+            </section>)}
+            <button className="primary full" onClick={()=>{setGrocery(p=>Array.from(new Set([...p,...basicGroceryNeeds.filter(x=>!checked.includes('basic:'+x))])));setListName('Grocery Basics');setGroceryMode('list')}}>Add Everything I Need to My Shopping List</button>
+          </div>}
+          {groceryMode==='list' && <>
           <div className="grocery-quickbar">
             <button className="primary" onClick={()=>{setListName('My Grocery List');setGrocery([]);setChecked([])}}>+ Start Fresh List</button>
             <button className="ghost" onClick={()=>setChecked(grocery)}>Check All</button>
@@ -860,6 +873,7 @@ export default function FancyEatz() {
             })}
             {grocery.length===0 && <div className="empty grocery-empty"><ShoppingBasket size={34}/><h3>Your list is empty</h3><p>Add items above, choose a Quick Start, or send missing ingredients here from any Fancy Eatz recipe.</p></div>}
           </div>
+          </>}
         </section>
       )}
 
