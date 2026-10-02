@@ -153,6 +153,14 @@ const starterLists = {
   'Family Dinner': ['chicken breasts', 'pasta', 'broccoli', 'parmesan', 'cream', 'garlic', 'salad greens'],
 };
 
+const cookingStyles = [
+  {name:'Fancy Dining', desc:'Restaurant-style plating, elevated sauces and special-occasion presentation.', style:'Fine Dining', occasion:'Elegant Dinner'},
+  {name:'Grill Master', desc:'Fire-kissed meats, seafood, vegetables, burgers and backyard favorites.', style:'Grill Master', occasion:'Grill Night'},
+  {name:'Everyday Mom Cooking', desc:'Comforting, practical family meals with familiar ingredients and simpler cleanup.', style:'Everyday Family', occasion:'Family Dinner'},
+  {name:"Chef's Kitchen", desc:'Technique-driven dishes with composed sides, sauces and polished presentation.', style:"Chef's choice", occasion:'Chef Night'},
+  {name:"Pastry Chef", desc:'Cakes, pies, tarts, cookies, pastries and elegant plated desserts.', style:'Elegant Dessert', occasion:'Dessert Night'}
+];
+
 const moods = ['Date Night at Home', 'Southern Luxe', 'Under $25', '20-Minute Fancy', 'Seafood Night', 'Sunday Family Table', 'Healthy but Fancy', 'Girls Night In'];
 
 function fallbackProtein(pantryText: string, diet: string) {
@@ -495,6 +503,7 @@ export default function FancyEatz() {
               <button onClick={() => navigate('photo')}>Photo My Fridge</button>
               <button onClick={() => navigate('leftovers')}>Leftovers → Luxury</button>
               <button onClick={() => navigate('ideas')}>Meal Ideas</button>
+              <button onClick={() => navigate('styles')}>Cooking Styles</button>
             </div>
           </details>
           <details className="nav-dropdown">
@@ -807,6 +816,18 @@ export default function FancyEatz() {
           <div className="section-head"><p className="eyebrow">NO IDEA WHAT TO COOK?</p><h2>Choose a vibe. Fancy Eatz does the rest.</h2><p>Each experience carries its settings into Pantry Chef so you can personalize before generating.</p></div>
           <div className="mood-grid">{moods.map(m => <button key={m} className="mood" onClick={() => applyMood(m)}><Sparkles size={22} /><b>{m}</b><span>Build a menu →</span></button>)}</div>
           <button className="primary surprise" onClick={() => generateMeal(true)} disabled={loading}>{loading ? 'Creating…' : 'Surprise Me With Dinner'}</button>
+        </section>
+      )}
+
+      {tab === 'styles' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">COOK YOUR WAY</p><h2>Choose Your Cooking Style</h2><p>Pick the kind of cook you want Fancy Eatz to become, then use what you already have to build the meal.</p></div>
+          <div className="style-grid">
+            {cookingStyles.map(x=><button className="style-card" key={x.name} onClick={()=>{setStyle(x.style);setOccasion(x.occasion);setMealType(x.name==='Pastry Chef'?'Dessert':'Dinner');setPantry('');navigate('pantry')}}>
+              <small>{x.name==='Pastry Chef'?'BAKE & CREATE':x.name==='Grill Master'?'FIRE & SMOKE':x.name==='Everyday Mom Cooking'?'FAMILY FAVORITES':'ELEVATED COOKING'}</small>
+              <h3>{x.name}</h3><p>{x.desc}</p><strong>Cook this style →</strong>
+            </button>)}
+          </div>
         </section>
       )}
 
