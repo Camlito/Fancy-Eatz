@@ -367,6 +367,7 @@ export default function FancyEatz() {
       const items = Array.isArray(r.data.items) ? r.data.items : [];
       setPhotoItems(items);
       if (items.length) setPantry(items.join(', '));
+      else if (r.data.available === false) setPhotoError(r.data.message || 'Photo recognition is temporarily unavailable. Enter ingredients manually.');
     } catch {
       setPhotoItems([]);
       setPhotoError('Photo recognition is temporarily unavailable on this test build. You can still type or paste any ingredients you see below.');
