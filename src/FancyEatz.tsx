@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { drinks } from './drinks';
+import { drinkVault } from './drinkVault';
 import { styleRecipeVault, styleRecipeCounts } from './styleRecipeVault';
 import { mealCollectionVault, mealCollectionCounts } from './mealCollectionVault';
 const api = { post: async (url: string, body: unknown) => { const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }); if (!response.ok) throw new Error('Request failed'); return { data: await response.json() }; } };
@@ -214,6 +215,7 @@ export default function FancyEatz() {
   const [tabHistory, setTabHistory] = useState<string[]>([]);
   const [drinkSearch, setDrinkSearch] = useState('');
   const [drinkCategory, setDrinkCategory] = useState('All');
+  const allDrinks = useMemo(() => [...drinks, ...drinkVault], []);
   const [selectedDrink, setSelectedDrink] = useState<(typeof drinks)[number] | null>(null);
   const [drinkPantryOnly, setDrinkPantryOnly] = useState(false);
   const [experienceDrinkMode, setExperienceDrinkMode] = useState('Both');
@@ -781,19 +783,19 @@ export default function FancyEatz() {
           <div className="section-head">
             <p className="eyebrow">FANCY EATZ BAR & DRINKS</p>
             <h2>Make the drink. Know the method.</h2>
-            <p>Search the bartender collection by drink name or by an ingredient you already have. Recipes below are converted from the Fancy Eatz source bartender book.</p>
+            <p>Explore the expanded Fancy Eatz Drink Vault by drink name, category or ingredients you already have. Source-book classics remain included alongside original Fancy Eatz drink creations.</p>
           </div>
           <div className="panel">
             <div className="recipe-tools">
               <label className="search-box"><Search size={18}/><input value={drinkSearch} onChange={e=>setDrinkSearch(e.target.value)} placeholder="Search vodka, lime, martini, rum..." /></label>
-              <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option><option>Mocktails & Punches</option></select></label>
+              <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option><option>Mocktails & Punches</option><option>Smoothies</option><option>Coffee & Café</option><option>Lemonades & Teas</option></select></label>
               <label>What do you have?<input value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="vodka, lime, cranberry juice..." /></label>
               <button className={drinkPantryOnly ? 'primary' : 'ghost'} onClick={()=>setDrinkPantryOnly(v=>!v)}>{drinkPantryOnly ? 'Showing what I can make' : 'Show what I can make'}</button>
             </div>
             <div className="plating"><b>21+ RESPONSIBLE SERVICE</b><p>Alcoholic recipes are for adults of legal drinking age. Serve responsibly and never drink and drive.</p></div>
           </div>
           <div className="cards">
-            {drinks.filter(d => {
+            {allDrinks.filter(d => {
               const q=drinkSearch.trim().toLowerCase();
               const matchesCategory=drinkCategory==='All'||d.category===drinkCategory;
               const matchesSearch=!q||d.title.toLowerCase().includes(q)||d.ingredients.some(i=>i.toLowerCase().includes(q));
