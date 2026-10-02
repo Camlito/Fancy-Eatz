@@ -699,3 +699,12 @@ footer p {
   .home-feature-grid{grid-template-columns:1fr !important}
   .source-reader{display:none}
 }
+
+#full-drink-recipe{scroll-margin-top:24px}
+#full-drink-recipe .generator-grid{align-items:start}
+#full-drink-recipe li{margin:12px 0;line-height:1.65}
+@media(max-width:800px){
+  #full-drink-recipe{scroll-margin-top:12px}
+  #full-drink-recipe .section-head h2{font-size:36px}
+  #full-drink-recipe .generator-grid{grid-template-columns:1fr}
+}
