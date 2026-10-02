@@ -59,7 +59,9 @@ export default async (req: Request) => {
     const m = mealFrom(body, 1);
     return send({ experience: { title: String(body.occasion || 'Fancy Eatz At Home'), appetizer: 'Pantry-first starter', entree: m.title, sides: ['Seasonal pantry side'], dessert: 'Simple fruit or pantry dessert', pairing: 'Sparkling citrus water', timeline: m.steps, plating: m.plating, tableSetting: 'Clean place settings with a simple centerpiece.', groceries: m.missing, ingredients: m.ingredients, steps: m.steps, estimatedCost: m.estimatedCost } });
   }
-  if (url.pathname === '/api/analyze-kitchen-photo') return send({ error: 'Photo ingredient recognition is not enabled on the Netlify fallback yet.' }, 501);
+  if (url.pathname === '/api/analyze-kitchen-photo') {
+    return send({ items: [], available: false, message: 'Photo recognition is not connected on this host yet. Manual ingredient entry remains available.' });
+  }
   return send({ error: 'Not found' }, 404);
 };
 
