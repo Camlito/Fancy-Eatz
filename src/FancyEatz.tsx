@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { drinks } from './drinks';
-import { drinkVault } from './drinkVault';
 import { styleRecipeVault, styleRecipeCounts } from './styleRecipeVault';
-import { mealCollectionVault, mealCollectionCounts } from './mealCollectionVault';
 const api = { post: async (url: string, body: unknown) => { const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }); if (!response.ok) throw new Error('Request failed'); return { data: await response.json() }; } };
 import {
   ArrowLeft,
@@ -158,7 +156,7 @@ const valueRecipes: Recipe[] = [
 
 ];
 
-const featured: Recipe[] = [...featuredBase, ...valueRecipes, ...styleRecipeVault, ...mealCollectionVault];
+const featured: Recipe[] = [...featuredBase, ...valueRecipes, ...styleRecipeVault];
 
 
 const basicGroceryCategories: Record<string,string[]> = {
@@ -215,35 +213,9 @@ export default function FancyEatz() {
   const [tabHistory, setTabHistory] = useState<string[]>([]);
   const [drinkSearch, setDrinkSearch] = useState('');
   const [drinkCategory, setDrinkCategory] = useState('All');
-  const allDrinks = useMemo(() => [...drinks, ...drinkVault], []);
   const [selectedDrink, setSelectedDrink] = useState<(typeof drinks)[number] | null>(null);
   const [drinkPantryOnly, setDrinkPantryOnly] = useState(false);
   const [experienceDrinkMode, setExperienceDrinkMode] = useState('Both');
-
-  const drinkMatches = useMemo(() => {
-    const clean = (v:string) => v.toLowerCase().replace(/\([^)]*\)/g,' ').replace(/\b\d+(?:[ ./-]\d+)?\b/g,' ').replace(/[^a-zà-ÿ\s-]/g,' ').replace(/\s+/g,' ').trim();
-    const pantryItems = pantry.split(/[,\n]/).map(clean).filter(Boolean);
-    const pantryText = ' '+pantryItems.join(' ')+' ';
-    const aliases:Record<string,string[]>={
-      'lime juice':['lime'],'lemon juice':['lemon'],'orange juice':['orange'],'cranberry juice':['cranberry'],
-      'pineapple juice':['pineapple'],'grapefruit juice':['grapefruit'],'simple syrup':['sugar','syrup'],
-      'club soda':['soda water','sparkling water'],'ginger ale':['ginger ale'],'greek yogurt':['yogurt'],
-      'half-and-half':['cream','half and half'],'crème de cacao':['creme de cacao'],'blue curaçao':['blue curacao','curacao']
-    };
-    const isOwned=(ingredient:string)=>{
-      const ing=clean(ingredient);
-      if (/^(ice|water|salt|sugar)(\b|$)/.test(ing)) return true;
-      return pantryItems.some(p=>p.length>2&&(ing.includes(p)||p.includes(ing))) ||
-        Object.entries(aliases).some(([key,vals])=>ing.includes(key)&&vals.some(v=>pantryText.includes(' '+v+' ')));
-    };
-    return allDrinks.map(d => {
-      const required=d.ingredients.filter(i=>!/\b(optional|garnish)\b/i.test(i));
-      const owned=required.filter(isOwned);
-      const missing=required.filter(i=>!isOwned(i));
-      const coverage=required.length?Math.round(owned.length/required.length*100):0;
-      return {...d,ownedCount:owned.length,requiredCount:required.length,missing,coverage,canMake:required.length>0&&missing.length===0};
-    }).sort((a,b)=>Number(b.canMake)-Number(a.canMake)||a.missing.length-b.missing.length||b.coverage-a.coverage||a.title.localeCompare(b.title));
-  }, [allDrinks, pantry]);
 
   function navigate(nextTab: string) {
     if (nextTab === tab) return;
@@ -808,28 +780,27 @@ export default function FancyEatz() {
           <div className="section-head">
             <p className="eyebrow">FANCY EATZ BAR & DRINKS</p>
             <h2>Make the drink. Know the method.</h2>
-            <p>Explore the expanded Fancy Eatz Drink Vault by drink name, category or ingredients you already have. Source-book classics remain included alongside original Fancy Eatz drink creations.</p>
+            <p>Search the bartender collection by drink name or by an ingredient you already have. Recipes below are converted from the Fancy Eatz source bartender book.</p>
           </div>
           <div className="panel">
             <div className="recipe-tools">
               <label className="search-box"><Search size={18}/><input value={drinkSearch} onChange={e=>setDrinkSearch(e.target.value)} placeholder="Search vodka, lime, martini, rum..." /></label>
-              <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option><option>Mocktails & Punches</option><option>Smoothies</option><option>Coffee & Café</option><option>Lemonades & Teas</option></select></label>
+              <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option><option>Mocktails & Punches</option></select></label>
               <label>What do you have?<input value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="vodka, lime, cranberry juice..." /></label>
               <button className={drinkPantryOnly ? 'primary' : 'ghost'} onClick={()=>setDrinkPantryOnly(v=>!v)}>{drinkPantryOnly ? 'Showing what I can make' : 'Show what I can make'}</button>
             </div>
             <div className="plating"><b>21+ RESPONSIBLE SERVICE</b><p>Alcoholic recipes are for adults of legal drinking age. Serve responsibly and never drink and drive.</p></div>
           </div>
           <div className="cards">
-            {drinkMatches.filter(d => {
+            {drinks.filter(d => {
               const q=drinkSearch.trim().toLowerCase();
               const matchesCategory=drinkCategory==='All'||d.category===drinkCategory;
               const matchesSearch=!q||d.title.toLowerCase().includes(q)||d.ingredients.some(i=>i.toLowerCase().includes(q));
-              const matchesPantry=!drinkPantryOnly||!pantry.trim()||d.canMake||d.coverage>0;
+              const have=pantry.toLowerCase().split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
+              const matchesPantry=!drinkPantryOnly||have.length===0||d.ingredients.some(i=>have.some(h=>i.toLowerCase().includes(h)));
               return matchesCategory&&matchesSearch&&matchesPantry;
             }).map(d => <article className="recipe-card" key={d.title}>
-              <div className="card-body"><small>{d.category} · {d.glassware}</small><h3>{d.title}</h3>
-                {pantry.trim() && <div className="plating"><b>{d.canMake ? '✓ MAKE NOW' : `Need ${d.missing.length} more ingredient${d.missing.length===1?'':'s'}`}</b><p>You have {d.ownedCount} of {d.requiredCount} core ingredients · {d.coverage}% match</p>{!d.canMake&&d.missing.length>0&&<p><b>Missing:</b> {d.missing.slice(0,4).join(' · ')}{d.missing.length>4?' · …':''}</p>}</div>}
-                <p>{d.ingredients.slice(0,3).join(' · ')}</p><button className="ghost" onClick={()=>{setSelectedDrink(d);setTimeout(()=>document.getElementById('full-drink-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),50)}}><BookOpen size={16}/>Open Full Recipe</button></div>
+              <div className="card-body"><small>{d.category} · {d.glassware}</small><h3>{d.title}</h3><p>{d.ingredients.slice(0,3).join(' · ')}</p><button className="ghost" onClick={()=>{setSelectedDrink(d);setTimeout(()=>document.getElementById('full-drink-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),50)}}><BookOpen size={16}/>Open Full Recipe</button></div>
             </article>)}
           </div>
           {selectedDrink && <div id="full-drink-recipe" className="panel recipe-detail" style={{marginTop:24}}>
