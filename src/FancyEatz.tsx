@@ -198,6 +198,7 @@ export default function FancyEatz() {
   const [experienceMinutes, setExperienceMinutes] = useState('90');
   const [photoPreview, setPhotoPreview] = useState('');
   const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState('');
   const [photoItems, setPhotoItems] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [planLoading, setPlanLoading] = useState(false);
@@ -353,6 +354,7 @@ export default function FancyEatz() {
   async function analyzeKitchenPhoto(file: File) {
     setPhotoBusy(true);
     setPhotoItems([]);
+    setPhotoError('');
     try {
       const dataUrl = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
@@ -367,6 +369,7 @@ export default function FancyEatz() {
       if (items.length) setPantry(items.join(', '));
     } catch {
       setPhotoItems([]);
+      setPhotoError('Photo recognition is temporarily unavailable on this test build. You can still type or paste any ingredients you see below.');
     } finally {
       setPhotoBusy(false);
     }
