@@ -281,6 +281,20 @@ export default function FancyEatz() {
 
   const requestSettings = { occasion, servings, time, style, mealType, diet, budget };
 
+  function openSpecialGenerator(kind: 'grill' | 'dessert') {
+    if (kind === 'grill') {
+      setMealType('Dinner');
+      setStyle('Grill Master');
+      setOccasion('Backyard Grill Night');
+    } else {
+      setMealType('Dessert');
+      setStyle('Elegant Dessert');
+      setOccasion('Fancy Sweet Finish');
+    }
+    setPantry('');
+    navigate('pantry');
+  }
+
   async function generateMeal(useFallback = false, pantryOverride?: string, mealTypeOverride?: string) {
     const pantryForRequest = pantryOverride ?? pantry;
     if (!pantryForRequest.trim() && !useFallback) {
@@ -675,7 +689,7 @@ export default function FancyEatz() {
         <section className="page">
           <div className="section-head"><p className="eyebrow">FIRE · SMOKE · FLAVOR</p><h2>Fancy Eatz Grill Master</h2><p>Source-backed grilling inspiration plus Pantry Chef generation for steak, chicken, seafood, vegetables and more.</p></div>
           <div className="home-feature-grid">
-            <button className="visual-feature pantry-feature" onClick={()=>{setStyle('Chef\'s choice');setMealType('Dinner');navigate('pantry')}}><span><b>Grill What You Have</b><small>Enter meat, seafood, vegetables or sides and build a complete grill meal.</small><strong>Open Grill Generator →</strong></span></button>
+            <button className="visual-feature pantry-feature" onClick={()=>openSpecialGenerator('grill')}><span><b>Grill What You Have</b><small>Enter meat, seafood, vegetables or sides and build a complete grill meal.</small><strong>Open Grill Generator →</strong></span></button>
             <button className="visual-feature mix-feature" onClick={()=>{setSearch('grill');navigate('recipes')}}><span><b>Grill Recipe Vault</b><small>Browse grilled and barbecue recipes already in the source collection.</small><strong>Browse Grill Recipes →</strong></span></button>
           </div>
         </section>
@@ -685,7 +699,7 @@ export default function FancyEatz() {
         <section className="page">
           <div className="section-head"><p className="eyebrow">THE SWEET FINISH</p><h2>Fancy Desserts</h2><p>Elegant desserts, celebration sweets and pantry-first dessert ideas.</p></div>
           <div className="home-feature-grid">
-            <button className="visual-feature book-feature" onClick={()=>{setMealType('Dessert');navigate('pantry')}}><span><b>Create a Dessert From What You Have</b><small>Use chocolate, fruit, cream, cookies, cake ingredients and more.</small><strong>Generate Dessert →</strong></span></button>
+            <button className="visual-feature book-feature" onClick={()=>openSpecialGenerator('dessert')}><span><b>Create a Dessert From What You Have</b><small>Use chocolate, fruit, cream, cookies, cake ingredients and more.</small><strong>Generate Dessert →</strong></span></button>
             <button className="visual-feature pantry-feature" onClick={()=>{setSearch('dessert');navigate('recipes')}}><span><b>Fancy Dessert Vault</b><small>Browse complete desserts with ingredients and directions.</small><strong>Browse Desserts →</strong></span></button>
           </div>
         </section>
