@@ -128,6 +128,13 @@ const featured: Recipe[] = [
   { title: 'Risotto With Crabmeat & Basil', tag: 'Crab', time: '45 min', note: 'Creamy risotto paired with crabmeat and basil.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
 ];
 
+const basicGroceryNeeds = [
+  'milk','eggs','butter','bread','rice','pasta','flour','sugar','cooking oil','olive oil',
+  'salt','black pepper','garlic','onions','potatoes','tomatoes','lettuce or greens','lemons','bananas','apples',
+  'chicken','ground beef','fish or seafood','cheese','yogurt','cereal','oatmeal','coffee or tea',
+  'canned beans','canned tomatoes','broth or stock','frozen vegetables','paper towels','dish soap'
+];
+
 const starterLists = {
   'Date Night': ['salmon fillets', 'jumbo scallops', 'lemons', 'fresh herbs', 'baby potatoes', 'asparagus', 'butter'],
   'Seafood Night': ['white fish', 'lump crabmeat', 'shrimp', 'garlic', 'lemons', 'parsley', 'rice'],
@@ -483,6 +490,7 @@ export default function FancyEatz() {
               <button onClick={() => navigate('experience')}>Full Dining Experience</button>
               <button onClick={() => navigate('planner')}>Weekly Planner</button>
               <button onClick={() => navigate('grocery')}>Grocery Lists</button>
+              <button onClick={() => navigate('basics')}>Grocery Basics Checklist</button>
             </div>
           </details>
           <button onClick={() => navigate('grill')}>Grill Master</button><button onClick={() => navigate('desserts')}>Fancy Desserts</button><button onClick={() => navigate('drinks')}>Drinks</button>
@@ -793,6 +801,25 @@ export default function FancyEatz() {
         <section className="page">
           <div className="section-head"><p className="eyebrow">MY FANCY COOKBOOK</p><h2>Your Personal Recipe Collection</h2><p>Save the meals worth making again and build your own evolving Fancy Eatz cookbook. Saved recipes stay on this device.</p></div>
           {favorites.length === 0 ? <div className="empty panel"><Heart size={40} /><h3>Your cookbook is ready</h3><p>Generate a meal in Pantry Chef and tap Save Favorite to add your first recipe.</p></div> : <div className="cards">{alphabetizedFavorites.map(f => <article className="recipe-card saved-card" key={f.title}><div className="card-body"><small>SAVED MEAL</small><h3>{f.title}</h3><p>{f.description}</p><button onClick={() => { setMeal(f); navigate('pantry'); }}>Open recipe →</button><button className="remove-favorite" onClick={() => setFavorites(p => p.filter(x => x.title !== f.title))}>Remove</button></div></article>)}</div>}
+        </section>
+      )}
+
+      {tab === 'basics' && (
+        <section className="page">
+          <div className="section-head"><p className="eyebrow">PANTRY & HOME BASICS</p><h2>Grocery Basics Checklist</h2><p>A reusable checklist of everyday grocery staples. Tap what you already have, then add anything you need to your active shopping list.</p></div>
+          <div className="basics-actions">
+            <button className="primary" onClick={()=>addItems(basicGroceryNeeds.filter(x=>!checked.includes('basic:'+x)), 'Grocery Basics')}>Add Unchecked Basics to Grocery List</button>
+            <button className="ghost" onClick={()=>setChecked(p=>[...p.filter(x=>!x.startsWith('basic:')),...basicGroceryNeeds.map(x=>'basic:'+x)])}>I Have All</button>
+            <button className="ghost" onClick={()=>setChecked(p=>p.filter(x=>!x.startsWith('basic:')))}>Reset Checklist</button>
+          </div>
+          <div className="basics-grid panel">
+            {basicGroceryNeeds.map(item => {
+              const key='basic:'+item; const have=checked.includes(key);
+              return <button key={item} className={'basic-check '+(have?'done':'')} onClick={()=>setChecked(p=>have?p.filter(x=>x!==key):[...p,key])}>
+                <span className="check">{have&&<Check size={15}/>}</span><span>{item}</span>
+              </button>
+            })}
+          </div>
         </section>
       )}
 
