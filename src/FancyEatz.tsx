@@ -220,6 +220,24 @@ export default function FancyEatz() {
   const [drinkPantryOnly, setDrinkPantryOnly] = useState(false);
   const [experienceDrinkMode, setExperienceDrinkMode] = useState('Both');
 
+  const drinkMatches = useMemo(() => {
+    const stop = new Set(['oz','cup','cups','tbsp','tsp','shot','shots','part','parts','fresh','chilled','cold','hot','optional','ice','to','taste','or','and','of','a','an','the','whole','small','large','medium','dash','splash','drops','slice','slices','wedge','wedges']);
+    const normalize = (v:string) => v.toLowerCase().replace(/[0-9¼½¾⅓⅔./–—-]+/g,' ').replace(/[^a-zà-ÿ\s]/g,' ').split(/\s+/).filter(x=>x.length>2&&!stop.has(x));
+    const haveRaw = pantry.toLowerCase().split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
+    const haveTokens = new Set(haveRaw.flatMap(normalize));
+    const basics = new Set(['ice','water','sugar','salt']);
+    return allDrinks.map(d => {
+      const required = d.ingredients.map(ingredient => {
+        const tokens=normalize(ingredient).filter(t=>!basics.has(t));
+        return {ingredient,tokens};
+      }).filter(x=>x.tokens.length);
+      const owned = required.filter(r=>r.tokens.some(t=>haveTokens.has(t)));
+      const missing = required.filter(r=>!r.tokens.some(t=>haveTokens.has(t))).map(r=>r.ingredient);
+      const coverage = required.length ? Math.round((owned.length/required.length)*100) : 0;
+      return {...d,ownedCount:owned.length,requiredCount:required.length,missing,coverage,canMake:required.length>0&&missing.length===0};
+    }).sort((a,b)=>Number(b.canMake)-Number(a.canMake)||a.missing.length-b.missing.length||b.coverage-a.coverage||a.title.localeCompare(b.title));
+  }, [allDrinks, pantry]);
+
   function navigate(nextTab: string) {
     if (nextTab === tab) return;
     setTabHistory(history => [...history, tab]);
@@ -795,15 +813,16 @@ export default function FancyEatz() {
             <div className="plating"><b>21+ RESPONSIBLE SERVICE</b><p>Alcoholic recipes are for adults of legal drinking age. Serve responsibly and never drink and drive.</p></div>
           </div>
           <div className="cards">
-            {allDrinks.filter(d => {
+            {drinkMatches.filter(d => {
               const q=drinkSearch.trim().toLowerCase();
               const matchesCategory=drinkCategory==='All'||d.category===drinkCategory;
               const matchesSearch=!q||d.title.toLowerCase().includes(q)||d.ingredients.some(i=>i.toLowerCase().includes(q));
-              const have=pantry.toLowerCase().split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
-              const matchesPantry=!drinkPantryOnly||have.length===0||d.ingredients.some(i=>have.some(h=>i.toLowerCase().includes(h)));
+              const matchesPantry=!drinkPantryOnly||!pantry.trim()||d.canMake||d.coverage>0;
               return matchesCategory&&matchesSearch&&matchesPantry;
             }).map(d => <article className="recipe-card" key={d.title}>
-              <div className="card-body"><small>{d.category} · {d.glassware}</small><h3>{d.title}</h3><p>{d.ingredients.slice(0,3).join(' · ')}</p><button className="ghost" onClick={()=>{setSelectedDrink(d);setTimeout(()=>document.getElementById('full-drink-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),50)}}><BookOpen size={16}/>Open Full Recipe</button></div>
+              <div className="card-body"><small>{d.category} · {d.glassware}</small><h3>{d.title}</h3>
+                {pantry.trim() && <div className="plating"><b>{d.canMake ? '✓ MAKE NOW' : `Need ${d.missing.length} more ingredient${d.missing.length===1?'':'s'}`}</b><p>You have {d.ownedCount} of {d.requiredCount} core ingredients · {d.coverage}% match</p>{!d.canMake&&d.missing.length>0&&<p><b>Missing:</b> {d.missing.slice(0,4).join(' · ')}{d.missing.length>4?' · …':''}</p>}</div>}
+                <p>{d.ingredients.slice(0,3).join(' · ')}</p><button className="ghost" onClick={()=>{setSelectedDrink(d);setTimeout(()=>document.getElementById('full-drink-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),50)}}><BookOpen size={16}/>Open Full Recipe</button></div>
             </article>)}
           </div>
           {selectedDrink && <div id="full-drink-recipe" className="panel recipe-detail" style={{marginTop:24}}>
