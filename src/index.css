@@ -708,3 +708,27 @@ footer p {
   #full-drink-recipe .section-head h2{font-size:36px}
   #full-drink-recipe .generator-grid{grid-template-columns:1fr}
 }
+
+/* Grocery command center */
+.grocery-quickbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.list-label{align-self:center;color:#9d958a;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-right:4px}
+.grocery-title strong{font:34px Georgia;color:#d8b46c}
+.grocery-title p{margin:7px 0 0;color:#9d958a;font-size:12px}
+.grocery-progress{height:7px;background:#292622;border-radius:999px;overflow:hidden;margin:16px 0 20px}
+.grocery-progress span{display:block;height:100%;background:#d5aa60;border-radius:999px;transition:width .25s ease}
+.grocery-filter{display:flex!important;align-items:center;gap:10px;border:1px solid #3a352f;background:#0f0f0e;padding:0 12px;margin:0 0 22px!important}
+.grocery-filter input{width:100%;border:0;outline:0;background:transparent;color:#fff;padding:12px 0}
+.category h3{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.category h3 small{font:700 11px Inter,system-ui;color:#8d8377;text-transform:uppercase;letter-spacing:.08em}
+.grocery-empty{padding:45px 18px}
+@media(max-width:800px){
+ .grocery-quickbar{display:grid;grid-template-columns:1fr 1fr}
+ .grocery-quickbar .primary{grid-column:1/-1}
+ .grocery{padding:18px 16px}
+ .grocery-title{align-items:center}
+ .grocery-title h2{font-size:30px}
+ .grocery-title strong{font-size:28px}
+ .list-tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px}
+ .list-tabs button,.list-label{white-space:nowrap}
+ .add-row input{min-width:0}
+}
