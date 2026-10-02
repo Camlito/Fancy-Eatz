@@ -753,3 +753,13 @@ footer p {
 .grocery-mode-tabs button.active{background:#d5aa60;border-color:#d5aa60;color:#17120c}
 .grocery-basics-inline{margin-bottom:24px}
 @media(max-width:800px){.grocery-mode-tabs{position:sticky;top:0;z-index:4;background:#0d0d0d;padding:8px 0}.grocery-mode-tabs button{font-size:12px}}
+
+/* Cooking style experiences */
+.style-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.style-card{min-height:230px;text-align:left;padding:24px;border:1px solid #39332b;border-radius:12px;background:linear-gradient(145deg,#181511,#0f0f0e);color:#f7f1e7;cursor:pointer}
+.style-card:hover{border-color:#d5aa60;transform:translateY(-2px)}
+.style-card small{color:#c49a52;letter-spacing:.16em;font-weight:900}
+.style-card h3{font:30px Georgia;margin:12px 0}
+.style-card p{color:#aaa297;line-height:1.55;min-height:72px}
+.style-card strong{color:#d8b46c}
+@media(max-width:800px){.style-grid{grid-template-columns:1fr}.style-card{min-height:0}.style-card p{min-height:0}}
