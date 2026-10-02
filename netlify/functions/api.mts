@@ -13,8 +13,10 @@ function mealFrom(body: any, variant = 0) {
   const servings = Math.max(1, Number.parseInt(String(body.servings || '2'), 10) || 2);
   const requestedStyle = String(body.style || '');
   const isGrill = /grill/i.test(requestedStyle);
-  const isDessert = /dessert/i.test(requestedStyle) || /dessert/i.test(String(body.mealType || ''));
-  const styles = isGrill ? ['Grilled', 'Flame-Kissed', 'Backyard Bistro'] : isDessert ? ['Elegant', 'Decadent', 'Patisserie-Style'] : ['Skillet', 'Roasted', 'Bistro'];
+  const isDessert = /dessert|pastry/i.test(requestedStyle) || /dessert/i.test(String(body.mealType || ''));
+  const isFineDining = /fine dining/i.test(requestedStyle);
+  const isFamily = /everyday family/i.test(requestedStyle);
+  const styles = isGrill ? ['Grilled', 'Flame-Kissed', 'Backyard Bistro'] : isDessert ? ['Elegant', 'Decadent', 'Patisserie-Style'] : isFineDining ? ['Fine-Dining', 'Chef-Composed', 'Restaurant-Style'] : isFamily ? ['Family-Style', 'Weeknight', 'Comfort-Kitchen'] : ['Skillet', 'Roasted', 'Bistro'];
   const titles = [
     isDessert ? `Fancy ${styles[variant % styles.length]} ${primary} Dessert` : `Fancy ${styles[variant % styles.length]} ${primary}`,
     `Elevated ${primary} & ${second} Bowl`,
@@ -28,7 +30,7 @@ function mealFrom(body: any, variant = 0) {
     ingredients,
     steps: [
       `Prep ${primary}, ${second} and ${third}; cut solid ingredients into even bite-size pieces so they cook evenly.`,
-      isGrill ? 'Preheat the grill to medium-high heat, clean and lightly oil the grates, then place the main ingredient over direct heat.' : isDessert ? 'Preheat or chill the required equipment for the dessert method, then combine the measured base ingredients evenly.' : 'Heat a large skillet over medium heat for 2 minutes, add the oil, then add the firmest/raw ingredients first.',
+      isGrill ? 'Preheat the grill to medium-high heat, clean and lightly oil the grates, then place the main ingredient over direct heat.' : isDessert ? 'Preheat or chill the required equipment for the dessert method, then combine the measured base ingredients evenly.' : isFineDining ? 'Prepare and season each component separately so the protein, vegetables, sauce and garnish can be plated with precision.' : isFamily ? 'Prep the ingredients first, then use a practical skillet, sheet-pan or casserole method to keep the family meal straightforward.' : 'Heat a large skillet over medium heat for 2 minutes, add the oil, then add the firmest/raw ingredients first.',
       'Cook, stirring or turning as needed, until vegetables are tender and any raw protein reaches a safe doneness for that ingredient.',
       'Add quicker-cooking or already-cooked pantry ingredients during the final 3–5 minutes so they heat through without overcooking.',
       'Taste, season with salt and black pepper, then rest off heat for 2 minutes before serving.',
