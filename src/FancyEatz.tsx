@@ -156,6 +156,7 @@ export default function FancyEatz() {
   const [drinkSearch, setDrinkSearch] = useState('');
   const [drinkCategory, setDrinkCategory] = useState('All');
   const [selectedDrink, setSelectedDrink] = useState<(typeof drinks)[number] | null>(null);
+  const [experienceDrinkMode, setExperienceDrinkMode] = useState('Both');
 
   function navigate(nextTab: string) {
     if (nextTab === tab) return;
@@ -577,6 +578,7 @@ export default function FancyEatz() {
                 <label>Time available<select value={experienceMinutes} onChange={e => setExperienceMinutes(e.target.value)}><option value="60">60 minutes</option><option value="90">90 minutes</option><option value="120">2 hours</option><option value="180">3 hours</option></select></label>
                 <label>Dietary preference<select value={diet} onChange={e => setDiet(e.target.value)}><option>No restriction</option><option>Vegetarian</option><option>Vegan</option><option>Pescatarian</option><option>Gluten-conscious</option><option>Dairy-free</option><option>Lower-carb</option></select></label>
                 <label>Style<select value={style} onChange={e => setStyle(e.target.value)}><option>Chef's choice</option><option>Southern upscale</option><option>Italian inspired</option><option>Fresh & light</option><option>Comfort food</option><option>Seafood-forward</option></select></label>
+                <label>Drink pairing<select value={experienceDrinkMode} onChange={e=>setExperienceDrinkMode(e.target.value)}><option>Both</option><option>Cocktail</option><option>Non-Alcoholic</option><option>No drink</option></select></label>
               </div>
               <button className="primary full" onClick={generateExperience} disabled={experienceLoading}><Sparkles size={18}/>{experienceLoading ? 'Designing your evening…' : 'Create My Experience'}</button>
             </div>
@@ -586,6 +588,7 @@ export default function FancyEatz() {
                 <h3>Appetizer</h3><p>{experience.appetizer}</p><h3>Entrée</h3><p>{experience.entree}</p>
                 <h3>Sides</h3><ul>{experience.sides.map(x => <li key={x}>{x}</li>)}</ul>
                 <h3>Dessert</h3><p>{experience.dessert}</p><h3>Pairing</h3><p>{experience.pairing}</p>
+                {experienceDrinkMode !== 'No drink' && (() => { const pool = experienceDrinkMode === 'Non-Alcoholic' ? drinks.filter(d=>d.category==='Mocktails & Punches') : experienceDrinkMode === 'Cocktail' ? drinks.filter(d=>d.category!=='Mocktails & Punches') : drinks; const pick = pool[Math.abs((experience.entree||experience.title).length) % Math.max(pool.length,1)]; return pick ? <div className="plating"><b>Fancy Eatz Drink Pairing</b><h3>{pick.title}</h3><p>{pick.ingredients.join(' · ')}</p><button className="ghost" onClick={()=>{setSelectedDrink(pick);navigate('drinks')}}>View drink recipe →</button></div> : null; })()}
                 <h3>Ingredients</h3><ul>{experience.ingredients.map(x => <li key={x}>{x}</li>)}</ul><h3>Method / Directions</h3><ol>{experience.steps.map(x => <li key={x}>{x}</li>)}</ol><h3>Preparation Timeline</h3><ol>{experience.timeline.map(x => <li key={x}>{x}</li>)}</ol>
                 <div className="plating"><b>Plating</b><p>{experience.plating}</p><b>Table Setting</b><p>{experience.tableSetting}</p></div>
                 <p><b>Budget:</b> {experience.estimatedCost}</p>
