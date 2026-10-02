@@ -671,3 +671,31 @@ footer p {
 @media(max-width:800px){.home-showcase{padding:0 10px 50px}.home-hero{grid-template-columns:1fr}.home-hero .hero-copy{padding:32px 22px}.hero-food-photo{min-height:300px;background-image:linear-gradient(0deg,#080909 0%,transparent 45%),url("https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=1000&q=88");padding:24px}.hero-food-photo b{font-size:32px}.home-search-row,.home-feature-grid{grid-template-columns:1fr}.ai-generator-callout strong{padding:10px}.home-recipe-strip{display:flex;overflow-x:auto;padding-bottom:8px}.home-recipe-card{min-width:210px}.home-tools{grid-template-columns:1fr}.home-search-row .search-box button{padding:10px 12px}}
 
 .vault-stats{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.vault-stats span{min-width:140px;padding:14px 18px;border:1px solid #4b443b;border-radius:9px;background:#11100e;display:flex;flex-direction:column}.vault-stats b{font:26px Georgia,serif;color:#d5aa60}.vault-stats small{color:#948b80;margin-top:3px}.vault-banner{display:flex;align-items:center;gap:15px;margin:18px 0;padding:18px;border:1px solid #765f39;border-radius:10px;background:linear-gradient(90deg,#18130d,#0d0c0a)}.vault-banner svg{color:#d5aa60;flex:none}.vault-banner div{display:flex;flex-direction:column;gap:4px}.vault-banner b{font:21px Georgia,serif;color:#f3e8d8}.vault-banner span{font-size:12px;line-height:1.5;color:#aaa096}
+
+/* Mobile navigation repair */
+@media (max-width:800px){
+  .topbar{position:relative;top:auto;padding:12px 16px;gap:10px}
+  .brand{width:100%}
+  .brand > span{width:38px;height:38px;font-size:25px;flex:0 0 auto}
+  .brand b{font-size:12px}
+  .brand small{font-size:10px}
+  .topbar nav,.main-nav{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    width:100%;gap:6px;overflow:visible
+  }
+  .main-nav > button,.nav-dropdown summary{
+    width:100%;min-height:42px;font-size:12px;padding:9px 8px;
+    white-space:normal;text-align:center;display:flex;align-items:center;justify-content:center
+  }
+  .nav-dropdown{position:relative}
+  .nav-menu{position:absolute;left:0;right:auto;top:calc(100% + 5px);width:min(280px,88vw);margin:0;z-index:100}
+  .main-nav .nav-dropdown:nth-of-type(even) .nav-menu{left:auto;right:0}
+  .page{padding:36px 16px 72px}
+  .backbar{padding:12px 16px 0}
+  .section-head{margin-bottom:24px}
+  .section-head h2{font-size:34px;line-height:1.08}
+  .panel{padding:18px}
+  .home-feature-grid{grid-template-columns:1fr !important}
+  .source-reader{display:none}
+}
