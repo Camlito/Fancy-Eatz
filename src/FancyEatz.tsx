@@ -128,12 +128,24 @@ const featured: Recipe[] = [
   { title: 'Risotto With Crabmeat & Basil', tag: 'Crab', time: '45 min', note: 'Creamy risotto paired with crabmeat and basil.', mealType: 'Dinner', diet: 'Pescatarian', budget: '$$$' },
 ];
 
-const basicGroceryNeeds = [
-  'milk','eggs','butter','bread','rice','pasta','flour','sugar','cooking oil','olive oil',
-  'salt','black pepper','garlic','onions','potatoes','tomatoes','lettuce or greens','lemons','bananas','apples',
-  'chicken','ground beef','fish or seafood','cheese','yogurt','cereal','oatmeal','coffee or tea',
-  'canned beans','canned tomatoes','broth or stock','frozen vegetables','paper towels','dish soap'
-];
+const basicGroceryCategories: Record<string,string[]> = {
+  'Fresh Produce': ['apples','bananas','oranges','lemons','limes','berries','grapes','avocados','tomatoes','lettuce or greens','spinach','broccoli','carrots','celery','bell peppers','onions','garlic','potatoes','sweet potatoes','mushrooms','cucumbers','fresh herbs'],
+  'Meat & Poultry': ['chicken breasts','chicken thighs','ground beef','steak','pork chops','bacon','sausage','ground turkey'],
+  'Seafood': ['salmon','white fish','shrimp','tuna','crab','scallops'],
+  'Dairy & Eggs': ['milk','eggs','butter','cheddar cheese','parmesan','mozzarella','cream cheese','yogurt','heavy cream','sour cream'],
+  'Bread & Bakery': ['sandwich bread','buns or rolls','tortillas','bagels','English muffins'],
+  'Rice, Pasta & Grains': ['white rice','brown rice','pasta','oatmeal','quinoa','grits','breadcrumbs'],
+  'Canned & Jarred': ['canned beans','canned tomatoes','tomato sauce','tuna cans','broth or stock','peanut butter','pasta sauce','salsa'],
+  'Frozen Foods': ['frozen vegetables','frozen fruit','frozen fries or potatoes','frozen pizza','ice cream'],
+  'Breakfast': ['cereal','pancake or waffle mix','syrup','breakfast bars','coffee','tea'],
+  'Baking': ['all-purpose flour','sugar','brown sugar','powdered sugar','baking powder','baking soda','vanilla extract','chocolate chips','cocoa powder'],
+  'Oils, Sauces & Condiments': ['olive oil','cooking oil','vinegar','ketchup','mustard','mayonnaise','hot sauce','soy sauce','barbecue sauce','salad dressing'],
+  'Spices & Seasonings': ['salt','black pepper','garlic powder','onion powder','paprika','chili powder','Italian seasoning','cinnamon','seasoning salt'],
+  'Snacks': ['chips','crackers','popcorn','nuts','granola bars','cookies'],
+  'Drinks': ['bottled water','juice','sparkling water','soda'],
+  'Household Kitchen Needs': ['paper towels','aluminum foil','plastic wrap','storage bags','dish soap','dishwasher detergent','trash bags']
+};
+const basicGroceryNeeds = Object.values(basicGroceryCategories).flat();
 
 const starterLists = {
   'Date Night': ['salmon fillets', 'jumbo scallops', 'lemons', 'fresh herbs', 'baby potatoes', 'asparagus', 'butter'],
@@ -812,13 +824,18 @@ export default function FancyEatz() {
             <button className="ghost" onClick={()=>setChecked(p=>[...p.filter(x=>!x.startsWith('basic:')),...basicGroceryNeeds.map(x=>'basic:'+x)])}>I Have All</button>
             <button className="ghost" onClick={()=>setChecked(p=>p.filter(x=>!x.startsWith('basic:')))}>Reset Checklist</button>
           </div>
-          <div className="basics-grid panel">
-            {basicGroceryNeeds.map(item => {
-              const key='basic:'+item; const have=checked.includes(key);
-              return <button key={item} className={'basic-check '+(have?'done':'')} onClick={()=>setChecked(p=>have?p.filter(x=>x!==key):[...p,key])}>
-                <span className="check">{have&&<Check size={15}/>}</span><span>{item}</span>
-              </button>
-            })}
+          <div className="basics-categories">
+            {Object.entries(basicGroceryCategories).map(([category,items])=><section className="basics-category panel" key={category}>
+              <div className="basics-category-head"><h3>{category}</h3><small>{items.filter(item=>checked.includes('basic:'+item)).length}/{items.length} stocked</small></div>
+              <div className="basics-grid">
+                {items.map(item => {
+                  const key='basic:'+item; const have=checked.includes(key);
+                  return <button key={item} className={'basic-check '+(have?'done':'')} onClick={()=>setChecked(p=>have?p.filter(x=>x!==key):[...p,key])}>
+                    <span className="check">{have&&<Check size={15}/>}</span><span>{item}</span>
+                  </button>
+                })}
+              </div>
+            </section>)}
           </div>
         </section>
       )}
