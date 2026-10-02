@@ -76,6 +76,7 @@ type Recipe = {
   method?: string[];
   servings?: string;
   image?: string;
+  style?: string;
 };
 
 const featuredBase: Recipe[] = [
@@ -154,7 +155,7 @@ const valueRecipes: Recipe[] = [
 
 ];
 
-const featured: Recipe[] = [...featuredBase, ...valueRecipes];
+const featured: Recipe[] = [...featuredBase, ...valueRecipes, ...styleRecipeVault];
 
 
 const basicGroceryCategories: Record<string,string[]> = {
@@ -283,12 +284,12 @@ export default function FancyEatz() {
   const filteredRecipes = useMemo(() => featured.filter(r => {
     const q = search.toLowerCase();
     const styleText=(r.title+' '+r.tag+' '+r.note+' '+r.category+' '+r.mealType).toLowerCase();
-    const styleMatch = cookStyleFilter === 'All' ||
-      (cookStyleFilter === 'Fancy Dining' && /crab|scallop|salmon|risotto|bisque|benedict|artichoke/.test(styleText)) ||
-      (cookStyleFilter === 'Grill Master' && /grill|burger|steak|salmon|fish|shrimp|tuna/.test(styleText)) ||
-      (cookStyleFilter === 'Everyday Mom' && /casserole|pasta|soup|chowder|sandwich|burger|family|chicken/.test(styleText)) ||
-      (cookStyleFilter === "Chef's Kitchen" && /crab|seafood|sauce|risotto|bisque|appetizer|brunch/.test(styleText)) ||
-      (cookStyleFilter === 'Pastry Chef' && /dessert|cake|pie|tart|cookie|chocolate|sweet|pastry/.test(styleText));
+    const styleMatch = cookStyleFilter === 'All' || r.style === cookStyleFilter ||
+      (!r.style && cookStyleFilter === 'Fancy Dining' && /crab|scallop|salmon|risotto|bisque|benedict|artichoke/.test(styleText)) ||
+      (!r.style && cookStyleFilter === 'Grill Master' && /grill|burger|steak|salmon|fish|shrimp|tuna/.test(styleText)) ||
+      (!r.style && cookStyleFilter === 'Everyday Mom' && /casserole|pasta|soup|chowder|sandwich|burger|family|chicken/.test(styleText)) ||
+      (!r.style && cookStyleFilter === "Chef's Kitchen" && /crab|seafood|sauce|risotto|bisque|appetizer|brunch/.test(styleText)) ||
+      (!r.style && cookStyleFilter === 'Pastry Chef' && /dessert|cake|pie|tart|cookie|chocolate|sweet|pastry/.test(styleText));
     return styleMatch && (recipeType === 'All' || r.mealType === recipeType || r.category === recipeType) &&
       (recipeLetter === 'All' || r.title.toUpperCase().startsWith(recipeLetter)) &&
       (!q || (r.title + ' ' + r.tag + ' ' + r.note).toLowerCase().includes(q));
@@ -818,7 +819,7 @@ export default function FancyEatz() {
           <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>One growing Fancy Eatz cookbook for every kind of meal — family favorites, grilling, fine dining, chef techniques, desserts, pastries, seafood and more.</p><div className="vault-stats"><span><b>{featured.length}</b><small>complete interactive recipes</small></span><span><b>All Styles</b><small>one unified cookbook</small></span><span><b>A–Z</b><small>recipe browsing</small></span></div></div>
           
           <div className="cook-style-filter">
-            {['All','Fancy Dining','Grill Master','Everyday Mom',"Chef's Kitchen",'Pastry Chef'].map(x=><button key={x} className={cookStyleFilter===x?'active':''} onClick={()=>setCookStyleFilter(x)}>{x}</button>)}
+            {['All','Fancy Dining','Grill Master','Everyday Mom',"Chef's Kitchen",'Pastry Chef'].map(x=><button key={x} className={cookStyleFilter===x?'active':''} onClick={()=>setCookStyleFilter(x)}>{x}{x!=='All' && styleRecipeCounts[x] ? ` (${styleRecipeCounts[x]})` : ''}</button>)}
           </div>
           <div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search chicken, steak, pasta, seafood, dessert..." /></label>
