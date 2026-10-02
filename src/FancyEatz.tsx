@@ -672,7 +672,7 @@ export default function FancyEatz() {
           <div className="panel">
             <div className="recipe-tools">
               <label className="search-box"><Search size={18}/><input value={drinkSearch} onChange={e=>setDrinkSearch(e.target.value)} placeholder="Search vodka, lime, martini, rum..." /></label>
-              <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option></select></label>
+              <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option><option>Mocktails & Punches</option></select></label>
             </div>
             <div className="plating"><b>21+ RESPONSIBLE SERVICE</b><p>Alcoholic recipes are for adults of legal drinking age. Serve responsibly and never drink and drive.</p></div>
           </div>
@@ -694,7 +694,7 @@ export default function FancyEatz() {
             </div>
             <div className="result-actions"><button className="ghost" onClick={()=>setSelectedDrink(null)}>Close Drink Recipe</button></div>
           </div>}
-          <div className="source-note"><BookOpen size={20}/><div><b>Bartending For Beginners</b><p>This section is being expanded from the source bartender collection with cocktails, martinis and additional drink categories.</p></div></div>
+          <div className="source-note"><BookOpen size={20}/><div><b>Bartending For Beginners</b><p>This section is being expanded from the source bartender collection with cocktails, martinis, mocktails, punches and additional drink categories.</p></div></div>
         </section>
       )}
 
