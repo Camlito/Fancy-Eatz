@@ -842,3 +842,12 @@ footer p {
   }
   .nav-menu button{box-sizing:border-box!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:normal!important;text-align:left!important;padding:14px 16px!important}
 }
+
+.nav-trigger{border:0;background:transparent;color:#c9c2b8;cursor:pointer;font-size:13px;padding:10px 12px;border-radius:7px}.nav-trigger.active{color:#17120c;background:#d5aa60}
+@media(max-width:800px){
+ .main-nav>.nav-dropdown{position:relative!important;min-width:0!important}
+ .main-nav>.nav-dropdown>.nav-trigger{width:100%!important;min-height:48px!important;font-size:15px!important;color:#f4eee5!important;background:#15120e!important;border:1px solid #514638!important;border-radius:14px!important;touch-action:manipulation!important}
+ .main-nav>.nav-dropdown>.nav-trigger.active{background:#d5aa60!important;color:#17120c!important}
+ .main-nav>.nav-dropdown>.nav-menu{position:absolute!important;top:calc(100% + 6px)!important;left:0!important;right:auto!important;width:calc(200% + 8px)!important;max-width:calc(100vw - 32px)!important;z-index:999999!important}
+ .main-nav>.nav-dropdown:nth-child(3)>.nav-menu,.main-nav>.nav-dropdown:nth-child(4)>.nav-menu{left:auto!important;right:0!important}
+}
