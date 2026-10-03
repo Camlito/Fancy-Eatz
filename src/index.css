@@ -1245,3 +1245,29 @@ section{scroll-margin-top:20px}
  .main-nav>button,.main-nav>.nav-dropdown>.nav-trigger{box-shadow:none!important}
  .membership-nav{box-shadow:none!important}
 }
+
+/* Rich less-is-more compact rhythm */
+.home-showcase,.onboarding-invite,.discover-strip,.premium-preview,.tonight-card,.return-home,.taste-profile-card,.premium-conversion{
+ max-width:1180px!important;margin-left:auto!important;margin-right:auto!important;
+}
+@media(min-width:801px){
+ .home-showcase{padding-top:52px!important;padding-bottom:52px!important}
+ .onboarding-invite,.premium-preview,.tonight-card,.return-home,.taste-profile-card,.premium-conversion{
+   margin-top:34px!important;margin-bottom:34px!important;padding:30px 34px!important;border-radius:22px!important
+ }
+ .discover-strip{margin-top:38px!important;margin-bottom:38px!important;padding-top:18px!important;padding-bottom:18px!important}
+ .discover-strip h2,.premium-preview h2,.onboarding-invite h2,.tonight-card h2,.return-home h2,.taste-profile-card h2,.premium-conversion h2{
+   margin-top:6px!important;margin-bottom:12px!important
+ }
+ .premium-preview .premium-grid,.discover-strip .discover-grid{gap:14px!important}
+ .premium-preview .premium-card,.discover-strip .discover-card{padding:20px!important;min-height:0!important}
+ .premium-conversion{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:28px!important}
+ .premium-conversion .primary{margin:0!important;white-space:nowrap!important}
+}
+@media(max-width:800px){
+ .onboarding-invite,.premium-preview,.tonight-card,.return-home,.taste-profile-card,.premium-conversion{
+   margin-top:22px!important;margin-bottom:22px!important;padding:22px 18px!important;border-radius:18px!important
+ }
+ .discover-strip{margin-top:26px!important;margin-bottom:26px!important}
+ .premium-preview .premium-grid,.discover-strip .discover-grid{gap:10px!important}
+}
