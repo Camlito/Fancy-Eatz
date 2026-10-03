@@ -65,7 +65,41 @@ export default async (req: Request) => {
     return send({ experience: { title: String(body.occasion || 'Fancy Eatz At Home'), appetizer: 'Pantry-first starter', entree: m.title, sides: ['Seasonal pantry side'], dessert: 'Simple fruit or pantry dessert', pairing: 'Sparkling citrus water', timeline: m.steps, plating: m.plating, tableSetting: 'Clean place settings with a simple centerpiece.', groceries: m.missing, ingredients: m.ingredients, steps: m.steps, estimatedCost: m.estimatedCost } });
   }
   if (url.pathname === '/api/analyze-kitchen-photo') {
-    return send({ items: [], available: false, message: 'Photo recognition is not connected on this host yet. Manual ingredient entry remains available.' });
+    const image = String(body.image || '');
+    if (!image.startsWith('data:image/')) return send({ items: [], available: true, message: 'Please upload a food or kitchen photo.' }, 400);
+    const key = process.env.OPENAI_API_KEY;
+    const base = (process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1').replace(/\/$/, '');
+    if (!key) return send({ items: [], available: false, message: 'Photo recognition is not configured on this deployment yet.' }, 503);
+    try {
+      const vision = await fetch(base + '/chat/completions', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + key },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          temperature: 0,
+          max_tokens: 250,
+          response_format: { type: 'json_object' },
+          messages: [
+            { role: 'system', content: 'Identify only food, beverages, and cooking ingredients visibly present in the image. Do not invent hidden ingredients. Return strict JSON: {"items":["item 1","item 2"],"note":"short confidence note"}. Use ordinary grocery names, deduplicate, maximum 20 items.' },
+            { role: 'user', content: [
+              { type: 'text', text: 'List the visible food and ingredient items in this kitchen/meal photo for a pantry assistant.' },
+              { type: 'image_url', image_url: { url: image, detail: 'low' } }
+            ] }
+          ]
+        })
+      });
+      if (!vision.ok) {
+        const detail = await vision.text();
+        return send({ items: [], available: false, message: 'Photo analysis could not complete. Please try again or enter ingredients manually.', detail: detail.slice(0,300) }, 502);
+      }
+      const result:any = await vision.json();
+      const raw = result?.choices?.[0]?.message?.content || '{}';
+      const parsed = JSON.parse(raw);
+      const items = Array.isArray(parsed.items) ? parsed.items.map((x:any)=>String(x).trim()).filter(Boolean).slice(0,20) : [];
+      return send({ items, available: true, note: String(parsed.note || ''), message: items.length ? 'Visible ingredients detected. Review and edit them before generating a meal.' : 'No clear food ingredients were detected. Try a closer, brighter photo.' });
+    } catch (error:any) {
+      return send({ items: [], available: false, message: 'Photo analysis failed. Please retry or enter ingredients manually.', detail: String(error?.message || error).slice(0,300) }, 500);
+    }
   }
   return send({ error: 'Not found' }, 404);
 };
