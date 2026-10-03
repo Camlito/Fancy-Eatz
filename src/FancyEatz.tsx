@@ -217,6 +217,7 @@ export default function FancyEatz() {
   const [membershipNotice, setMembershipNotice] = useState('');
   const [earlyEmail, setEarlyEmail] = useState('');
   const [earlyJoined, setEarlyJoined] = useState(false);
+  const [earlySubmitting, setEarlySubmitting] = useState(false);
   const premiumTabs = new Set(['pantry','photo','leftovers','ideas','styles','experience','planner','grocery','basics','grill','desserts','drinks','recipes','favorites']);
   const openMembership = (message='Start your 7-day Fancy Eatz Premium trial to unlock this feature.') => { setMembershipNotice(message); setShowMembership(true); };
 
@@ -584,6 +585,8 @@ export default function FancyEatz() {
       {tab !== 'home' && <div className="backbar">
         <button className="back-button" onClick={goBack} aria-label="Go back"><ArrowLeft size={18} /> Back</button>
       </div>}
+
+      {earlyJoined && tab === 'home' && <section className="early-access-confirmation"><ShieldCheck size={30}/><div><p className="eyebrow">FOUNDING EARLY ACCESS</p><h2>You're on the Fancy Eatz list.</h2><p>Your spot is saved. You'll receive your 7-day Premium trial invitation when Fancy Eatz launches.</p></div></section>}
 
       {tab === 'home' && (
         <section className="home-showcase">
@@ -971,7 +974,7 @@ export default function FancyEatz() {
             <button className="membership-plan selected" onClick={()=>setMembershipNotice('Monthly plan selected. Secure checkout will activate here once billing is connected.')}><small>PLANNED MONTHLY</small><strong>$9.99</strong><span>/ month</span><em>7-day trial at launch</em></button>
             <button className="membership-plan" onClick={()=>setMembershipNotice('Annual plan selected. Secure checkout will activate here once billing is connected.')}><small>PLANNED ANNUAL · SAVE</small><strong>$79</strong><span>/ year</span><em>7-day trial at launch</em></button>
           </div>
-          <div className="early-access-form"><input type="email" value={earlyEmail} onChange={e=>setEarlyEmail(e.target.value)} placeholder="Enter your email" aria-label="Email for early access"/><button className="primary membership-cta" onClick={async()=>{if(!/^\S+@\S+\.\S+$/.test(earlyEmail)){setMembershipNotice('Enter a valid email to join early access.');return;}try{const response=await fetch('https://flnplmywkukyejisbnyd.supabase.co/rest/v1/early_access',{method:'POST',headers:{'content-type':'application/json','apikey':'sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR','Authorization':'Bearer sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR','Prefer':'resolution=ignore-duplicates'},body:JSON.stringify({email:earlyEmail.trim().toLowerCase(),source:'fancy-eatzzz.netlify.app'})});if(!response.ok)throw new Error('signup failed');setEarlyJoined(true);}catch{setMembershipNotice('We could not save your signup. Please try again.');}}}><LockKeyhole size={18}/>Join Early Access</button></div>
+          <div className="early-access-form"><input type="email" value={earlyEmail} onChange={e=>setEarlyEmail(e.target.value)} placeholder="Enter your email" aria-label="Email for early access"/><button className="primary membership-cta" onClick={async()=>{if(!/^\S+@\S+\.\S+$/.test(earlyEmail)){setMembershipNotice('Enter a valid email to join early access.');return;}try{const response=await fetch('https://flnplmywkukyejisbnyd.supabase.co/rest/v1/early_access',{method:'POST',headers:{'content-type':'application/json','apikey':'sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR','Authorization':'Bearer sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR','Prefer':'resolution=ignore-duplicates'},body:JSON.stringify({email:earlyEmail.trim().toLowerCase(),source:'fancy-eatzzz.netlify.app'})});if(!response.ok)throw new Error('signup failed');setEarlyJoined(true);setShowMembership(false);window.scrollTo({top:0,behavior:'smooth'});}catch{setMembershipNotice('We could not save your signup. Please try again.');}}}><LockKeyhole size={18}/>Join Early Access</button></div>
           {earlyJoined ? <div className="early-success"><ShieldCheck size={20}/><span><b>You're on the list.</b><small>You'll get your 7-day Premium trial invitation when Fancy Eatz launches.</small></span></div> : <p className="membership-fine">Join the founding early-access list. No payment is collected today.</p>}
         </div>
       </div>}
