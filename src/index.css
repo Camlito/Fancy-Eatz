@@ -811,3 +811,6 @@ footer p {
   .hero-trust{margin-top:13px!important}.hero-trust span{font-size:9px!important;padding:6px 9px!important}
   .premium-preview{margin-top:18px!important}.home-search-row{margin-top:20px!important}
 }
+
+.early-access-form{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:14px}.early-access-form input{min-width:0;border:1px solid #494137;background:#0c0b09;color:#f4eee5;border-radius:12px;padding:14px 15px;font-size:16px;outline:none}.early-access-form input:focus{border-color:#d5aa60}.early-success{display:flex;align-items:center;gap:10px;margin-top:13px;padding:13px;border:1px solid #5b7047;background:#11180d;border-radius:12px}.early-success svg{color:#d5aa60}.early-success span,.early-success small{display:block}.early-success small{color:#aaa297;margin-top:3px}
+@media(max-width:600px){.early-access-form{grid-template-columns:1fr}.early-access-form button{justify-content:center}}
