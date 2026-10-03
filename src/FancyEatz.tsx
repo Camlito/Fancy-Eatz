@@ -558,15 +558,16 @@ export default function FancyEatz() {
             </div>
           </details>
           <details className="nav-dropdown">
-            <summary>Plan ▾</summary>
+            <summary>Explore ▾</summary>
             <div className="nav-menu">
-              <button onClick={() => navigate('experience')}>Full Dining Experience</button>
+              <button onClick={() => navigate('experience')}>Dining Experience</button>
               <button onClick={() => navigate('planner')}>Weekly Planner</button>
               <button onClick={() => navigate('grocery')}>Grocery Lists</button>
-              <button onClick={() => navigate('basics')}>Grocery Basics Checklist</button>
+              <button onClick={() => navigate('grill')}>Grill Master</button>
+              <button onClick={() => navigate('desserts')}>Desserts</button>
+              <button onClick={() => navigate('drinks')}>Drinks</button>
             </div>
           </details>
-          <button onClick={() => navigate('grill')}>Grill Master</button><button onClick={() => navigate('desserts')}>Fancy Desserts</button><button onClick={() => navigate('drinks')}>Drinks</button>
           <details className="nav-dropdown">
             <summary>Cookbook ▾</summary>
             <div className="nav-menu">
@@ -578,25 +579,20 @@ export default function FancyEatz() {
         <button className="membership-nav" onClick={()=>openMembership('Choose your Fancy Eatz Premium plan and start your 7-day trial.')}><Crown size={16}/> Start 7-Day Trial</button>
       </header>
 
-      <div className="backbar">
-        <button className="back-button" onClick={() => {
-          if (tab !== 'home') goBack();
-          else if (window.history.length > 1) window.history.back();
-        }} aria-label="Go back">
-          <ArrowLeft size={18} /> Back
-        </button>
-      </div>
+      {tab !== 'home' && <div className="backbar">
+        <button className="back-button" onClick={goBack} aria-label="Go back"><ArrowLeft size={18} /> Back</button>
+      </div>}
 
       {tab === 'home' && (
         <section className="home-showcase">
-          <div className="premium-launch-strip"><Crown size={18}/><span><b>Fancy Eatz Premium</b> · Your personal kitchen, recipe & dining assistant</span><button onClick={()=>openMembership('Try every Fancy Eatz Premium feature for 7 days.')}>Start 7-Day Trial</button></div>
+          
           <div className="home-hero">
             <div className="hero-copy">
-              <p className="eyebrow">REAL RECIPES · AI-POWERED POSSIBILITIES</p>
-              <h1>Real Recipes.<br/>Real Flavor.<br/><em>Real Possibilities.</em></h1>
-              <p className="lede">Turn what you already have into beautiful meals, complete recipes, drinks, grocery lists and weekly plans.</p>
+              <p className="eyebrow">YOUR PERSONAL KITCHEN ASSISTANT</p>
+              <h1>Know what to cook.<br/><em>Use what you have.</em></h1>
+              <p className="lede">Snap your fridge, enter your ingredients, and Fancy Eatz helps turn them into complete meals.</p>
               <div className="hero-actions"><button className="primary" onClick={()=>openMembership('Unlock the complete Fancy Eatz kitchen experience free for 7 days.')}>Start 7-Day Trial</button><button className="ghost" onClick={()=>document.getElementById('premium-preview')?.scrollIntoView({behavior:'smooth'})}>See What You Get ↓</button></div>
-              <div className="hero-trust"><span>7 days to explore</span><span>Premium kitchen tools</span><span>Cancel anytime once billing launches</span></div>
+              <div className="hero-trust"><span>7-day trial</span><span>Full Premium access</span></div>
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"><div><b>Good Food.<br/>Better Living.</b><span>Simple ingredients. Extraordinary meals.</span></div></div>
           </div>
