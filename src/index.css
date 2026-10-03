@@ -997,3 +997,16 @@ footer p {
 .brand-logo{display:block;width:116px;height:82px;object-fit:contain;object-position:left center;border-radius:12px}
 @media(min-width:801px){.brand-logo{width:142px;height:96px}}
 @media(max-width:800px){.brand-logo-button{width:auto!important;min-width:0!important}.brand-logo{width:112px;height:78px}}
+
+/* Polished responsive brand lockup */
+.brand-logo-button{width:auto!important;max-width:100%!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.brand-logo{display:block!important;width:132px!important;height:132px!important;object-fit:contain!important;object-position:center!important;background:#fff!important;border:1px solid rgba(213,170,96,.42)!important;border-radius:22px!important;box-shadow:0 10px 30px rgba(0,0,0,.32)!important}
+@media(max-width:800px){
+  .topbar{padding:18px 20px 22px!important;gap:16px!important}
+  .brand-logo-button{width:100%!important;display:flex!important;justify-content:center!important;align-items:center!important}
+  .brand-logo{width:126px!important;height:126px!important;border-radius:20px!important}
+  .main-nav{margin-top:2px!important}
+}
+@media(min-width:801px){
+  .brand-logo{width:116px!important;height:116px!important;border-radius:18px!important}
+}
