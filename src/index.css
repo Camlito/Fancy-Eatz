@@ -1183,3 +1183,34 @@ footer p {
    box-shadow:0 10px 30px rgba(214,163,58,.16)!important;
  }
 }
+
+/* Desktop scroll fix: header/logo must stay in normal document flow */
+@media(min-width:801px){
+ .topbar{
+   position:relative!important;
+   top:auto!important;
+   bottom:auto!important;
+   left:auto!important;
+   right:auto!important;
+   height:auto!important;
+   min-height:0!important;
+   z-index:20!important;
+ }
+ .brand-logo-button{
+   position:relative!important;
+   top:auto!important;
+   left:auto!important;
+   right:auto!important;
+   bottom:auto!important;
+   transform:none!important;
+ }
+ .brand-logo{
+   position:static!important;
+   top:auto!important;
+   transform:none!important;
+ }
+ .main-nav,.membership-nav{
+   position:relative!important;
+   top:auto!important;
+ }
+}
