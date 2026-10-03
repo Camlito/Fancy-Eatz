@@ -1010,3 +1010,40 @@ footer p {
 @media(min-width:801px){
   .brand-logo{width:116px!important;height:116px!important;border-radius:18px!important}
 }
+
+/* Fancy Eatz luxe visual upgrade */
+:root{--fe-gold:#e2b65f;--fe-gold2:#f4d27e;--fe-ink:#070706}
+.topbar{background:radial-gradient(circle at 50% -20%,rgba(226,182,95,.16),transparent 45%),linear-gradient(180deg,#090806,#050505)!important;border-bottom:1px solid rgba(226,182,95,.24)!important}
+.brand-logo{border-color:rgba(244,210,126,.7)!important;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 12px 38px rgba(0,0,0,.5),0 0 26px rgba(226,182,95,.14)!important}
+.main-nav>button,.main-nav>.nav-dropdown>.nav-trigger{gap:9px!important;border-color:rgba(226,182,95,.42)!important;background:linear-gradient(145deg,#15120e,#0b0a08)!important;box-shadow:inset 0 1px rgba(255,255,255,.025),0 8px 22px rgba(0,0,0,.22)!important;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important}
+.main-nav>button svg,.main-nav>.nav-dropdown>.nav-trigger svg{color:var(--fe-gold2);stroke-width:1.7}
+.main-nav>.nav-dropdown>.nav-trigger small{margin-left:auto;color:#e9dfcf;font-size:12px}
+.main-nav>button:active,.main-nav>.nav-dropdown>.nav-trigger:active{transform:scale(.985)}
+.membership-nav{background:linear-gradient(100deg,#c9973e 0%,#f0cd79 48%,#d6a54f 100%)!important;color:#120e08!important;border:1px solid #f5d98e!important;box-shadow:0 10px 28px rgba(213,170,96,.18),inset 0 1px rgba(255,255,255,.55)!important;font-weight:800!important}
+.home-showcase{background:radial-gradient(circle at 82% 4%,rgba(226,182,95,.16),transparent 24%),linear-gradient(180deg,#080807,#050505)!important}
+.home-hero{border-color:rgba(226,182,95,.38)!important;border-radius:28px!important;background:#070706!important;box-shadow:0 34px 90px rgba(0,0,0,.55),0 0 40px rgba(226,182,95,.05)!important}
+.home-hero .hero-copy{background:linear-gradient(110deg,rgba(8,8,7,.99),rgba(8,8,7,.93) 70%,rgba(8,8,7,.45))!important;position:relative;z-index:2}
+.home-hero .eyebrow{color:var(--fe-gold)!important;letter-spacing:.18em!important}
+.home-hero h1{font-family:Georgia,'Times New Roman',serif!important;font-weight:500!important;text-shadow:0 4px 24px rgba(0,0,0,.4)}
+.home-hero h1 em{color:var(--fe-gold2)!important;font-weight:500!important}
+.hero-food-photo{filter:saturate(1.08) contrast(1.04);position:relative}
+.hero-food-photo:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#070706 0%,rgba(7,7,6,.52) 25%,transparent 58%),linear-gradient(0deg,rgba(0,0,0,.28),transparent 45%)}
+.national-trust span{border-color:rgba(226,182,95,.28)!important;background:rgba(14,12,9,.76)!important}
+.national-trust svg{color:var(--fe-gold2)}
+@media(max-width:800px){
+  .topbar{padding:18px 20px 24px!important}
+  .brand-logo{width:148px!important;height:148px!important;border-radius:24px!important}
+  .main-nav{gap:10px!important}
+  .main-nav>button,.main-nav>.nav-dropdown>.nav-trigger{min-height:58px!important;border-radius:17px!important;font-size:16px!important;padding:12px 15px!important}
+  .membership-nav{min-height:58px!important;border-radius:999px!important;font-size:17px!important;margin-top:4px!important}
+  .home-showcase{padding-top:16px!important}
+  .home-hero{display:block!important;border-radius:24px!important;margin:0 4px!important;overflow:hidden!important}
+  .home-hero .hero-copy{padding:38px 28px 32px!important}
+  .home-hero h1{font-size:clamp(48px,14vw,68px)!important;line-height:.93!important;letter-spacing:-.045em!important;margin:18px 0 24px!important}
+  .hero-copy .lede{font-size:17px!important;line-height:1.62!important;color:#d4cec5!important}
+  .hero-food-photo{min-height:330px!important;background-position:center!important;padding:24px!important}
+  .hero-food-photo>div{position:relative;z-index:2}
+  .hero-food-photo b{font-size:34px!important}
+  .national-trust{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+  .national-trust span{min-height:46px!important;display:flex!important;align-items:center!important;gap:9px!important;border-radius:13px!important;padding:10px 13px!important}
+}
