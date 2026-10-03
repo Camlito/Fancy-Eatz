@@ -301,6 +301,8 @@ export default function FancyEatz() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [meal, setMeal] = useState<Meal | null>(null);
   const [mealChoices, setMealChoices] = useState<MealChoice[]>([]);
+  const [choiceCategory, setChoiceCategory] = useState('All');
+  const [showAllChoices, setShowAllChoices] = useState(false);
   const [mixSelections, setMixSelections] = useState<Record<string,string>>({});
   const [weeklyPlan, setWeeklyPlan] = useState<WeeklyPlan | null>(null);
   const [experience, setExperience] = useState<Experience | null>(null);
@@ -441,6 +443,25 @@ export default function FancyEatz() {
     navigate('pantry');
   }
 
+  function rankedMealChoices(pantryText:string, requestedMealType:string, requestedStyle:string, avoidRule?:RegExp) {
+    const pantryTokens=(pantryText.toLowerCase().match(/[a-z]{3,}/g)||[]).filter(x=>!['and','the','with'].includes(x));
+    const wanted=requestedMealType.toLowerCase();
+    const styleWords=(requestedStyle.toLowerCase().match(/[a-z]{4,}/g)||[]);
+    return featured
+      .filter(r=>r.ingredients?.length&&r.method?.length&&(!avoidRule||!avoidRule.test([r.title,...(r.ingredients||[])].join(' '))))
+      .map(r=>{
+        const hay=[r.title,r.tag,r.note,r.category,r.mealType,r.style,...(r.ingredients||[])].join(' ').toLowerCase();
+        const mealMatch=r.mealType.toLowerCase()===wanted ? 8 : (wanted==='dinner'&&/dinner|entrée|entree|main/.test(hay) ? 5 : 0);
+        const pantryScore=pantryTokens.reduce((n,t)=>n+(hay.includes(t)?3:0),0);
+        const styleScore=styleWords.reduce((n,t)=>n+(hay.includes(t)?1:0),0);
+        return {r,score:mealMatch+pantryScore+styleScore};
+      })
+      .filter(x=>x.score>0)
+      .sort((a,b)=>b.score-a.score||a.r.title.localeCompare(b.r.title))
+      .slice(0,34)
+      .map(({r})=>({title:r.title,description:r.note,ingredients:r.ingredients||[],steps:r.method||[],plating:'Finish with a polished Fancy Eatz presentation.',missing:[],estimatedCost:r.budget,category:r.category||r.mealType} as MealChoice));
+  }
+
   async function generateMeal(useFallback = false, pantryOverride?: string, mealTypeOverride?: string) {
     const pantryForRequest = pantryOverride ?? pantry;
     if (!pantryForRequest.trim() && !useFallback) {
@@ -455,9 +476,8 @@ export default function FancyEatz() {
       setMeal(primary);
       const avoidPattern:Record<string,RegExp>={Peanuts:/peanut/i,'Tree nuts':/almond|walnut|pecan|cashew|pistachio|hazelnut|tree nut/i,Shellfish:/shrimp|crab|lobster|clam|mussel|oyster|scallop|shellfish/i,Dairy:/milk|cream|cheese|butter|yogurt|dairy/i,Eggs:/\begg(s)?\b/i,Gluten:/wheat|flour|bread|pasta|noodle|cracker|barley|rye|gluten/i};
       const avoidRule=avoidPattern[allergies];
-      const sourceMatches = featured.filter(x => x.ingredients?.length && x.method?.length && (!avoidRule || !avoidRule.test([x.title,...(x.ingredients||[])].join(' ')))).slice(0, 34).map(x => ({
-        title:x.title, description:x.note, ingredients:x.ingredients || [], steps:x.method || [], plating:'Finish with a polished Fancy Eatz presentation.', missing:[], estimatedCost:x.budget, category:x.category || x.mealType
-      }));
+      const sourceMatches = rankedMealChoices(pantryForRequest, mealTypeOverride ?? mealType, style, avoidRule);
+      setChoiceCategory('All'); setShowAllChoices(false);
       setMealChoices([{...primary, category:'Chef Pick'}, ...sourceMatches].slice(0,35));
       navigate('pantry');
     } catch {
@@ -477,7 +497,8 @@ export default function FancyEatz() {
           estimatedCost: sourceRecipe.budget
         };
         setMeal(verifiedMeal);
-        setMealChoices(featured.filter(x=>x.ingredients?.length && x.method?.length).slice(0,35).map(x=>({title:x.title,description:x.note,ingredients:x.ingredients||[],steps:x.method||[],plating:'Serve neatly and finish according to the recipe.',missing:[],estimatedCost:x.budget,category:x.category||x.mealType})));
+        setChoiceCategory('All'); setShowAllChoices(false);
+        setMealChoices(rankedMealChoices(pantryForRequest, mealTypeOverride ?? mealType, style).slice(0,35));
         setMealError('AI generation was unavailable, so Fancy Eatz loaded a complete cookbook recipe instead of showing incomplete directions.');
       } else {
         setMeal(null);
@@ -801,9 +822,11 @@ export default function FancyEatz() {
                   <p className="eyebrow">CHEF-CREATED FOR YOU</p><h2>{meal.title}</h2><p>{meal.description}</p>
                   <div className="meta"><span><Users size={16} />{servings} servings</span><span><Clock3 size={16} />{time}</span>{meal.estimatedCost && <span><WalletCards size={16} />{meal.estimatedCost}</span>}</div>
                   {mealChoices.length > 1 && <div className="choice-studio">
-                    <div className="choice-heading"><div><small>MIX & MATCH STUDIO</small><h3>{mealChoices.length} meal choices</h3></div><span>Tap any choice to make it your active recipe</span></div>
-                    <div className="choice-scroll">{mealChoices.map((choice,i)=><button key={choice.title+i} className={choice.title===meal.title?'meal-choice active':'meal-choice'} onClick={()=>setMeal(choice)}><small>{choice.category}</small><b>{choice.title}</b><span>{choice.description}</span></button>)}</div>
-                    <p className="mix-note">Mix & match your favorite entrée, sides, flavor direction and plating idea, then save the version you want to your cookbook.</p>
+                    <div className="choice-heading"><div><small>MEAL DISCOVERY</small><h3>Choose Your Next Meal</h3><p>{mealChoices.length} relevant recipes available</p></div><span>Organized by the categories these recipes actually belong to.</span></div>
+                    <div className="choice-categories">{['All',...Array.from(new Set(mealChoices.map(x=>x.category)))].map(cat=><button key={cat} className={choiceCategory===cat?'active':''} onClick={()=>{setChoiceCategory(cat);setShowAllChoices(false)}}>{cat}</button>)}</div>
+                    <div className="choice-scroll">{mealChoices.filter(x=>choiceCategory==='All'||x.category===choiceCategory).slice(0,showAllChoices?35:6).map((choice,i)=><button key={choice.title+i} className={choice.title===meal.title?'meal-choice active':'meal-choice'} onClick={()=>setMeal(choice)}><small>{choice.category}</small><b>{choice.title}</b><span>{choice.description}</span><strong>View Recipe →</strong></button>)}</div>
+                    {mealChoices.filter(x=>choiceCategory==='All'||x.category===choiceCategory).length>6&&<button className="ghost choice-more" onClick={()=>setShowAllChoices(v=>!v)}>{showAllChoices?'Show Fewer Meals':'Show More Meals'}</button>}
+                    <p className="mix-note">Choose a complete recipe that fits your current meal direction, or build a custom plate below.</p>
                     <div className="component-builder">
                       <h3>Build Your Own Plate</h3><p>Choose components from the cookbook-powered library. Only components found in completed recipe entries are used for food selections.</p>
                       <div className="component-grid">{mixKinds.map(kind=><label key={kind}><span>{kind}</span><select value={mixSelections[kind]||''} onChange={e=>setMixSelections(v=>({...v,[kind]:e.target.value}))}><option value="">Chef's choice</option>{mixLibrary.filter(x=>x.kind===kind).slice(0,35).map(x=><option key={kind+x.name} value={x.name}>{x.name}</option>)}</select></label>)}</div>
