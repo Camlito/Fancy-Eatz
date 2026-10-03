@@ -237,50 +237,23 @@ export default function FancyEatz() {
   async function loadDashboard() {
     setDashboardLoading(true);
     try {
-      const response = await fetch('https://flnplmywkukyejisbnyd.supabase.co/rest/v1/early_access?select=id,email,source,status,created_at,launch_invited_at,converted_at&order=created_at.desc', {
-        headers: {
-          'apikey': 'sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR',
-          'Authorization': 'Bearer sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR'
-        }
-      });
-      if (!response.ok) throw new Error('dashboard');
-      setDashboardLeads(await response.json());
+      const response=await fetch('/api/early-access-stats',{method:'POST',headers:{'content-type':'application/json','x-owner-code':'FANCY2026'},body:'{}'});
+      if(!response.ok) throw new Error('dashboard');
+      const data=await response.json(); setDashboardLeads(Array.isArray(data.leads)?data.leads:[]);
     } catch { setDashboardLeads([]); }
     finally { setDashboardLoading(false); }
   }
 
   async function joinEarlyAccess() {
-    const email = earlyEmail.trim().toLowerCase();
-    if (!email || !email.includes('@') || !email.split('@')[1]?.includes('.')) {
-      setMembershipNotice('Enter a valid email to join early access.');
-      setEarlyError('Please enter a valid email address first.');
-      return;
-    }
-    setEarlySubmitting(true);
-    setEarlyError('');
-    setMembershipNotice('Saving your spot…');
-    try {
-      const response = await fetch('https://flnplmywkukyejisbnyd.supabase.co/rest/v1/rpc/join_early_access', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'apikey': 'sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR',
-          'Authorization': 'Bearer sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR'
-        },
-        body: JSON.stringify({ p_email: email, p_source: 'website' })
-      });
-      if (!response.ok) throw new Error('signup failed');
-      setEarlyJoined(true);
-      setMembershipNotice('');
-      setShowMembership(false);
-      window.location.hash = 'early-access-confirmed';
-      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
-    } catch {
-      setMembershipNotice('Signup did not save. Please try again.');
-      setEarlyError('We could not save your signup. Please try again.');
-    } finally {
-      setEarlySubmitting(false);
-    }
+    const email=earlyEmail.trim().toLowerCase();
+    if(!email||!email.includes('@')||!email.split('@')[1]?.includes('.')){setMembershipNotice('Enter a valid email to join early access.');setEarlyError('Please enter a valid email address first.');return;}
+    setEarlySubmitting(true);setEarlyError('');setMembershipNotice('Saving your spot…');
+    try{
+      const response=await fetch('/api/early-access',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email,source:'website'})});
+      if(!response.ok) throw new Error('signup');
+      setEarlyJoined(true);setMembershipNotice('');setShowMembership(false);window.location.hash='early-access-confirmed';setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),50);
+    }catch{setMembershipNotice('Signup did not save. Please try again.');setEarlyError('We could not save your signup. Please try again.');}
+    finally{setEarlySubmitting(false);}
   }
 
   function navigate(nextTab: string) {
