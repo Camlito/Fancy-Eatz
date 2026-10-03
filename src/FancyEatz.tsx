@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { drinks } from './drinks';
 import { styleRecipeVault, styleRecipeCounts } from './styleRecipeVault';
-const api = { post: async (url: string, body: unknown) => { const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }); if (!response.ok) throw new Error('Request failed'); return { data: await response.json() }; } };
+const api = { post: async (url: string, body: unknown) => { const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }); let data:any={}; try { data=await response.json(); } catch { data={message:'The server returned an unreadable response.'}; } if (!response.ok) { const err:any=new Error(data?.message || 'Request failed'); err.data=data; throw err; } return { data }; } };
 import {
   ArrowLeft,
   BookOpen,
@@ -449,10 +449,10 @@ export default function FancyEatz() {
       const items = Array.isArray(r.data.items) ? r.data.items : [];
       setPhotoItems(items);
       if (items.length) setPantry(items.join(', '));
-      else if (r.data.available === false) setPhotoError(r.data.message || 'Photo recognition is temporarily unavailable. Enter ingredients manually.');
-    } catch {
+      else setPhotoError(r.data.message || 'No clear food ingredients were detected. Try a closer, brighter photo or enter ingredients manually.');
+    } catch (error:any) {
       setPhotoItems([]);
-      setPhotoError('Photo recognition is temporarily unavailable on this test build. You can still type or paste any ingredients you see below.');
+      setPhotoError(error?.data?.message || error?.message || 'Photo recognition is temporarily unavailable. You can still type or paste ingredients below.');
     } finally {
       setPhotoBusy(false);
     }
