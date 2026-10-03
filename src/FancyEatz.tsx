@@ -589,17 +589,18 @@ export default function FancyEatz() {
 
       {tab === 'home' && (
         <section className="home-showcase">
-          <div className="premium-launch-strip"><Crown size={18}/><span><b>Fancy Eatz Premium</b> · Full kitchen intelligence, planning & recipe experience</span><button onClick={()=>openMembership('Try every Fancy Eatz Premium feature for 7 days.')}>Start 7-Day Trial</button></div>
+          <div className="premium-launch-strip"><Crown size={18}/><span><b>Fancy Eatz Premium</b> · Your personal kitchen, recipe & dining assistant</span><button onClick={()=>openMembership('Try every Fancy Eatz Premium feature for 7 days.')}>Start 7-Day Trial</button></div>
           <div className="home-hero">
             <div className="hero-copy">
               <p className="eyebrow">REAL RECIPES · AI-POWERED POSSIBILITIES</p>
               <h1>Real Recipes.<br/>Real Flavor.<br/><em>Real Possibilities.</em></h1>
-              <p className="lede">Cookbook recipes · AI Meal Generator · Mix & Match · Grocery Lists · Meal Plans</p>
-              <button className="primary" onClick={()=>navigate('recipes')}>Find Your Next Meal →</button>
+              <p className="lede">Turn what you already have into beautiful meals, complete recipes, drinks, grocery lists and weekly plans.</p>
+              <div className="hero-actions"><button className="primary" onClick={()=>openMembership('Unlock the complete Fancy Eatz kitchen experience free for 7 days.')}>Start 7-Day Trial</button><button className="ghost" onClick={()=>document.getElementById('premium-preview')?.scrollIntoView({behavior:'smooth'})}>See What You Get ↓</button></div>
+              <div className="hero-trust"><span>7 days to explore</span><span>Premium kitchen tools</span><span>Cancel anytime once billing launches</span></div>
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"><div><b>Good Food.<br/>Better Living.</b><span>Simple ingredients. Extraordinary meals.</span></div></div>
           </div>
-          <div className="home-search-row">
+          <section className="premium-preview" id="premium-preview"><p className="eyebrow">ONE MEMBERSHIP · YOUR WHOLE KITCHEN</p><h2>More than recipes. A smarter way to cook.</h2><p>Fancy Eatz helps you decide what to make, use what you already have, plan the week and turn everyday meals into something worth serving.</p><div className="premium-preview-grid"><article><ChefHat/><b>Pantry Chef</b><span>Tell us what you have. Get complete meal possibilities.</span></article><article><Sparkles/><b>Photo My Fridge</b><span>Upload your kitchen photo and turn visible ingredients into ideas.</span></article><article><BookOpen/><b>Recipe Vault</b><span>Explore complete recipes, drinks, desserts and cooking styles.</span></article><article><CalendarDays/><b>Plan the Week</b><span>Build weekly meals and one organized grocery list.</span></article></div></section><div className="home-search-row">
             <label className="search-box"><Search size={18}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search recipes (salmon, chicken, pasta, healthy...)" /><button onClick={()=>navigate('recipes')}>Search</button></label>
             <button className="ai-generator-callout" onClick={()=>navigate('pantry')}><ChefHat size={30}/><span><b>AI Meal Generator</b><small>Enter what you have and get 22–35 meal ideas</small></span><strong>Generate Meals →</strong></button>
           </div>
@@ -611,7 +612,7 @@ export default function FancyEatz() {
           <div className="home-recipe-section"><div className="home-section-title"><h2>Featured Recipes</h2><button onClick={()=>navigate('recipes')}>View All Recipes →</button></div>
             <div className="home-recipe-strip">{featured.filter(r=>r.image).slice(0,6).map(r=><button className="home-recipe-card" key={r.title} onClick={()=>{setSelectedRecipe(r);navigate('recipes')}}><div style={{backgroundImage:`url("${r.image}")`}}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div>
           </div>
-          <div className="home-tools">
+          <section className="premium-conversion"><div><p className="eyebrow">TRY THE FULL EXPERIENCE</p><h2>Tonight's dinner is just the beginning.</h2><p>Unlock every Fancy Eatz tool for 7 days and see how much easier your kitchen can feel.</p></div><button className="primary" onClick={()=>openMembership('Start with full Premium access for 7 days.')}>Start My 7-Day Trial →</button></section><div className="home-tools">
             <button onClick={()=>navigate('planner')}><CalendarDays/><span><b>Meal Planner</b><small>Plan your week and build one smart shopping list.</small></span></button>
             <button onClick={()=>navigate('grocery')}><ShoppingBasket/><span><b>Grocery Lists</b><small>Add ingredients with one click and shop in seconds.</small></span></button>
             <button onClick={()=>navigate('favorites')}><BookOpen/><span><b>My Cookbook</b><small>Save favorite recipes and custom creations.</small></span></button>
