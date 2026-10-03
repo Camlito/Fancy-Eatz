@@ -219,6 +219,7 @@ export default function FancyEatz() {
   const [earlyJoined, setEarlyJoined] = useState(false);
   const [earlySubmitting, setEarlySubmitting] = useState(false);
   const [earlyError, setEarlyError] = useState('');
+  const [mobileMenu, setMobileMenu] = useState('');
   const premiumTabs = new Set(['pantry','photo','leftovers','ideas','styles','experience','planner','grocery','basics','grill','desserts','drinks','recipes','favorites']);
   const openMembership = (message='Start your 7-day Fancy Eatz Premium trial to unlock this feature.') => { setMembershipNotice(message); setShowMembership(true); };
 
@@ -585,34 +586,9 @@ export default function FancyEatz() {
         </button>
         <nav className="main-nav">
           <button onClick={() => navigate('home')}>Home</button>
-          <details className="nav-dropdown">
-            <summary>Cook ▾</summary>
-            <div className="nav-menu">
-              <button onClick={() => navigate('pantry')}>Pantry Chef</button>
-              <button onClick={() => navigate('photo')}>Photo My Fridge</button>
-              <button onClick={() => navigate('leftovers')}>Leftovers → Luxury</button>
-              <button onClick={() => navigate('ideas')}>Meal Ideas</button>
-              <button onClick={() => navigate('styles')}>Cooking Styles</button>
-            </div>
-          </details>
-          <details className="nav-dropdown">
-            <summary>Explore ▾</summary>
-            <div className="nav-menu">
-              <button onClick={() => navigate('experience')}>Dining Experience</button>
-              <button onClick={() => navigate('planner')}>Weekly Planner</button>
-              <button onClick={() => navigate('grocery')}>Grocery Lists</button>
-              <button onClick={() => navigate('grill')}>Grill Master</button>
-              <button onClick={() => navigate('desserts')}>Desserts</button>
-              <button onClick={() => navigate('drinks')}>Drinks</button>
-            </div>
-          </details>
-          <details className="nav-dropdown">
-            <summary>Cookbook ▾</summary>
-            <div className="nav-menu">
-              <button onClick={() => navigate('recipes')}>A–Z Recipe Vault</button>
-              <button onClick={() => navigate('favorites')}>My Fancy Cookbook</button>
-            </div>
-          </details>
+          <div className="nav-dropdown"><button className={mobileMenu==='cook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cook'?'':'cook')}>Cook ▾</button>{mobileMenu==='cook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('pantry')}}>Pantry Chef</button><button onClick={()=>{setMobileMenu('');navigate('photo')}}>Photo My Fridge</button><button onClick={()=>{setMobileMenu('');navigate('leftovers')}}>Leftovers → Luxury</button><button onClick={()=>{setMobileMenu('');navigate('ideas')}}>Meal Ideas</button><button onClick={()=>{setMobileMenu('');navigate('styles')}}>Cooking Styles</button></div>}</div>
+          <div className="nav-dropdown"><button className={mobileMenu==='explore'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='explore'?'':'explore')}>Explore ▾</button>{mobileMenu==='explore'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('experience')}}>Dining Experience</button><button onClick={()=>{setMobileMenu('');navigate('planner')}}>Weekly Planner</button><button onClick={()=>{setMobileMenu('');navigate('grocery')}}>Grocery Lists</button><button onClick={()=>{setMobileMenu('');navigate('grill')}}>Grill Master</button><button onClick={()=>{setMobileMenu('');navigate('desserts')}}>Desserts</button><button onClick={()=>{setMobileMenu('');navigate('drinks')}}>Drinks</button></div>}</div>
+          <div className="nav-dropdown"><button className={mobileMenu==='cookbook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cookbook'?'':'cookbook')}>Cookbook ▾</button>{mobileMenu==='cookbook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('recipes')}}>A–Z Recipe Vault</button><button onClick={()=>{setMobileMenu('');navigate('favorites')}}>My Fancy Cookbook</button></div>}</div>
         </nav>
         <button className="membership-nav" onClick={()=>openMembership('Choose your Fancy Eatz Premium plan and start your 7-day trial.')}><Crown size={16}/> Get Early Access</button>
       </header>
