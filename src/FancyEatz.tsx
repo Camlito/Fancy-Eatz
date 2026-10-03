@@ -405,7 +405,7 @@ export default function FancyEatz() {
     setMeal({...meal,title:`My Fancy Eatz: ${mixSelections['Entrée'] || meal.title}`,description:`${meal.description} Customized with ${description}.`,plating:mixSelections['Finish'] || meal.plating});
   }
 
-  const requestSettings = { occasion, servings, time, style, mealType, diet, budget };
+  const requestSettings = { occasion, servings, time, style, mealType, diet, budget, allergies, household, skill, appliance };
 
   function openSpecialGenerator(kind: 'grill' | 'dessert') {
     if (kind === 'grill') {
@@ -433,7 +433,9 @@ export default function FancyEatz() {
       const r = await api.post('/api/generate-meal', { pantry: pantryForRequest || 'common home pantry staples', ...requestSettings, mealType: mealTypeOverride ?? mealType });
       const primary = r.data.meal as Meal;
       setMeal(primary);
-      const sourceMatches = featured.filter(x => x.ingredients?.length && x.method?.length).slice(0, 34).map(x => ({
+      const avoidPattern:Record<string,RegExp>={Peanuts:/peanut/i,'Tree nuts':/almond|walnut|pecan|cashew|pistachio|hazelnut|tree nut/i,Shellfish:/shrimp|crab|lobster|clam|mussel|oyster|scallop|shellfish/i,Dairy:/milk|cream|cheese|butter|yogurt|dairy/i,Eggs:/\begg(s)?\b/i,Gluten:/wheat|flour|bread|pasta|noodle|cracker|barley|rye|gluten/i};
+      const avoidRule=avoidPattern[allergies];
+      const sourceMatches = featured.filter(x => x.ingredients?.length && x.method?.length && (!avoidRule || !avoidRule.test([x.title,...(x.ingredients||[])].join(' ')))).slice(0, 34).map(x => ({
         title:x.title, description:x.note, ingredients:x.ingredients || [], steps:x.method || [], plating:'Finish with a polished Fancy Eatz presentation.', missing:[], estimatedCost:x.budget, category:x.category || x.mealType
       }));
       setMealChoices([{...primary, category:'Chef Pick'}, ...sourceMatches].slice(0,35));
