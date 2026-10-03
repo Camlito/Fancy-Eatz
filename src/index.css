@@ -1125,3 +1125,10 @@ footer p {
  .reference-hero h1 strong{color:#f0c968!important}
  .reference-benefits svg{box-shadow:0 0 18px rgba(228,185,95,.12)!important}
 }
+
+/* Crisp mobile brand presentation */
+@media(max-width:800px){
+ .topbar{padding:14px 20px 22px!important}
+ .brand-logo-button{width:100%!important;margin:0 auto 18px!important;border:1px solid rgba(225,177,76,.22)!important;border-radius:20px!important;overflow:hidden!important;background:#050505!important;box-shadow:0 16px 38px rgba(0,0,0,.38)!important}
+ .brand-logo{display:block!important;width:100%!important;height:auto!important;max-width:640px!important;max-height:none!important;object-fit:contain!important;object-position:center!important;transform:none!important;filter:contrast(1.04) saturate(1.03)!important}
+}
