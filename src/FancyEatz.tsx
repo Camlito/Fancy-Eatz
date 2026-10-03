@@ -218,6 +218,7 @@ export default function FancyEatz() {
   const [earlyEmail, setEarlyEmail] = useState('');
   const [earlyJoined, setEarlyJoined] = useState(false);
   const [earlySubmitting, setEarlySubmitting] = useState(false);
+  const [earlyError, setEarlyError] = useState('');
   const premiumTabs = new Set(['pantry','photo','leftovers','ideas','styles','experience','planner','grocery','basics','grill','desserts','drinks','recipes','favorites']);
   const openMembership = (message='Start your 7-day Fancy Eatz Premium trial to unlock this feature.') => { setMembershipNotice(message); setShowMembership(true); };
 
@@ -232,9 +233,11 @@ export default function FancyEatz() {
     const email = earlyEmail.trim().toLowerCase();
     if (!email || !email.includes('@') || !email.split('@')[1]?.includes('.')) {
       setMembershipNotice('Enter a valid email to join early access.');
+      setEarlyError('Please enter a valid email address first.');
       return;
     }
     setEarlySubmitting(true);
+    setEarlyError('');
     setMembershipNotice('Saving your spot…');
     try {
       const response = await fetch('https://flnplmywkukyejisbnyd.supabase.co/rest/v1/rpc/join_early_access', {
@@ -254,6 +257,7 @@ export default function FancyEatz() {
       setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
     } catch {
       setMembershipNotice('Signup did not save. Please try again.');
+      setEarlyError('We could not save your signup. Please try again.');
     } finally {
       setEarlySubmitting(false);
     }
@@ -1010,6 +1014,7 @@ export default function FancyEatz() {
             <button className="membership-plan" onClick={()=>setMembershipNotice('Annual plan selected. Secure checkout will activate here once billing is connected.')}><small>PLANNED ANNUAL · SAVE</small><strong>$79</strong><span>/ year</span><em>7-day trial at launch</em></button>
           </div>
           <div className="early-access-form"><input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" value={earlyEmail} onChange={e=>{setEarlyEmail(e.target.value);setMembershipNotice('')}} onKeyDown={e=>{if(e.key==='Enter')joinEarlyAccess()}} placeholder="Enter your email" aria-label="Email for early access"/><button type="button" className="primary membership-cta" disabled={earlySubmitting} onClick={joinEarlyAccess}><LockKeyhole size={18}/>{earlySubmitting?'Joining…':'Join Early Access'}</button></div>
+          {earlyError && <p className="early-inline-error" role="alert">{earlyError}</p>}
           {earlyJoined ? <div className="early-success"><ShieldCheck size={20}/><span><b>You're on the list.</b><small>You'll get your 7-day Premium trial invitation when Fancy Eatz launches.</small></span></div> : <p className="membership-fine">Join the founding early-access list. No payment is collected today.</p>}
         </div>
       </div>}
