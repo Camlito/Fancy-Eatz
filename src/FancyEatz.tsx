@@ -228,6 +228,37 @@ export default function FancyEatz() {
   const [drinkPantryOnly, setDrinkPantryOnly] = useState(false);
   const [experienceDrinkMode, setExperienceDrinkMode] = useState('Both');
 
+  async function joinEarlyAccess() {
+    const email = earlyEmail.trim().toLowerCase();
+    if (!email || !email.includes('@') || !email.split('@')[1]?.includes('.')) {
+      setMembershipNotice('Enter a valid email to join early access.');
+      return;
+    }
+    setEarlySubmitting(true);
+    setMembershipNotice('Saving your spot…');
+    try {
+      const response = await fetch('https://flnplmywkukyejisbnyd.supabase.co/rest/v1/rpc/join_early_access', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'apikey': 'sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR',
+          'Authorization': 'Bearer sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR'
+        },
+        body: JSON.stringify({ p_email: email, p_source: 'website' })
+      });
+      if (!response.ok) throw new Error('signup failed');
+      setEarlyJoined(true);
+      setMembershipNotice('');
+      setShowMembership(false);
+      window.location.hash = 'early-access-confirmed';
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+    } catch {
+      setMembershipNotice('Signup did not save. Please try again.');
+    } finally {
+      setEarlySubmitting(false);
+    }
+  }
+
   function navigate(nextTab: string) {
     if (premiumTabs.has(nextTab) && localStorage.getItem('fancy-eatz-member') !== 'active') {
       openMembership();
@@ -974,7 +1005,7 @@ export default function FancyEatz() {
             <button className="membership-plan selected" onClick={()=>setMembershipNotice('Monthly plan selected. Secure checkout will activate here once billing is connected.')}><small>PLANNED MONTHLY</small><strong>$9.99</strong><span>/ month</span><em>7-day trial at launch</em></button>
             <button className="membership-plan" onClick={()=>setMembershipNotice('Annual plan selected. Secure checkout will activate here once billing is connected.')}><small>PLANNED ANNUAL · SAVE</small><strong>$79</strong><span>/ year</span><em>7-day trial at launch</em></button>
           </div>
-          <div className="early-access-form"><input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" value={earlyEmail} onChange={e=>{setEarlyEmail(e.target.value);setMembershipNotice('')}} placeholder="Enter your email" aria-label="Email for early access"/><button type="button" className="primary membership-cta" onClick={async()=>{const email=earlyEmail.trim().toLowerCase();if(!email||!email.includes('@')||!email.slice(email.indexOf('@')+1).includes('.')){setMembershipNotice('Enter a valid email to join early access.');return;}setMembershipNotice('Saving your spot…');try{const response=await fetch('https://flnplmywkukyejisbnyd.supabase.co/rest/v1/rpc/join_early_access',{method:'POST',headers:{'content-type':'application/json','apikey':'sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR','Authorization':'Bearer sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR'},body:JSON.stringify({p_email:email,p_source:'website'})});if(!response.ok)throw new Error(await response.text());setEarlyJoined(true);setMembershipNotice('');setShowMembership(false);window.scrollTo({top:0,behavior:'smooth'});}catch(e){console.error(e);setMembershipNotice('Signup did not save. Please try again.');}}}><LockKeyhole size={18}/>Join Early Access</button></div>
+          <div className="early-access-form"><input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" value={earlyEmail} onChange={e=>{setEarlyEmail(e.target.value);setMembershipNotice('')}} onKeyDown={e=>{if(e.key==='Enter')joinEarlyAccess()}} placeholder="Enter your email" aria-label="Email for early access"/><button type="button" className="primary membership-cta" disabled={earlySubmitting} onClick={joinEarlyAccess}><LockKeyhole size={18}/>{earlySubmitting?'Joining…':'Join Early Access'}</button></div>
           {earlyJoined ? <div className="early-success"><ShieldCheck size={20}/><span><b>You're on the list.</b><small>You'll get your 7-day Premium trial invitation when Fancy Eatz launches.</small></span></div> : <p className="membership-fine">Join the founding early-access list. No payment is collected today.</p>}
         </div>
       </div>}
