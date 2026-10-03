@@ -916,3 +916,35 @@ footer p {
     left:0!important;right:auto!important;
   }
 }
+
+/* Final portrait-mobile dropdown fix: menu is viewport-fixed, never clipped by nav column */
+@media(max-width:800px) and (orientation:portrait){
+  .topbar,.main-nav,.nav-dropdown{overflow:visible!important}
+  .main-nav>.nav-dropdown>.nav-menu{
+    position:fixed!important;
+    top:390px!important;
+    left:16px!important;
+    right:16px!important;
+    width:auto!important;
+    max-width:none!important;
+    max-height:calc(100dvh - 420px)!important;
+    margin:0!important;
+    transform:none!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    box-sizing:border-box!important;
+    z-index:2147483000!important;
+    border-radius:16px!important;
+  }
+  .main-nav>.nav-dropdown:nth-of-type(even)>.nav-menu,
+  .main-nav>.nav-dropdown:nth-of-type(odd)>.nav-menu{
+    left:16px!important;right:16px!important;
+  }
+  .nav-menu button{
+    width:100%!important;
+    min-width:0!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    text-align:left!important;
+  }
+}
