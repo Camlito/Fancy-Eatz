@@ -627,7 +627,11 @@ export default function FancyEatz() {
               <p className="eyebrow">YOUR PERSONAL KITCHEN ASSISTANT</p>
               <h1>Know what to cook.<br/><em>Use what you have.</em></h1>
               <p className="lede">Snap your fridge, enter your ingredients, and Fancy Eatz helps turn them into complete meals.</p>
-              <div className="hero-actions"><button className="primary" onClick={()=>openMembership('Join early access and be first to try the complete Fancy Eatz experience.')}>Get Early Access</button><button className="ghost" onClick={()=>document.getElementById('premium-preview')?.scrollIntoView({behavior:'smooth'})}>See What You Get ↓</button></div>
+              <div className="hero-early-access">
+            <div className="hero-early-copy"><b>Get Fancy Eatz Early Access</b><span>Be first in line for your 7-day Premium trial at launch.</span></div>
+            <div className="hero-early-form"><input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" value={earlyEmail} onChange={e=>{setEarlyEmail(e.target.value);setMembershipNotice('')}} onKeyDown={e=>{if(e.key==='Enter')joinEarlyAccess()}} placeholder="Enter your email address"/><button type="button" className="primary" disabled={earlySubmitting} onClick={joinEarlyAccess}>{earlySubmitting?'Joining…':'Join Early Access'}</button></div>
+          </div>
+          <div className="hero-actions"><button className="primary" onClick={()=>openMembership('Join early access and be first to try the complete Fancy Eatz experience.')}>Get Early Access</button><button className="ghost" onClick={()=>document.getElementById('premium-preview')?.scrollIntoView({behavior:'smooth'})}>See What You Get ↓</button></div>
               <div className="hero-trust"><span>7-day trial</span><span>Full Premium access</span></div>
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"><div><b>Good Food.<br/>Better Living.</b><span>Simple ingredients. Extraordinary meals.</span></div></div>
