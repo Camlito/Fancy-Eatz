@@ -21,6 +21,8 @@ import {
   Crown,
   LockKeyhole,
   ShieldCheck,
+  House,
+  Compass,
 } from 'lucide-react';
 
 type Meal = {
@@ -648,10 +650,10 @@ export default function FancyEatz() {
           <img className="brand-logo" src="/fancy-eatz-logo-mobile.jpg?v=4" alt="Fancy Eatz — Elevate Every Bite" />
         </button>
         <nav className="main-nav">
-          <button onClick={() => navigate('home')}>Home</button>
-          <div className="nav-dropdown"><button className={mobileMenu==='cook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cook'?'':'cook')}>Cook ▾</button>{mobileMenu==='cook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('pantry')}}>Pantry Chef</button><button onClick={()=>{setMobileMenu('');navigate('photo')}}>Photo My Fridge</button><button onClick={()=>{setMobileMenu('');navigate('leftovers')}}>Leftovers → Luxury</button><button onClick={()=>{setMobileMenu('');navigate('ideas')}}>Meal Ideas</button><button onClick={()=>{setMobileMenu('');navigate('styles')}}>Cooking Styles</button></div>}</div>
-          <div className="nav-dropdown"><button className={mobileMenu==='explore'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='explore'?'':'explore')}>Explore ▾</button>{mobileMenu==='explore'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('experience')}}>Dining Experience</button><button onClick={()=>{setMobileMenu('');navigate('planner')}}>Weekly Planner</button><button onClick={()=>{setMobileMenu('');navigate('grocery')}}>Grocery Lists</button><button onClick={()=>{setMobileMenu('');navigate('grill')}}>Grill Master</button><button onClick={()=>{setMobileMenu('');navigate('desserts')}}>Desserts</button><button onClick={()=>{setMobileMenu('');navigate('drinks')}}>Drinks</button></div>}</div>
-          <div className="nav-dropdown"><button className={mobileMenu==='cookbook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cookbook'?'':'cookbook')}>Cookbook ▾</button>{mobileMenu==='cookbook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('recipes')}}>A–Z Recipe Vault</button><button onClick={()=>{setMobileMenu('');navigate('favorites')}}>My Fancy Cookbook</button></div>}</div>
+          <button onClick={() => navigate('home')}><House size={19}/> <span>Home</span></button>
+          <div className="nav-dropdown"><button className={mobileMenu==='cook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cook'?'':'cook')}><ChefHat size={19}/> <span>Cook</span> <small>▾</small></button>{mobileMenu==='cook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('pantry')}}>Pantry Chef</button><button onClick={()=>{setMobileMenu('');navigate('photo')}}>Photo My Fridge</button><button onClick={()=>{setMobileMenu('');navigate('leftovers')}}>Leftovers → Luxury</button><button onClick={()=>{setMobileMenu('');navigate('ideas')}}>Meal Ideas</button><button onClick={()=>{setMobileMenu('');navigate('styles')}}>Cooking Styles</button></div>}</div>
+          <div className="nav-dropdown"><button className={mobileMenu==='explore'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='explore'?'':'explore')}><Compass size={19}/> <span>Explore</span> <small>▾</small></button>{mobileMenu==='explore'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('experience')}}>Dining Experience</button><button onClick={()=>{setMobileMenu('');navigate('planner')}}>Weekly Planner</button><button onClick={()=>{setMobileMenu('');navigate('grocery')}}>Grocery Lists</button><button onClick={()=>{setMobileMenu('');navigate('grill')}}>Grill Master</button><button onClick={()=>{setMobileMenu('');navigate('desserts')}}>Desserts</button><button onClick={()=>{setMobileMenu('');navigate('drinks')}}>Drinks</button></div>}</div>
+          <div className="nav-dropdown"><button className={mobileMenu==='cookbook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cookbook'?'':'cookbook')}><BookOpen size={19}/> <span>Cookbook</span> <small>▾</small></button>{mobileMenu==='cookbook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('recipes')}}>A–Z Recipe Vault</button><button onClick={()=>{setMobileMenu('');navigate('favorites')}}>My Fancy Cookbook</button></div>}</div>
         </nav>
         <button className="membership-nav" onClick={()=>openMembership('Choose your Fancy Eatz Premium plan and start your 7-day trial.')}><Crown size={16}/> Get Early Access</button>
       </header>
