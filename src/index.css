@@ -832,3 +832,13 @@ footer p {
   .nav-menu button{display:block!important;position:relative!important;z-index:100000!important;min-height:52px!important;width:100%!important;color:#fff!important;background:#15120e!important;pointer-events:auto!important;touch-action:manipulation!important}
   .main-nav .nav-dropdown:nth-of-type(even) .nav-menu{left:auto!important;right:0!important}
 }
+
+/* Mobile Explore dropdown containment */
+@media(max-width:800px){
+  .main-nav{position:relative!important}
+  .nav-dropdown .nav-menu{box-sizing:border-box!important}
+  .main-nav .nav-dropdown:nth-of-type(2) .nav-menu{
+    left:auto!important;right:0!important;width:min(300px,calc(100vw - 32px))!important;
+  }
+  .nav-menu button{box-sizing:border-box!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:normal!important;text-align:left!important;padding:14px 16px!important}
+}
