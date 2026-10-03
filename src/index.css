@@ -987,3 +987,7 @@ footer p {
   }
   .main-nav>.nav-dropdown>.nav-menu button+button{margin-top:2px!important}
 }
+
+/* Structured meal discovery */
+.choice-heading p{margin:5px 0 0;color:#8f867a;font-size:12px}.choice-categories{display:flex;gap:7px;overflow-x:auto;padding:4px 0 14px;-webkit-overflow-scrolling:touch;scrollbar-width:none}.choice-categories::-webkit-scrollbar{display:none}.choice-categories button{flex:0 0 auto;border:1px solid #4a4034;border-radius:999px;background:#0e0c09;color:#c8bfb3;padding:8px 12px;font-size:11px;cursor:pointer}.choice-categories button.active{background:#d5aa60;color:#17120c;border-color:#d5aa60}.meal-choice strong{display:block;margin-top:12px;color:#d5aa60;font-size:11px;letter-spacing:.04em}.choice-more{margin:14px 0 4px}
+@media(max-width:800px){.choice-studio{padding:18px 14px!important}.choice-heading{display:block!important}.choice-heading h3{font-size:27px!important;line-height:1.05!important;margin:5px 0!important}.choice-heading>span{display:block!important;margin-top:8px!important;font-size:12px!important}.choice-scroll{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;overflow:visible!important}.meal-choice{width:100%!important;min-width:0!important;min-height:0!important;padding:17px!important}.meal-choice b{font-size:21px!important}.meal-choice span{font-size:14px!important;line-height:1.45!important}.choice-more{width:100%!important;min-height:48px!important}}
