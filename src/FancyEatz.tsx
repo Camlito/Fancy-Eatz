@@ -344,6 +344,19 @@ export default function FancyEatz() {
   }, [household,skill,appliance,profileDiet,allergies,dayMeal,foodMood,weeklyGoal]);
 
 
+  const tasteSignals = useMemo(() => {
+    const words=[...cookedHistory.slice(0,12).map(x=>x.title+' '+x.description),...favorites.slice(0,12).map(x=>x.title+' '+x.description)].join(' ').toLowerCase();
+    const signals=[['Chicken',/chicken/],['Seafood',/salmon|shrimp|crab|fish|tuna|scallop/],['Pasta',/pasta|spaghetti|linguine|noodle|macaroni/],['Comfort',/casserole|creamy|comfort|potato|cheese/],['Fresh',/salad|vegetable|greens|fresh|citrus/],['Grill',/grill|steak|burger|barbecue|bbq/]] as const;
+    return signals.filter(([,re])=>re.test(words)).map(([name])=>name).slice(0,3);
+  },[cookedHistory,favorites]);
+
+  const recommendedRecipes = useMemo(() => {
+    if(!cookedHistory.length&&!favorites.length) return [] as Recipe[];
+    const corpus=[...cookedHistory,...favorites].map(x=>(x.title+' '+x.description+' '+x.ingredients.join(' ')).toLowerCase()).join(' ');
+    const tokens=Array.from(new Set(corpus.match(/[a-z]{4,}/g)||[])).filter(x=>!['with','this','that','from','your','serve','fancy','eatz'].includes(x));
+    return featured.filter(r=>r.ingredients?.length).map(r=>({r,score:tokens.reduce((n,t)=>n+((r.title+' '+r.note+' '+r.ingredients.join(' ')).toLowerCase().includes(t)?1:0),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.r);
+  },[cookedHistory,favorites]);
+
   const filteredRecipes = useMemo(() => featured.filter(r => {
     const q = search.toLowerCase();
     const styleText=(r.title+' '+r.tag+' '+r.note+' '+r.category+' '+r.mealType).toLowerCase();
@@ -671,6 +684,7 @@ export default function FancyEatz() {
             <button onClick={()=>navigate('planner')}><span>7</span><div><b>This Week</b><small>{weeklyPlan ? 'Your weekly plan is ready to revisit' : 'Build a simple plan for the week ahead'}</small></div></button>
             <button onClick={()=>cookedHistory.length?cookAgain(cookedHistory[0]):navigate('pantry')}><span>↻</span><div><b>Cook Again</b><small>{cookedHistory.length ? cookedHistory[0].title : 'Start with your saved kitchen preferences'}</small></div></button>
           </div>{cookedHistory.length>0&&<div className="recent-wrap"><div className="home-section-title"><h3>Cooked Recently</h3><span>{cookedHistory.length} meal{cookedHistory.length===1?'':'s'}</span></div><div className="home-recipe-strip">{cookedHistory.slice(0,5).map((r,i)=><button className="home-recipe-card cooked-card" key={'cooked-'+r.title+i} onClick={()=>cookAgain(r)}><div style={r.image?{backgroundImage:`url("${r.image}")`}:undefined}/><b>{r.title}</b><small>{new Date(r.cookedAt).toLocaleDateString(undefined,{month:'short',day:'numeric'})} · Cook Again</small></button>)}</div></div>}{recentRecipes.length>0&&<div className="recent-wrap"><div className="home-section-title"><h3>Recently Viewed</h3><button onClick={()=>navigate('recipes')}>Browse All →</button></div><div className="home-recipe-strip">{recentRecipes.slice(0,5).map(r=><button className="home-recipe-card" key={'recent-'+r.title} onClick={()=>openRecipe(r)}><div style={r.image?{backgroundImage:`url("${r.image}")`}:undefined}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div></div>}</section>
+          {recommendedRecipes.length>0&&<section className="taste-profile-card"><div className="home-section-title"><div><p className="eyebrow">BASED ON WHAT YOU COOK</p><h2>Your Taste Profile</h2><p>{tasteSignals.length ? 'We’re noticing '+tasteSignals.join(' · ')+' in your kitchen.' : 'Fancy Eatz is learning from meals you make and save.'}</p></div></div><div className="home-recipe-strip">{recommendedRecipes.map(r=><button className="home-recipe-card" key={'taste-'+r.title} onClick={()=>openRecipe(r)}><div style={r.image?{backgroundImage:`url("${r.image}")`}:undefined}/><b>{r.title}</b><small>Picked from your cooking history</small></button>)}</div></section>}
           <div className="home-recipe-section"><div className="home-section-title"><h2>Featured Recipes</h2><button onClick={()=>navigate('recipes')}>View All Recipes →</button></div>
             <div className="home-recipe-strip">{featured.filter(r=>r.image).slice(0,6).map(r=><button className="home-recipe-card" key={r.title} onClick={()=>openRecipe(r)}><div style={{backgroundImage:`url("${r.image}")`}}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div>
           </div>
