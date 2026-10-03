@@ -6,7 +6,11 @@ function cleanItems(value: unknown) {
 
 function mealFrom(body: any, variant = 0) {
   const items = cleanItems(body.pantry);
-  const base = items.length ? items : ['chicken', 'rice', 'seasonal vegetables'];
+  const avoid=String(body.allergies||'None').toLowerCase();
+  const blocked:Record<string,RegExp>={peanuts:/peanut/i,'tree nuts':/almond|walnut|pecan|cashew|pistachio|hazelnut|tree nut/i,shellfish:/shrimp|crab|lobster|clam|mussel|oyster|scallop|shellfish/i,dairy:/milk|cream|cheese|butter|yogurt|dairy/i,eggs:/\begg(s)?\b/i,gluten:/wheat|flour|bread|pasta|noodle|cracker|barley|rye|gluten/i};
+  const rule=blocked[avoid];
+  const safeItems=rule?items.filter(x=>!rule.test(x)):items;
+  const base = safeItems.length ? safeItems : ['rice', 'seasonal vegetables', 'fresh herbs'];
   const primary = base[variant % base.length] || base[0];
   const second = base[(variant + 1) % base.length] || 'seasonal vegetables';
   const third = base[(variant + 2) % base.length] || 'rice';
@@ -26,7 +30,7 @@ function mealFrom(body: any, variant = 0) {
   ingredients.push('1 tbsp cooking oil', 'salt and black pepper to taste');
   return {
     title: titles[variant % titles.length],
-    description: `A practical ${String(body.style || 'chef-inspired').toLowerCase()} meal built around what is already in your kitchen.`,
+    description: `A practical ${String(body.style || 'chef-inspired').toLowerCase()} meal built around what is already in your kitchen.${avoid!=='none'?' Requested avoid preference: '+body.allergies+'.':''}`,
     ingredients,
     steps: [
       `Prep ${primary}, ${second} and ${third}; cut solid ingredients into even bite-size pieces so they cook evenly.`,
