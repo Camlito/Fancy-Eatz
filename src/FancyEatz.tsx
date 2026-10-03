@@ -597,19 +597,19 @@ export default function FancyEatz() {
           
           <div className="home-hero">
             <div className="hero-copy">
-              <p className="eyebrow">YOUR PERSONAL KITCHEN ASSISTANT</p>
-              <h1>Know what to cook.<br/><em>Use what you have.</em></h1>
-              <p className="lede">Snap your fridge, enter your ingredients, and Fancy Eatz helps turn them into complete meals.</p>
+              <p className="eyebrow">SMARTER HOME COOKING · MADE FOR EVERY KITCHEN</p>
+              <h1>Make something good.<br/><em>With what you have.</em></h1>
+              <p className="lede">From weeknight dinners to weekend hosting, Fancy Eatz turns the ingredients you already have into meals, plans and grocery lists built around you.</p>
+              <div className="national-trust"><span><ShieldCheck size={15}/> Built for real households</span><span><Sparkles size={15}/> Personalized to your kitchen</span><span><CalendarDays size={15}/> Dinner through weekly planning</span></div>
               <div className="hero-early-access">
-            <div className="hero-early-copy"><b>Get Fancy Eatz Early Access</b><span>Be first in line for your 7-day Premium trial at launch.</span></div>
+            <div className="hero-early-copy"><b>Be First to Cook with Fancy Eatz</b><span>Join early access for launch updates and your 7-day Premium trial invitation.</span></div>
             <div className="hero-early-form"><input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" value={earlyEmail} onChange={e=>{setEarlyEmail(e.target.value);setMembershipNotice('')}} onKeyDown={e=>{if(e.key==='Enter')joinEarlyAccess()}} placeholder="Enter your email address"/><button type="button" className="primary" disabled={earlySubmitting} onClick={joinEarlyAccess}>{earlySubmitting?'Joining…':'Join Early Access'}</button></div>
           </div>
-          <div className="hero-actions"><button className="primary" onClick={()=>openMembership('Join early access and be first to try the complete Fancy Eatz experience.')}>Get Early Access</button><button className="ghost" onClick={()=>document.getElementById('premium-preview')?.scrollIntoView({behavior:'smooth'})}>See What You Get ↓</button></div>
-              <div className="hero-trust"><span>7-day trial</span><span>Full Premium access</span></div>
+          <div className="hero-actions"><button className="ghost" onClick={()=>document.getElementById('premium-preview')?.scrollIntoView({behavior:'smooth'})}>Explore Fancy Eatz ↓</button></div>
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"><div><b>Good Food.<br/>Better Living.</b><span>Simple ingredients. Extraordinary meals.</span></div></div>
           </div>
-          <section className="premium-preview" id="premium-preview"><p className="eyebrow">ONE MEMBERSHIP · YOUR WHOLE KITCHEN</p><h2>More than recipes. A smarter way to cook.</h2><p>Fancy Eatz helps you decide what to make, use what you already have, plan the week and turn everyday meals into something worth serving.</p><div className="premium-preview-grid"><article><ChefHat/><b>Pantry Chef</b><span>Tell us what you have. Get complete meal possibilities.</span></article><article><Sparkles/><b>Photo My Fridge</b><span>Upload your kitchen photo and turn visible ingredients into ideas.</span></article><article><BookOpen/><b>Recipe Vault</b><span>Explore complete recipes, drinks, desserts and cooking styles.</span></article><article><CalendarDays/><b>Plan the Week</b><span>Build weekly meals and one organized grocery list.</span></article></div></section><div className="home-search-row">
+          <section className="premium-preview" id="premium-preview"><p className="eyebrow">ONE KITCHEN COMPANION</p><h2>From “what can I make?” to dinner on the table.</h2><p>Fancy Eatz brings meal inspiration, ingredient-first cooking, planning, grocery organization, drinks, desserts and entertaining tools into one polished experience.</p><div className="premium-preview-grid"><article><ChefHat/><b>Pantry Chef</b><span>Tell us what you have. Get complete meal possibilities.</span></article><article><Sparkles/><b>Photo My Fridge</b><span>Upload your kitchen photo and turn visible ingredients into ideas.</span></article><article><BookOpen/><b>Recipe Vault</b><span>Explore complete recipes, drinks, desserts and cooking styles.</span></article><article><CalendarDays/><b>Plan the Week</b><span>Build weekly meals and one organized grocery list.</span></article></div></section><div className="home-search-row">
             <label className="search-box"><Search size={18}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search recipes (salmon, chicken, pasta, healthy...)" /><button onClick={()=>navigate('recipes')}>Search</button></label>
             <button className="ai-generator-callout" onClick={()=>navigate('pantry')}><ChefHat size={30}/><span><b>AI Meal Generator</b><small>Enter what you have and get 22–35 meal ideas</small></span><strong>Generate Meals →</strong></button>
           </div>
@@ -999,7 +999,7 @@ export default function FancyEatz() {
 
       {tab === 'home' && <button className="owner-access-link" onClick={()=>navigate('dashboard')}>Owner Dashboard</button>}
 
-      <footer><div className="brand footer-brand"><span>F</span><div><b>FANCY EATZ</b><small>Everyday ingredients. Elevated experiences.</small></div></div><p>Cook beautifully. Shop intentionally. Eat fancy.</p></footer>
+      <footer><div className="brand footer-brand"><span>F</span><div><b>FANCY EATZ</b><small>Smarter cooking for every kitchen.</small></div></div><p>Use what you have. Make something worth sharing.</p><small className="footer-note">Fancy Eatz is being prepared for broader U.S. availability.</small></footer>
     </main>
   );
 }
