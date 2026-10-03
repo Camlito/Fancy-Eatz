@@ -891,3 +891,6 @@ footer p {
 
 .conversion-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 @media(max-width:800px){.conversion-actions{display:grid;grid-template-columns:1fr;width:100%}.conversion-actions button{width:100%;justify-content:center;min-height:48px}}
+
+.taste-profile-card{max-width:1180px;margin:26px auto;padding:24px;border:1px solid #493d2e;border-radius:22px;background:linear-gradient(145deg,#14110d,#0b0907)}.taste-profile-card .home-section-title p:last-child{margin:6px 0 0;color:#aa9f91;font-size:13px}.cooked-card small{color:#d5aa60}
+@media(max-width:800px){.taste-profile-card{margin:18px 12px;padding:18px 14px}}
