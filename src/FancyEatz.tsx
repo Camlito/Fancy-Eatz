@@ -222,6 +222,8 @@ export default function FancyEatz() {
   const [mobileMenu, setMobileMenu] = useState('');
   const [dashboardLeads, setDashboardLeads] = useState<any[]>([]);
   const [dashboardLoading, setDashboardLoading] = useState(false);
+  const [ownerUnlocked, setOwnerUnlocked] = useState(()=>sessionStorage.getItem('fancy-eatz-owner')==='yes');
+  const [ownerCode, setOwnerCode] = useState('');
   const premiumTabs = new Set(['pantry','photo','leftovers','ideas','styles','experience','planner','grocery','basics','grill','desserts','drinks','recipes','favorites']);
   const openMembership = (message='Start your 7-day Fancy Eatz Premium trial to unlock this feature.') => { setMembershipNotice(message); setShowMembership(true); };
 
@@ -1013,12 +1015,16 @@ export default function FancyEatz() {
         </div>
       </div>}
 
-      {tab === 'dashboard' && <section className="page owner-dashboard">
+      {tab === 'dashboard' && !ownerUnlocked && <section className="page owner-login"><div className="owner-login-card"><div className="membership-mark"><Crown/></div><p className="eyebrow">OWNER ACCESS</p><h2>Fancy Eatz Command Center</h2><p>Enter your owner access code to open the private dashboard.</p><input type="password" value={ownerCode} onChange={e=>setOwnerCode(e.target.value)} placeholder="Owner access code"/><button className="primary full" onClick={()=>{if(ownerCode==='FANCY2026'){sessionStorage.setItem('fancy-eatz-owner','yes');setOwnerUnlocked(true);setTimeout(loadDashboard,0)}else setMembershipNotice('Incorrect owner access code.')}}>Open Dashboard</button>{membershipNotice&&<p className="early-inline-error">{membershipNotice}</p>}</div></section>}
+      
+      {tab === 'dashboard' && ownerUnlocked && <section className="page owner-dashboard">
         <div className="section-head"><p className="eyebrow">FANCY EATZ OWNER</p><h2>Early Access Dashboard</h2><p>Track the audience building before paid launch.</p></div>
         <div className="dashboard-actions"><button className="primary" onClick={loadDashboard}>{dashboardLoading?'Refreshing…':'Refresh Signups'}</button><button className="ghost" onClick={()=>navigate('home')}>Back to Site</button></div>
         <div className="dashboard-stats"><article><small>TOTAL SIGNUPS</small><strong>{dashboardLeads.length}</strong></article><article><small>WAITING</small><strong>{dashboardLeads.filter(x=>x.status==='waiting').length}</strong></article><article><small>INVITED</small><strong>{dashboardLeads.filter(x=>x.launch_invited_at).length}</strong></article><article><small>CONVERTED</small><strong>{dashboardLeads.filter(x=>x.converted_at).length}</strong></article></div>
         <div className="panel dashboard-table-wrap">{dashboardLoading?<p>Loading signups…</p>:dashboardLeads.length?<table className="dashboard-table"><thead><tr><th>Email</th><th>Status</th><th>Source</th><th>Joined</th></tr></thead><tbody>{dashboardLeads.map(x=><tr key={x.id}><td>{x.email}</td><td><span className="status-pill">{x.converted_at?'Converted':x.launch_invited_at?'Invited':x.status}</span></td><td>{x.source}</td><td>{new Date(x.created_at).toLocaleDateString()}</td></tr>)}</tbody></table>:<div className="dashboard-empty"><h3>No signups loaded yet</h3><p>Tap Refresh Signups to load the current Early Access list.</p></div>}</div>
       </section>}
+
+      {tab === 'home' && <button className="owner-access-link" onClick={()=>navigate('dashboard')}>Owner Dashboard</button>}
 
       <footer><div className="brand footer-brand"><span>F</span><div><b>FANCY EATZ</b><small>Everyday ingredients. Elevated experiences.</small></div></div><p>Cook beautifully. Shop intentionally. Eat fancy.</p></footer>
     </main>
