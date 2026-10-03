@@ -948,3 +948,22 @@ footer p {
     text-align:left!important;
   }
 }
+
+/* Portrait menu: attach dropdown visually to its trigger row */
+@media(max-width:800px) and (orientation:portrait){
+  .main-nav>.nav-dropdown>.nav-menu{
+    position:absolute!important;
+    top:calc(100% + 6px)!important;
+    bottom:auto!important;
+    max-height:min(60dvh,520px)!important;
+    overflow-y:auto!important;
+  }
+  .main-nav>.nav-dropdown:nth-of-type(odd)>.nav-menu{
+    left:0!important;right:auto!important;width:calc(200% + 8px)!important;
+    max-width:calc(100vw - 40px)!important;
+  }
+  .main-nav>.nav-dropdown:nth-of-type(even)>.nav-menu{
+    left:auto!important;right:0!important;width:calc(200% + 8px)!important;
+    max-width:calc(100vw - 40px)!important;
+  }
+}
