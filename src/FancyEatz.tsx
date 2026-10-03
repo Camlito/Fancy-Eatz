@@ -288,6 +288,10 @@ export default function FancyEatz() {
   const [mealType, setMealType] = useState('Dinner');
   const [diet, setDiet] = useState('No restriction');
   const [budget, setBudget] = useState('$25');
+  const [household, setHousehold] = useState(()=>localStorage.getItem('fancy-household')||'2');
+  const [skill, setSkill] = useState(()=>localStorage.getItem('fancy-skill')||'Comfortable');
+  const [appliance, setAppliance] = useState(()=>localStorage.getItem('fancy-appliance')||'Any');
+  const [profileDiet, setProfileDiet] = useState(()=>localStorage.getItem('fancy-diet')||'No restriction');
   const [meal, setMeal] = useState<Meal | null>(null);
   const [mealChoices, setMealChoices] = useState<MealChoice[]>([]);
   const [mixSelections, setMixSelections] = useState<Record<string,string>>({});
@@ -325,6 +329,11 @@ export default function FancyEatz() {
   useEffect(() => {
     localStorage.setItem('fancy-eatz-favorites', JSON.stringify(favorites));
   }, [favorites]);
+
+  useEffect(() => {
+    localStorage.setItem('fancy-household',household); localStorage.setItem('fancy-skill',skill); localStorage.setItem('fancy-appliance',appliance); localStorage.setItem('fancy-diet',profileDiet);
+  }, [household,skill,appliance,profileDiet]);
+
 
   const filteredRecipes = useMemo(() => featured.filter(r => {
     const q = search.toLowerCase();
@@ -609,6 +618,20 @@ export default function FancyEatz() {
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"><div><b>Good Food.<br/>Better Living.</b><span>Simple ingredients. Extraordinary meals.</span></div></div>
           </div>
+          <section className="discover-strip"><div className="discover-head"><p className="eyebrow">DISCOVER YOUR NEXT MEAL</p><h2>What sounds good today?</h2></div><div className="discover-chips">
+            <button onClick={()=>{setTime('30 minutes');navigate('ideas')}}>Under 30 Minutes</button>
+            <button onClick={()=>{setOccasion('Family Dinner');navigate('ideas')}}>Family Favorites</button>
+            <button onClick={()=>{setDiet('Vegetarian');navigate('ideas')}}>More Veggies</button>
+            <button onClick={()=>{setBudget('$25');navigate('ideas')}}>Budget Friendly</button>
+            <button onClick={()=>{setOccasion('Date Night at Home');navigate('ideas')}}>Date Night</button>
+            <button onClick={()=>navigate('leftovers')}>Use My Leftovers</button>
+          </div></section>
+          <section className="personalize-card"><div><p className="eyebrow">MAKE FANCY EATZ YOURS</p><h2>Your kitchen. Your people. Your way of cooking.</h2><p>Set a few preferences now so future meal ideas can start closer to what works for your household.</p></div><div className="personalize-grid">
+            <label>Household size<select value={household} onChange={e=>{setHousehold(e.target.value);setServings(e.target.value)}}><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select></label>
+            <label>Eating style<select value={profileDiet} onChange={e=>{setProfileDiet(e.target.value);setDiet(e.target.value)}}><option>No restriction</option><option>Vegetarian</option><option>Vegan</option><option>Pescatarian</option></select></label>
+            <label>Cooking confidence<select value={skill} onChange={e=>setSkill(e.target.value)}><option>Keep it simple</option><option>Comfortable</option><option>Confident cook</option></select></label>
+            <label>Go-to appliance<select value={appliance} onChange={e=>setAppliance(e.target.value)}><option>Any</option><option>Stovetop</option><option>Oven</option><option>Air Fryer</option><option>Grill</option><option>Slow Cooker</option></select></label>
+          </div><button className="primary" onClick={()=>navigate('pantry')}>Cook With My Preferences →</button></section>
           <section className="premium-preview" id="premium-preview"><p className="eyebrow">ONE KITCHEN COMPANION</p><h2>From “what can I make?” to dinner on the table.</h2><p>Fancy Eatz brings meal inspiration, ingredient-first cooking, planning, grocery organization, drinks, desserts and entertaining tools into one polished experience.</p><div className="premium-preview-grid"><article><ChefHat/><b>Pantry Chef</b><span>Tell us what you have. Get complete meal possibilities.</span></article><article><Sparkles/><b>Photo My Fridge</b><span>Upload your kitchen photo and turn visible ingredients into ideas.</span></article><article><BookOpen/><b>Recipe Vault</b><span>Explore complete recipes, drinks, desserts and cooking styles.</span></article><article><CalendarDays/><b>Plan the Week</b><span>Build weekly meals and one organized grocery list.</span></article></div></section><div className="home-search-row">
             <label className="search-box"><Search size={18}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search recipes (salmon, chicken, pasta, healthy...)" /><button onClick={()=>navigate('recipes')}>Search</button></label>
             <button className="ai-generator-callout" onClick={()=>navigate('pantry')}><ChefHat size={30}/><span><b>AI Meal Generator</b><small>Enter what you have and get 22–35 meal ideas</small></span><strong>Generate Meals →</strong></button>
