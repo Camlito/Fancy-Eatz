@@ -667,19 +667,18 @@ export default function FancyEatz() {
       {tab === 'home' && (
         <section className="home-showcase">
           
-          <div className="home-hero">
+          <div className="home-hero reference-hero">
             <div className="hero-copy">
               <p className="eyebrow">SMARTER HOME COOKING · MADE FOR EVERY KITCHEN</p>
-              <h1>Make something good.<br/><em>With what you have.</em></h1>
+              <h1>Make<br/>something<br/><strong>good.</strong><br/><em>With what<br/>you have.</em></h1>
               <p className="lede">From weeknight dinners to weekend hosting, Fancy Eatz turns the ingredients you already have into meals, plans and grocery lists built around you.</p>
-              <div className="national-trust"><span><ShieldCheck size={15}/> Built for real households</span><span><Sparkles size={15}/> Personalized to your kitchen</span><span><CalendarDays size={15}/> Dinner through weekly planning</span></div>
-              <div className="hero-early-access">
-            <div className="hero-early-copy"><b>Be First to Cook with Fancy Eatz</b><span>Join early access for launch updates and your 7-day Premium trial invitation.</span></div>
-            <div className="hero-early-form"><input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" autoComplete="email" value={earlyEmail} onChange={e=>{setEarlyEmail(e.target.value);setMembershipNotice('')}} onKeyDown={e=>{if(e.key==='Enter')joinEarlyAccess()}} placeholder="Enter your email address"/><button type="button" className="primary" disabled={earlySubmitting} onClick={joinEarlyAccess}>{earlySubmitting?'Joining…':'Join Early Access'}</button></div>
-          </div>
-          <div className="hero-actions"><button className="ghost" onClick={()=>document.getElementById('premium-preview')?.scrollIntoView({behavior:'smooth'})}>Explore Fancy Eatz ↓</button></div>
+              <div className="reference-benefits">
+                <button onClick={()=>navigate('ideas')}><Sparkles/><span>Personalized<br/>Meal Ideas</span></button>
+                <button onClick={()=>navigate('grocery')}><ShoppingBasket/><span>Smart<br/>Grocery Lists</span></button>
+                <button onClick={()=>navigate('recipes')}><BookOpen/><span>1,000+<br/>Recipes</span></button>
+              </div>
             </div>
-            <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"><div><b>Good Food.<br/>Better Living.</b><span>Simple ingredients. Extraordinary meals.</span></div></div>
+            <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"></div>
           </div>
           {!onboarded&&!showOnboarding&&<section className="onboarding-invite"><div><p className="eyebrow">PERSONALIZE FANCY EATZ</p><h2>Want better picks from the start?</h2><p>Answer a few quick kitchen questions and tailor the experience to your household.</p></div><button className="primary" onClick={()=>setShowOnboarding(true)}>Personalize My Kitchen →</button></section>}
           <section className="discover-strip"><div className="discover-head"><p className="eyebrow">DISCOVER YOUR NEXT MEAL</p><h2>What sounds good today?</h2></div><div className="discover-chips">
