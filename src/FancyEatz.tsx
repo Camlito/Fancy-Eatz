@@ -215,6 +215,8 @@ export default function FancyEatz() {
   const [tab, setTab] = useState('home');
   const [showMembership, setShowMembership] = useState(false);
   const [membershipNotice, setMembershipNotice] = useState('');
+  const [earlyEmail, setEarlyEmail] = useState('');
+  const [earlyJoined, setEarlyJoined] = useState(false);
   const premiumTabs = new Set(['pantry','photo','leftovers','ideas','styles','experience','planner','grocery','basics','grill','desserts','drinks','recipes','favorites']);
   const openMembership = (message='Start your 7-day Fancy Eatz Premium trial to unlock this feature.') => { setMembershipNotice(message); setShowMembership(true); };
 
@@ -576,7 +578,7 @@ export default function FancyEatz() {
             </div>
           </details>
         </nav>
-        <button className="membership-nav" onClick={()=>openMembership('Choose your Fancy Eatz Premium plan and start your 7-day trial.')}><Crown size={16}/> Start 7-Day Trial</button>
+        <button className="membership-nav" onClick={()=>openMembership('Choose your Fancy Eatz Premium plan and start your 7-day trial.')}><Crown size={16}/> Get Early Access</button>
       </header>
 
       {tab !== 'home' && <div className="backbar">
@@ -591,7 +593,7 @@ export default function FancyEatz() {
               <p className="eyebrow">YOUR PERSONAL KITCHEN ASSISTANT</p>
               <h1>Know what to cook.<br/><em>Use what you have.</em></h1>
               <p className="lede">Snap your fridge, enter your ingredients, and Fancy Eatz helps turn them into complete meals.</p>
-              <div className="hero-actions"><button className="primary" onClick={()=>openMembership('Unlock the complete Fancy Eatz kitchen experience free for 7 days.')}>Start 7-Day Trial</button><button className="ghost" onClick={()=>document.getElementById('premium-preview')?.scrollIntoView({behavior:'smooth'})}>See What You Get ↓</button></div>
+              <div className="hero-actions"><button className="primary" onClick={()=>openMembership('Join early access and be first to try the complete Fancy Eatz experience.')}>Get Early Access</button><button className="ghost" onClick={()=>document.getElementById('premium-preview')?.scrollIntoView({behavior:'smooth'})}>See What You Get ↓</button></div>
               <div className="hero-trust"><span>7-day trial</span><span>Full Premium access</span></div>
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"><div><b>Good Food.<br/>Better Living.</b><span>Simple ingredients. Extraordinary meals.</span></div></div>
@@ -608,7 +610,7 @@ export default function FancyEatz() {
           <div className="home-recipe-section"><div className="home-section-title"><h2>Featured Recipes</h2><button onClick={()=>navigate('recipes')}>View All Recipes →</button></div>
             <div className="home-recipe-strip">{featured.filter(r=>r.image).slice(0,6).map(r=><button className="home-recipe-card" key={r.title} onClick={()=>{setSelectedRecipe(r);navigate('recipes')}}><div style={{backgroundImage:`url("${r.image}")`}}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div>
           </div>
-          <section className="premium-conversion"><div><p className="eyebrow">TRY THE FULL EXPERIENCE</p><h2>Tonight's dinner is just the beginning.</h2><p>Unlock every Fancy Eatz tool for 7 days and see how much easier your kitchen can feel.</p></div><button className="primary" onClick={()=>openMembership('Start with full Premium access for 7 days.')}>Start My 7-Day Trial →</button></section><div className="home-tools">
+          <section className="premium-conversion"><div><p className="eyebrow">TRY THE FULL EXPERIENCE</p><h2>Tonight's dinner is just the beginning.</h2><p>Unlock every Fancy Eatz tool for 7 days and see how much easier your kitchen can feel.</p></div><button className="primary" onClick={()=>openMembership('Join early access now and get your 7-day Premium trial when Fancy Eatz launches.')}>Join Early Access →</button></section><div className="home-tools">
             <button onClick={()=>navigate('planner')}><CalendarDays/><span><b>Meal Planner</b><small>Plan your week and build one smart shopping list.</small></span></button>
             <button onClick={()=>navigate('grocery')}><ShoppingBasket/><span><b>Grocery Lists</b><small>Add ingredients with one click and shop in seconds.</small></span></button>
             <button onClick={()=>navigate('favorites')}><BookOpen/><span><b>My Cookbook</b><small>Save favorite recipes and custom creations.</small></span></button>
@@ -966,10 +968,10 @@ export default function FancyEatz() {
             <span><ShieldCheck size={17}/> Grill Master & complete dining experiences</span>
           </div>
           <div className="membership-plans">
-            <button className="membership-plan selected" onClick={()=>setMembershipNotice('Monthly plan selected. Secure checkout will activate here once billing is connected.')}><small>MONTHLY</small><strong>$9.99</strong><span>/ month</span><em>7-day trial</em></button>
-            <button className="membership-plan" onClick={()=>setMembershipNotice('Annual plan selected. Secure checkout will activate here once billing is connected.')}><small>ANNUAL · SAVE</small><strong>$79</strong><span>/ year</span><em>7-day trial</em></button>
+            <button className="membership-plan selected" onClick={()=>setMembershipNotice('Monthly plan selected. Secure checkout will activate here once billing is connected.')}><small>PLANNED MONTHLY</small><strong>$9.99</strong><span>/ month</span><em>7-day trial at launch</em></button>
+            <button className="membership-plan" onClick={()=>setMembershipNotice('Annual plan selected. Secure checkout will activate here once billing is connected.')}><small>PLANNED ANNUAL · SAVE</small><strong>$79</strong><span>/ year</span><em>7-day trial at launch</em></button>
           </div>
-          <button className="primary full membership-cta" onClick={()=>setMembershipNotice('Membership checkout is being connected. No payment has been taken.')}><LockKeyhole size={18}/>Start My 7-Day Trial</button>
+          <button className="primary full membership-cta" onClick={()=>setMembershipNotice('Membership checkout is being connected. No payment has been taken.')}><LockKeyhole size={18}/>Join Early Access</button>
           <p className="membership-fine">No payment is being collected on this build yet. Billing and subscriber authentication will be connected and tested before enrollment opens.</p>
         </div>
       </div>}
