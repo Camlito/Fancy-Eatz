@@ -1097,3 +1097,31 @@ footer p {
 .brand-logo{display:block!important;width:min(92vw,520px)!important;height:auto!important;max-width:100%!important;max-height:none!important;object-fit:contain!important;object-position:center!important;border:0!important;border-radius:0!important;background:#050505!important;box-shadow:none!important}
 @media(max-width:800px){.topbar{padding:8px 20px 22px!important;background:#050505!important}.brand-logo-button{min-height:0!important}.brand-logo{width:100%!important;height:auto!important;aspect-ratio:auto!important}}
 @media(min-width:801px){.brand-logo-button{width:320px!important}.brand-logo{width:300px!important;height:auto!important}}
+
+/* Luxe reference pass */
+@media(max-width:800px){
+ .topbar{padding:0 20px 20px!important;background:
+ radial-gradient(circle at 50% 12%,rgba(216,166,68,.14),transparent 34%),
+ #050505!important}
+ .brand-logo-button{margin:0 -20px 12px!important;width:calc(100% + 40px)!important;background:#050505!important;border-bottom:1px solid rgba(230,186,91,.28)!important}
+ .brand-logo{width:100%!important;max-width:none!important;max-height:500px!important;object-fit:cover!important;object-position:center!important;image-rendering:auto!important}
+ .main-nav{gap:10px!important}
+ .main-nav>button,.main-nav>.nav-dropdown>.nav-trigger{
+   min-height:62px!important;border:1.4px solid #b88936!important;
+   background:linear-gradient(145deg,#15110b,#080706)!important;
+   box-shadow:inset 0 0 22px rgba(218,170,75,.04),0 8px 20px rgba(0,0,0,.25)!important;
+   color:#fff7e8!important
+ }
+ .main-nav svg{color:#f0c968!important;stroke-width:1.8!important}
+ .membership-nav{
+   min-height:64px!important;margin-top:12px!important;
+   background:linear-gradient(100deg,#d49a31,#ffe18a 52%,#dca43d)!important;
+   border:1px solid #ffe49b!important;box-shadow:0 0 22px rgba(224,174,70,.2)!important;
+   color:#100d08!important;font-weight:900!important
+ }
+ .reference-hero{border-top:1px solid rgba(229,181,78,.5)!important}
+ .reference-hero .hero-copy{padding-top:46px!important}
+ .reference-hero h1{font-family:Georgia,'Times New Roman',serif!important;font-weight:500!important;letter-spacing:-.035em!important}
+ .reference-hero h1 strong{color:#f0c968!important}
+ .reference-benefits svg{box-shadow:0 0 18px rgba(228,185,95,.12)!important}
+}
