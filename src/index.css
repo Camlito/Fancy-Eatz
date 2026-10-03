@@ -967,3 +967,42 @@ footer p {
     max-width:calc(100vw - 40px)!important;
   }
 }
+
+/* iPhone portrait dropdown — compact panel directly under trigger */
+@media(max-width:800px) and (orientation:portrait){
+  .main-nav>.nav-dropdown>.nav-menu{
+    position:absolute!important;
+    top:calc(100% + 4px)!important;
+    left:0!important;
+    right:auto!important;
+    width:calc(200% + 8px)!important;
+    max-width:calc(100vw - 40px)!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:52dvh!important;
+    padding:8px!important;
+    margin:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    background:#11100e!important;
+    border:1px solid #6b5940!important;
+    border-radius:14px!important;
+    box-shadow:0 16px 38px rgba(0,0,0,.72)!important;
+  }
+  .main-nav>.nav-dropdown:nth-of-type(even)>.nav-menu{left:auto!important;right:0!important}
+  .main-nav>.nav-dropdown:nth-of-type(odd)>.nav-menu{left:0!important;right:auto!important}
+  .main-nav>.nav-dropdown>.nav-menu button{
+    display:flex!important;
+    align-items:center!important;
+    width:100%!important;
+    min-height:46px!important;
+    height:auto!important;
+    margin:0!important;
+    padding:11px 14px!important;
+    line-height:1.25!important;
+    background:transparent!important;
+    border:0!important;
+    border-radius:9px!important;
+  }
+  .main-nav>.nav-dropdown>.nav-menu button+button{margin-top:2px!important}
+}
