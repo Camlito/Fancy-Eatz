@@ -855,3 +855,18 @@ footer p {
 .owner-dashboard{max-width:1180px;margin:auto}.dashboard-actions{display:flex;gap:10px;margin-bottom:20px}.dashboard-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.dashboard-stats article{padding:22px;border:1px solid #4b4032;border-radius:16px;background:#12100d}.dashboard-stats small{display:block;color:#bcae9c;font-size:11px;letter-spacing:.12em}.dashboard-stats strong{display:block;margin-top:8px;font-size:34px;color:#d5aa60}.dashboard-table-wrap{overflow-x:auto}.dashboard-table{width:100%;border-collapse:collapse;min-width:680px}.dashboard-table th,.dashboard-table td{padding:14px 12px;border-bottom:1px solid #302b25;text-align:left}.dashboard-table th{font-size:11px;letter-spacing:.1em;color:#d5aa60}.status-pill{display:inline-block;text-transform:capitalize;border:1px solid #5c4c37;border-radius:999px;padding:5px 9px;font-size:12px}.dashboard-empty{text-align:center;padding:36px 12px}.dashboard-empty h3{margin-bottom:6px}@media(max-width:800px){.dashboard-stats{grid-template-columns:repeat(2,1fr)}.dashboard-actions{flex-direction:column}.dashboard-stats article{padding:17px}.dashboard-stats strong{font-size:28px}}
 
 .owner-access-link{display:block;margin:24px auto 4px;border:0;background:transparent;color:#766d61;font-size:12px;text-decoration:underline;cursor:pointer}.owner-login{min-height:62vh;display:grid;place-items:center}.owner-login-card{width:min(480px,100%);padding:32px;border:1px solid #4b4032;border-radius:22px;background:#12100d;text-align:center}.owner-login-card .membership-mark{margin:0 auto 14px}.owner-login-card h2{font-size:32px;margin:5px 0 10px}.owner-login-card>p{color:#bdb3a6}.owner-login-card input{width:100%;min-height:54px;margin:18px 0 10px;border:1px solid #5a4c3a;border-radius:12px;background:#080706;color:#fff;padding:0 15px;font-size:17px}.early-inline-error{color:#f0b8aa!important;margin:10px 0!important}
+
+/* National consumer polish */
+.national-trust{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 4px}.national-trust span{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid #3f382f;border-radius:999px;background:rgba(14,12,10,.72);color:#cfc6bb;font-size:11px;letter-spacing:.02em}
+.home-hero{box-shadow:0 28px 80px rgba(0,0,0,.34)}
+.hero-copy h1{letter-spacing:-.035em}.hero-copy .lede{max-width:650px;color:#c8c0b6}
+.hero-early-access{background:linear-gradient(145deg,rgba(18,15,11,.98),rgba(8,7,6,.98));border-color:#8f6e3e}.hero-early-copy b{letter-spacing:-.01em}.hero-early-form input{background:#0b0907}
+.premium-preview{max-width:1180px;margin-left:auto;margin-right:auto}.premium-preview>h2{max-width:760px;letter-spacing:-.025em}
+.footer-note{display:block;margin-top:8px;color:#746c62}
+@media(max-width:800px){
+ .national-trust{display:grid;grid-template-columns:1fr;margin-top:16px}.national-trust span{border-radius:12px;font-size:12px;padding:9px 10px}
+ .hero-copy h1{font-size:42px!important;line-height:1.01!important}
+ .hero-early-access{margin-top:24px!important}
+ .hero-actions{margin-top:12px!important}
+ .hero-actions .ghost{display:inline-flex!important;width:100%!important;justify-content:center!important;min-height:48px!important}
+}
