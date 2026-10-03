@@ -888,3 +888,6 @@ footer p {
 
 .onboarding-invite{max-width:1180px;margin:22px auto;padding:20px 24px;border:1px solid #5b4931;border-radius:18px;background:linear-gradient(120deg,#15110d,#0c0a08);display:flex;align-items:center;justify-content:space-between;gap:20px}.onboarding-invite h2{margin:3px 0 5px;font-size:23px}.onboarding-invite p:not(.eyebrow){margin:0;color:#a99f93}.onboarding-invite .primary{flex:0 0 auto}
 @media(max-width:800px){.onboarding-invite{margin:16px 12px;padding:18px;display:block}.onboarding-invite h2{font-size:21px}.onboarding-invite .primary{width:100%;justify-content:center;margin-top:15px;min-height:48px}}
+
+.conversion-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+@media(max-width:800px){.conversion-actions{display:grid;grid-template-columns:1fr;width:100%}.conversion-actions button{width:100%;justify-content:center;min-height:48px}}
