@@ -225,6 +225,7 @@ export default function FancyEatz() {
   const [ownerUnlocked, setOwnerUnlocked] = useState(()=>sessionStorage.getItem('fancy-eatz-owner')==='yes');
   const [ownerCode, setOwnerCode] = useState('');
   const premiumTabs = new Set(['pantry','photo','leftovers','ideas','styles','experience','planner','grocery','basics','grill','desserts','drinks','recipes','favorites']);
+  const paymentsLive = false; // QA/open-access mode until billing is intentionally launched.
   const openMembership = (message='Start your 7-day Fancy Eatz Premium trial to unlock this feature.') => { setMembershipNotice(message); setShowMembership(true); };
 
   const [tabHistory, setTabHistory] = useState<string[]>([]);
@@ -258,7 +259,7 @@ export default function FancyEatz() {
 
   function navigate(nextTab: string) {
     if (nextTab === 'dashboard') { setTabHistory(history => [...history, tab]); setTab('dashboard'); setMobileMenu(''); setTimeout(loadDashboard, 0); window.scrollTo({top:0,behavior:'smooth'}); return; }
-    if (premiumTabs.has(nextTab) && localStorage.getItem('fancy-eatz-member') !== 'active') {
+    if (paymentsLive && premiumTabs.has(nextTab) && localStorage.getItem('fancy-eatz-member') !== 'active') {
       openMembership();
       return;
     }
