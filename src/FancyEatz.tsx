@@ -646,7 +646,7 @@ export default function FancyEatz() {
   return (
     <main>
       <header className="topbar">
-        <button className="brand brand-logo-button" onClick={() => navigate('home')} aria-label="Fancy Eatz home"><img className="brand-logo" src="/fancy-eatz-logo.jpg?v=exact1" alt="Fancy Eatz — Elevate Every Bite" /></button>
+        <button className="brand brand-logo-button" onClick={() => navigate('home')} aria-label="Fancy Eatz home"><img className="brand-logo" src="/fancy-eatz-logo.jpg?v=luxe2" alt="Fancy Eatz — Elevate Every Bite" /></button>
         <nav className="main-nav">
           <button onClick={() => navigate('home')}><House size={19}/> <span>Home</span></button>
           <div className="nav-dropdown"><button className={mobileMenu==='cook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cook'?'':'cook')}><ChefHat size={19}/> <span>Cook</span> <small>▾</small></button>{mobileMenu==='cook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('pantry')}}>Pantry Chef</button><button onClick={()=>{setMobileMenu('');navigate('photo')}}>Photo My Fridge</button><button onClick={()=>{setMobileMenu('');navigate('leftovers')}}>Leftovers → Luxury</button><button onClick={()=>{setMobileMenu('');navigate('ideas')}}>Meal Ideas</button><button onClick={()=>{setMobileMenu('');navigate('styles')}}>Cooking Styles</button></div>}</div>
