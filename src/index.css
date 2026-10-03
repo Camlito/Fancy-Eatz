@@ -1132,3 +1132,9 @@ footer p {
  .brand-logo-button{width:100%!important;margin:0 auto 18px!important;border:1px solid rgba(225,177,76,.22)!important;border-radius:20px!important;overflow:hidden!important;background:#050505!important;box-shadow:0 16px 38px rgba(0,0,0,.38)!important}
  .brand-logo{display:block!important;width:100%!important;height:auto!important;max-width:640px!important;max-height:none!important;object-fit:contain!important;object-position:center!important;transform:none!important;filter:contrast(1.04) saturate(1.03)!important}
 }
+
+/* Final crisp header treatment: match the clean hero below */
+@media(max-width:800px){
+ .brand-logo-button{border:1px solid rgba(224,174,70,.45)!important;border-radius:20px!important;overflow:hidden!important;box-shadow:none!important;background:#050505!important}
+ .brand-logo{width:100%!important;height:auto!important;max-width:100%!important;object-fit:contain!important;image-rendering:auto!important;filter:none!important}
+}
