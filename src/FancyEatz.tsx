@@ -220,6 +220,8 @@ export default function FancyEatz() {
   const [earlySubmitting, setEarlySubmitting] = useState(false);
   const [earlyError, setEarlyError] = useState('');
   const [mobileMenu, setMobileMenu] = useState('');
+  const [dashboardLeads, setDashboardLeads] = useState<any[]>([]);
+  const [dashboardLoading, setDashboardLoading] = useState(false);
   const premiumTabs = new Set(['pantry','photo','leftovers','ideas','styles','experience','planner','grocery','basics','grill','desserts','drinks','recipes','favorites']);
   const openMembership = (message='Start your 7-day Fancy Eatz Premium trial to unlock this feature.') => { setMembershipNotice(message); setShowMembership(true); };
 
@@ -229,6 +231,21 @@ export default function FancyEatz() {
   const [selectedDrink, setSelectedDrink] = useState<(typeof drinks)[number] | null>(null);
   const [drinkPantryOnly, setDrinkPantryOnly] = useState(false);
   const [experienceDrinkMode, setExperienceDrinkMode] = useState('Both');
+
+  async function loadDashboard() {
+    setDashboardLoading(true);
+    try {
+      const response = await fetch('https://flnplmywkukyejisbnyd.supabase.co/rest/v1/early_access?select=id,email,source,status,created_at,launch_invited_at,converted_at&order=created_at.desc', {
+        headers: {
+          'apikey': 'sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR',
+          'Authorization': 'Bearer sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR'
+        }
+      });
+      if (!response.ok) throw new Error('dashboard');
+      setDashboardLeads(await response.json());
+    } catch { setDashboardLeads([]); }
+    finally { setDashboardLoading(false); }
+  }
 
   async function joinEarlyAccess() {
     const email = earlyEmail.trim().toLowerCase();
@@ -265,6 +282,7 @@ export default function FancyEatz() {
   }
 
   function navigate(nextTab: string) {
+    if (nextTab === 'dashboard') { setTabHistory(history => [...history, tab]); setTab('dashboard'); setMobileMenu(''); setTimeout(loadDashboard, 0); window.scrollTo({top:0,behavior:'smooth'}); return; }
     if (premiumTabs.has(nextTab) && localStorage.getItem('fancy-eatz-member') !== 'active') {
       openMembership();
       return;
@@ -994,6 +1012,13 @@ export default function FancyEatz() {
           {earlyJoined ? <div className="early-success"><ShieldCheck size={20}/><span><b>You're on the list.</b><small>You'll get your 7-day Premium trial invitation when Fancy Eatz launches.</small></span></div> : <p className="membership-fine">Join the founding early-access list. No payment is collected today.</p>}
         </div>
       </div>}
+
+      {tab === 'dashboard' && <section className="page owner-dashboard">
+        <div className="section-head"><p className="eyebrow">FANCY EATZ OWNER</p><h2>Early Access Dashboard</h2><p>Track the audience building before paid launch.</p></div>
+        <div className="dashboard-actions"><button className="primary" onClick={loadDashboard}>{dashboardLoading?'Refreshing…':'Refresh Signups'}</button><button className="ghost" onClick={()=>navigate('home')}>Back to Site</button></div>
+        <div className="dashboard-stats"><article><small>TOTAL SIGNUPS</small><strong>{dashboardLeads.length}</strong></article><article><small>WAITING</small><strong>{dashboardLeads.filter(x=>x.status==='waiting').length}</strong></article><article><small>INVITED</small><strong>{dashboardLeads.filter(x=>x.launch_invited_at).length}</strong></article><article><small>CONVERTED</small><strong>{dashboardLeads.filter(x=>x.converted_at).length}</strong></article></div>
+        <div className="panel dashboard-table-wrap">{dashboardLoading?<p>Loading signups…</p>:dashboardLeads.length?<table className="dashboard-table"><thead><tr><th>Email</th><th>Status</th><th>Source</th><th>Joined</th></tr></thead><tbody>{dashboardLeads.map(x=><tr key={x.id}><td>{x.email}</td><td><span className="status-pill">{x.converted_at?'Converted':x.launch_invited_at?'Invited':x.status}</span></td><td>{x.source}</td><td>{new Date(x.created_at).toLocaleDateString()}</td></tr>)}</tbody></table>:<div className="dashboard-empty"><h3>No signups loaded yet</h3><p>Tap Refresh Signups to load the current Early Access list.</p></div>}</div>
+      </section>}
 
       <footer><div className="brand footer-brand"><span>F</span><div><b>FANCY EATZ</b><small>Everyday ingredients. Elevated experiences.</small></div></div><p>Cook beautifully. Shop intentionally. Eat fancy.</p></footer>
     </main>
