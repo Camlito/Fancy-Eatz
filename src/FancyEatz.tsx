@@ -292,6 +292,8 @@ export default function FancyEatz() {
   const [skill, setSkill] = useState(()=>localStorage.getItem('fancy-skill')||'Comfortable');
   const [appliance, setAppliance] = useState(()=>localStorage.getItem('fancy-appliance')||'Any');
   const [profileDiet, setProfileDiet] = useState(()=>localStorage.getItem('fancy-diet')||'No restriction');
+  const [allergies, setAllergies] = useState(()=>localStorage.getItem('fancy-allergies')||'None');
+  const [dayMeal, setDayMeal] = useState(()=>localStorage.getItem('fancy-day-meal')||'Dinner');
   const [meal, setMeal] = useState<Meal | null>(null);
   const [mealChoices, setMealChoices] = useState<MealChoice[]>([]);
   const [mixSelections, setMixSelections] = useState<Record<string,string>>({});
@@ -332,8 +334,8 @@ export default function FancyEatz() {
   }, [favorites]);
 
   useEffect(() => {
-    localStorage.setItem('fancy-household',household); localStorage.setItem('fancy-skill',skill); localStorage.setItem('fancy-appliance',appliance); localStorage.setItem('fancy-diet',profileDiet);
-  }, [household,skill,appliance,profileDiet]);
+    localStorage.setItem('fancy-household',household); localStorage.setItem('fancy-skill',skill); localStorage.setItem('fancy-appliance',appliance); localStorage.setItem('fancy-diet',profileDiet); localStorage.setItem('fancy-allergies',allergies); localStorage.setItem('fancy-day-meal',dayMeal);
+  }, [household,skill,appliance,profileDiet,allergies,dayMeal]);
 
 
   const filteredRecipes = useMemo(() => featured.filter(r => {
@@ -632,6 +634,7 @@ export default function FancyEatz() {
           <section className="personalize-card"><div><p className="eyebrow">MAKE FANCY EATZ YOURS</p><h2>Your kitchen. Your people. Your way of cooking.</h2><p>Set a few preferences now so future meal ideas can start closer to what works for your household.</p></div><div className="personalize-grid">
             <label>Household size<select value={household} onChange={e=>{setHousehold(e.target.value);setServings(e.target.value)}}><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select></label>
             <label>Eating style<select value={profileDiet} onChange={e=>{setProfileDiet(e.target.value);setDiet(e.target.value)}}><option>No restriction</option><option>Vegetarian</option><option>Vegan</option><option>Pescatarian</option></select></label>
+            <label>Allergies / avoid<select value={allergies} onChange={e=>setAllergies(e.target.value)}><option>None</option><option>Peanuts</option><option>Tree nuts</option><option>Shellfish</option><option>Dairy</option><option>Eggs</option><option>Gluten</option></select></label>
             <label>Cooking confidence<select value={skill} onChange={e=>setSkill(e.target.value)}><option>Keep it simple</option><option>Comfortable</option><option>Confident cook</option></select></label>
             <label>Go-to appliance<select value={appliance} onChange={e=>setAppliance(e.target.value)}><option>Any</option><option>Stovetop</option><option>Oven</option><option>Air Fryer</option><option>Grill</option><option>Slow Cooker</option></select></label>
           </div><button className="primary" onClick={()=>navigate('pantry')}>Cook With My Preferences →</button></section>
@@ -639,6 +642,7 @@ export default function FancyEatz() {
             <label className="search-box"><Search size={18}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search recipes (salmon, chicken, pasta, healthy...)" /><button onClick={()=>navigate('recipes')}>Search</button></label>
             <button className="ai-generator-callout" onClick={()=>navigate('pantry')}><ChefHat size={30}/><span><b>AI Meal Generator</b><small>Enter what you have and get 22–35 meal ideas</small></span><strong>Generate Meals →</strong></button>
           </div>
+          <section className="tonight-card"><div className="tonight-copy"><p className="eyebrow">FOR YOU TODAY</p><h2>What are we making?</h2><p>Choose the moment and Fancy Eatz will start with the preferences you already saved.</p><div className="meal-switch">{['Breakfast','Lunch','Dinner'].map(x=><button key={x} className={dayMeal===x?'active':''} onClick={()=>{setDayMeal(x);setMealType(x)}}>{x}</button>)}</div></div><div className="tonight-action"><span>{profileDiet==='No restriction'?'Flexible':profileDiet} · {household} serving{household==='1'?'':'s'} · {appliance}</span><h3>{dayMeal === 'Breakfast' ? 'Start the day with something worth making.' : dayMeal === 'Lunch' ? 'Make lunch feel less like an afterthought.' : 'Turn tonight into something good.'}</h3><button className="primary" onClick={()=>{setMealType(dayMeal);setDiet(profileDiet);setServings(household==='6+'?'6':household);navigate('pantry')}}>Find My {dayMeal} →</button></div></section>
           <section className="return-home"><div className="home-section-title"><div><p className="eyebrow">MADE FOR YOU</p><h2>Pick up where you left off.</h2></div></div><div className="return-grid">
             <button onClick={()=>navigate('favorites')}><span>♥</span><div><b>Saved Meals</b><small>{favorites.length ? favorites.length+' saved creation'+(favorites.length===1?'':'s') : 'Save meals you want to make again'}</small></div></button>
             <button onClick={()=>navigate('planner')}><span>7</span><div><b>This Week</b><small>{weeklyPlan ? 'Your weekly plan is ready to revisit' : 'Build a simple plan for the week ahead'}</small></div></button>
