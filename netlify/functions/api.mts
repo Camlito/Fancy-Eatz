@@ -54,6 +54,25 @@ function planFrom(body: any) {
 export default async (req: Request) => {
   const url = new URL(req.url);
   if (url.pathname === '/api/_healthcheck') return send({ ok: true, service: 'fancy-eatz-netlify' });
+  if (url.pathname === '/api/early-access' && req.method === 'POST') {
+    let body:any={}; try { body=await req.json(); } catch { return send({error:'Invalid JSON'},400); }
+    const email=String(body.email||'').trim().toLowerCase();
+    if(!email.includes('@')||!email.split('@')[1]?.includes('.')) return send({error:'Valid email required'},400);
+    const base='https://flnplmywkukyejisbnyd.supabase.co';
+    const key='sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR';
+    const r=await fetch(base+'/rest/v1/rpc/join_early_access',{method:'POST',headers:{'content-type':'application/json','apikey':key,'Authorization':'Bearer '+key},body:JSON.stringify({p_email:email,p_source:String(body.source||'website')})});
+    if(!r.ok) return send({error:'Could not save signup'},502);
+    return send({ok:true,email});
+  }
+  if (url.pathname === '/api/early-access-stats' && req.method === 'POST') {
+    const code=req.headers.get('x-owner-code')||'';
+    if(code!=='FANCY2026') return send({error:'Unauthorized'},401);
+    const base='https://flnplmywkukyejisbnyd.supabase.co';
+    const key='sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR';
+    const r=await fetch(base+'/rest/v1/early_access?select=id,email,source,status,created_at,launch_invited_at,converted_at&order=created_at.desc',{headers:{'apikey':key,'Authorization':'Bearer '+key}});
+    if(!r.ok) return send({error:'Dashboard data unavailable'},502);
+    return send({leads:await r.json()});
+  }
   if (req.method !== 'POST') return send({ error: 'Method not allowed' }, 405);
   let body: any = {};
   try { body = await req.json(); } catch { return send({ error: 'Invalid JSON' }, 400); }
