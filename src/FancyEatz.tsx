@@ -18,6 +18,9 @@ import {
   Users,
   UtensilsCrossed,
   WalletCards,
+  Crown,
+  LockKeyhole,
+  ShieldCheck,
 } from 'lucide-react';
 
 type Meal = {
@@ -210,6 +213,11 @@ function fallbackProtein(pantryText: string, diet: string) {
 // Build marker: repaired-source-20260923-0045
 export default function FancyEatz() {
   const [tab, setTab] = useState('home');
+  const [showMembership, setShowMembership] = useState(false);
+  const [membershipNotice, setMembershipNotice] = useState('');
+  const premiumTabs = new Set(['pantry','photo','leftovers','ideas','styles','experience','planner','grocery','basics','grill','desserts','drinks','recipes','favorites']);
+  const openMembership = (message='Start your 7-day Fancy Eatz Premium trial to unlock this feature.') => { setMembershipNotice(message); setShowMembership(true); };
+
   const [tabHistory, setTabHistory] = useState<string[]>([]);
   const [drinkSearch, setDrinkSearch] = useState('');
   const [drinkCategory, setDrinkCategory] = useState('All');
@@ -218,6 +226,10 @@ export default function FancyEatz() {
   const [experienceDrinkMode, setExperienceDrinkMode] = useState('Both');
 
   function navigate(nextTab: string) {
+    if (premiumTabs.has(nextTab) && localStorage.getItem('fancy-eatz-member') !== 'active') {
+      openMembership();
+      return;
+    }
     if (nextTab === tab) return;
     setTabHistory(history => [...history, tab]);
     setTab(nextTab);
@@ -563,6 +575,7 @@ export default function FancyEatz() {
             </div>
           </details>
         </nav>
+        <button className="membership-nav" onClick={()=>openMembership('Choose your Fancy Eatz Premium plan and start your 7-day trial.')}><Crown size={16}/> Start 7-Day Trial</button>
       </header>
 
       <div className="backbar">
@@ -576,6 +589,7 @@ export default function FancyEatz() {
 
       {tab === 'home' && (
         <section className="home-showcase">
+          <div className="premium-launch-strip"><Crown size={18}/><span><b>Fancy Eatz Premium</b> · Full kitchen intelligence, planning & recipe experience</span><button onClick={()=>openMembership('Try every Fancy Eatz Premium feature for 7 days.')}>Start 7-Day Trial</button></div>
           <div className="home-hero">
             <div className="hero-copy">
               <p className="eyebrow">REAL RECIPES · AI-POWERED POSSIBILITIES</p>
@@ -939,6 +953,29 @@ export default function FancyEatz() {
           </>}
         </section>
       )}
+
+      {showMembership && <div className="membership-overlay" role="dialog" aria-modal="true" aria-label="Fancy Eatz Premium membership">
+        <div className="membership-modal">
+          <button className="membership-close" aria-label="Close membership window" onClick={()=>setShowMembership(false)}>×</button>
+          <div className="membership-mark"><Crown size={30}/></div>
+          <p className="eyebrow">FANCY EATZ PREMIUM</p>
+          <h2>Your kitchen just got smarter.</h2>
+          <p className="membership-lede">{membershipNotice || 'Try the complete Fancy Eatz experience for 7 days.'}</p>
+          <div className="membership-benefits">
+            <span><ShieldCheck size={17}/> Photo My Fridge ingredient recognition</span>
+            <span><ShieldCheck size={17}/> Pantry Chef & personalized meal ideas</span>
+            <span><ShieldCheck size={17}/> Full recipe, drink & dessert vaults</span>
+            <span><ShieldCheck size={17}/> Weekly planning & smart grocery tools</span>
+            <span><ShieldCheck size={17}/> Grill Master & complete dining experiences</span>
+          </div>
+          <div className="membership-plans">
+            <button className="membership-plan selected" onClick={()=>setMembershipNotice('Monthly plan selected. Secure checkout will activate here once billing is connected.')}><small>MONTHLY</small><strong>$9.99</strong><span>/ month</span><em>7-day trial</em></button>
+            <button className="membership-plan" onClick={()=>setMembershipNotice('Annual plan selected. Secure checkout will activate here once billing is connected.')}><small>ANNUAL · SAVE</small><strong>$79</strong><span>/ year</span><em>7-day trial</em></button>
+          </div>
+          <button className="primary full membership-cta" onClick={()=>setMembershipNotice('Membership checkout is being connected. No payment has been taken.')}><LockKeyhole size={18}/>Start My 7-Day Trial</button>
+          <p className="membership-fine">No payment is being collected on this build yet. Billing and subscriber authentication will be connected and tested before enrollment opens.</p>
+        </div>
+      </div>}
 
       <footer><div className="brand footer-brand"><span>F</span><div><b>FANCY EATZ</b><small>Everyday ingredients. Elevated experiences.</small></div></div><p>Cook beautifully. Shop intentionally. Eat fancy.</p></footer>
     </main>
