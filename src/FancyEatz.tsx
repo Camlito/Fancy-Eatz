@@ -328,6 +328,8 @@ export default function FancyEatz() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [showSourceLibrary, setShowSourceLibrary] = useState(false);
   const [recentRecipes, setRecentRecipes] = useState<Recipe[]>(()=>{try{return JSON.parse(localStorage.getItem('fancy-recent-recipes')||'[]') as Recipe[]}catch{return []}});
+  type CookedMeal = { title:string; description:string; ingredients:string[]; steps:string[]; plating?:string; cookedAt:string; source:'Pantry Chef'|'Recipe Vault'; image?:string; time?:string; budget?:string };
+  const [cookedHistory, setCookedHistory] = useState<CookedMeal[]>(()=>{try{return JSON.parse(localStorage.getItem('fancy-cooked-history')||'[]') as CookedMeal[]}catch{return []}});
   const [recipeLetter, setRecipeLetter] = useState('All');
   const [favorites, setFavorites] = useState<Meal[]>(() => {
     try { return JSON.parse(localStorage.getItem('fancy-eatz-favorites') || '[]') as Meal[]; } catch { return []; }
@@ -577,6 +579,19 @@ export default function FancyEatz() {
     navigate('grocery');
   }
 
+  function markCooked(item:CookedMeal) {
+    setCookedHistory(prev=>{
+      const next=[{...item,cookedAt:new Date().toISOString()},...prev.filter(x=>x.title!==item.title)].slice(0,20);
+      localStorage.setItem('fancy-cooked-history',JSON.stringify(next));
+      return next;
+    });
+  }
+
+  function cookAgain(item:CookedMeal) {
+    const saved:Meal={title:item.title,description:item.description,ingredients:item.ingredients,steps:item.steps,plating:item.plating||'Serve with a Fancy Eatz finish.',missing:[]};
+    setMeal(saved); setMealChoices([saved]); navigate('pantry');
+  }
+
   function saveFavorite() {
     if (!meal || favorites.some(f => f.title === meal.title)) return;
     setFavorites(p => [...p, meal]);
@@ -654,8 +669,8 @@ export default function FancyEatz() {
           <section className="return-home"><div className="home-section-title"><div><p className="eyebrow">MADE FOR YOU</p><h2>Pick up where you left off.</h2></div></div><div className="return-grid">
             <button onClick={()=>navigate('favorites')}><span>♥</span><div><b>Saved Meals</b><small>{favorites.length ? favorites.length+' saved creation'+(favorites.length===1?'':'s') : 'Save meals you want to make again'}</small></div></button>
             <button onClick={()=>navigate('planner')}><span>7</span><div><b>This Week</b><small>{weeklyPlan ? 'Your weekly plan is ready to revisit' : 'Build a simple plan for the week ahead'}</small></div></button>
-            <button onClick={()=>navigate('pantry')}><span>↻</span><div><b>Cook Again</b><small>Start with your saved kitchen preferences</small></div></button>
-          </div>{recentRecipes.length>0&&<div className="recent-wrap"><div className="home-section-title"><h3>Recently Viewed</h3><button onClick={()=>navigate('recipes')}>Browse All →</button></div><div className="home-recipe-strip">{recentRecipes.slice(0,5).map(r=><button className="home-recipe-card" key={'recent-'+r.title} onClick={()=>openRecipe(r)}><div style={r.image?{backgroundImage:`url("${r.image}")`}:undefined}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div></div>}</section>
+            <button onClick={()=>cookedHistory.length?cookAgain(cookedHistory[0]):navigate('pantry')}><span>↻</span><div><b>Cook Again</b><small>{cookedHistory.length ? cookedHistory[0].title : 'Start with your saved kitchen preferences'}</small></div></button>
+          </div>{cookedHistory.length>0&&<div className="recent-wrap"><div className="home-section-title"><h3>Cooked Recently</h3><span>{cookedHistory.length} meal{cookedHistory.length===1?'':'s'}</span></div><div className="home-recipe-strip">{cookedHistory.slice(0,5).map((r,i)=><button className="home-recipe-card cooked-card" key={'cooked-'+r.title+i} onClick={()=>cookAgain(r)}><div style={r.image?{backgroundImage:`url("${r.image}")`}:undefined}/><b>{r.title}</b><small>{new Date(r.cookedAt).toLocaleDateString(undefined,{month:'short',day:'numeric'})} · Cook Again</small></button>)}</div></div>}{recentRecipes.length>0&&<div className="recent-wrap"><div className="home-section-title"><h3>Recently Viewed</h3><button onClick={()=>navigate('recipes')}>Browse All →</button></div><div className="home-recipe-strip">{recentRecipes.slice(0,5).map(r=><button className="home-recipe-card" key={'recent-'+r.title} onClick={()=>openRecipe(r)}><div style={r.image?{backgroundImage:`url("${r.image}")`}:undefined}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div></div>}</section>
           <div className="home-recipe-section"><div className="home-section-title"><h2>Featured Recipes</h2><button onClick={()=>navigate('recipes')}>View All Recipes →</button></div>
             <div className="home-recipe-strip">{featured.filter(r=>r.image).slice(0,6).map(r=><button className="home-recipe-card" key={r.title} onClick={()=>openRecipe(r)}><div style={{backgroundImage:`url("${r.image}")`}}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div>
           </div>
@@ -785,6 +800,7 @@ export default function FancyEatz() {
                   <div className="plating"><b>Fancy Finish</b><p>{meal.plating}</p></div>
                   <div className="result-actions">
                     <button className="ghost" onClick={saveFavorite}><Heart size={18} />{favorites.some(f => f.title === meal.title) ? 'Saved' : 'Save Favorite'}</button>
+                    <button className="primary" onClick={()=>markCooked({title:meal.title,description:meal.description,ingredients:meal.ingredients,steps:meal.steps,plating:meal.plating,cookedAt:new Date().toISOString(),source:'Pantry Chef',time,budget})}><ChefHat size={18}/>I Made This</button>
                     {meal.missing.length > 0 && <button className="ghost" onClick={() => addItems(meal.missing, meal.title)}><ShoppingBasket size={18} />Add Missing Items</button>}
                   </div>
                 </div>
@@ -902,6 +918,7 @@ export default function FancyEatz() {
               {selectedRecipe.ingredients && <button className="ghost" onClick={() => addItems(selectedRecipe.ingredients || [], selectedRecipe.title)}><ShoppingBasket size={18}/>Add Ingredients to Grocery List</button>}
               <button className="ghost" onClick={() => { const p=selectedRecipe.title+' ingredients'; setPantry(p); setMealType(selectedRecipe.mealType); navigate('pantry'); void generateMeal(true,p,selectedRecipe.mealType); }}><Sparkles size={18}/>Make My Version</button>
               <button className="ghost" onClick={() => { if (!selectedRecipe) return; const saved: Meal = { title:selectedRecipe.title, description:selectedRecipe.note, ingredients:selectedRecipe.ingredients || [], steps:selectedRecipe.method || [], plating:'Serve with an elevated Fancy Eatz presentation.', missing:[] }; setFavorites(prev => prev.some(x=>x.title===saved.title) ? prev : [...prev,saved]); }}><Heart size={18}/>Save to My Cookbook</button>
+              <button className="primary" onClick={()=>markCooked({title:selectedRecipe.title,description:selectedRecipe.note,ingredients:selectedRecipe.ingredients||[],steps:selectedRecipe.method||[],plating:'Serve with an elevated Fancy Eatz presentation.',cookedAt:new Date().toISOString(),source:'Recipe Vault',image:selectedRecipe.image,time:selectedRecipe.time,budget:selectedRecipe.budget})}><ChefHat size={18}/>I Made This</button>
               <button className="ghost" onClick={() => window.print()}>Print Recipe</button>
               <button className="ghost" onClick={async () => { if (navigator.share && selectedRecipe) await navigator.share({title:selectedRecipe.title,text:selectedRecipe.note,url:window.location.href}); }}>Share Recipe</button>
               <button className="ghost" onClick={() => setSelectedRecipe(null)}>Close Recipe</button>
