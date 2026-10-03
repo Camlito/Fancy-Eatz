@@ -1047,3 +1047,34 @@ footer p {
   .national-trust{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
   .national-trust span{min-height:46px!important;display:flex!important;align-items:center!important;gap:9px!important;border-radius:13px!important;padding:10px 13px!important}
 }
+
+/* Approved reference layout — mobile-first */
+.reference-benefits{display:flex;justify-content:space-between;gap:18px;margin-top:30px}
+.reference-benefits button{flex:1;border:0;background:transparent;color:#f4eee5;padding:0;text-align:center;font:inherit;cursor:pointer}
+.reference-benefits svg{width:52px;height:52px;margin:0 auto 10px;padding:12px;border:1.5px solid #e4b95f;border-radius:50%;color:#e4b95f;filter:drop-shadow(0 0 8px rgba(228,185,95,.25))}
+.reference-benefits span{font-size:13px;line-height:1.15}
+.reference-hero h1 strong{color:#f0c968;font-weight:500}
+@media(max-width:800px){
+  .home-showcase{padding:0!important}
+  .reference-hero{position:relative!important;min-height:820px!important;margin:0!important;border-radius:0!important;display:block!important;background:#050505!important}
+  .reference-hero .hero-food-photo{position:absolute!important;inset:0!important;min-height:100%!important;background:
+    linear-gradient(90deg,rgba(5,5,5,.99) 0%,rgba(5,5,5,.92) 38%,rgba(5,5,5,.24) 72%,rgba(5,5,5,.08) 100%),
+    linear-gradient(0deg,#050505 0%,transparent 28%,transparent 70%,#050505 100%),
+    url("https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=1200&q=92") 72% center/cover!important;
+    filter:saturate(1.22) contrast(1.08)!important
+  }
+  .reference-hero .hero-food-photo:after{background:radial-gradient(circle at 70% 35%,rgba(226,182,95,.09),transparent 34%)!important}
+  .reference-hero .hero-copy{position:relative!important;z-index:3!important;min-height:820px!important;padding:50px 28px 34px!important;background:transparent!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important}
+  .reference-hero .eyebrow{max-width:330px!important;font-size:12px!important;line-height:1.45!important;letter-spacing:.18em!important;margin:0 0 24px!important}
+  .reference-hero h1{font-size:54px!important;line-height:.91!important;margin:0!important;max-width:355px!important;color:#fff!important}
+  .reference-hero h1 em{display:inline-block!important;color:#e4b95f!important;margin-top:5px!important}
+  .reference-hero .lede{max-width:350px!important;margin-top:30px!important;font-size:16px!important;line-height:1.55!important;color:#d8d2ca!important;text-shadow:0 2px 14px #000!important}
+  .reference-benefits{margin-top:auto!important;padding-top:34px!important}
+  .reference-benefits button{color:#fff!important}
+  .reference-benefits span{font-size:13px!important}
+}
+@media(min-width:801px){
+  .reference-hero .hero-copy{padding:60px 48px!important}
+  .reference-hero h1{font-size:72px!important}
+  .reference-benefits{max-width:520px}
+}
