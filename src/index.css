@@ -894,3 +894,25 @@ footer p {
 
 .taste-profile-card{max-width:1180px;margin:26px auto;padding:24px;border:1px solid #493d2e;border-radius:22px;background:linear-gradient(145deg,#14110d,#0b0907)}.taste-profile-card .home-section-title p:last-child{margin:6px 0 0;color:#aa9f91;font-size:13px}.cooked-card small{color:#d5aa60}
 @media(max-width:800px){.taste-profile-card{margin:18px 12px;padding:18px 14px}}
+
+/* iPhone dropdown alignment — keep menus inside viewport */
+@media(max-width:800px){
+  .main-nav{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;overflow:visible!important;gap:8px!important}
+  .main-nav>.nav-dropdown{position:relative!important;width:100%!important}
+  .main-nav>.nav-dropdown>.nav-menu{
+    position:absolute!important;
+    top:calc(100% + 6px)!important;
+    width:calc(200% + 8px)!important;
+    max-width:calc(100vw - 40px)!important;
+    left:0!important;right:auto!important;
+    margin:0!important;
+    transform:none!important;
+    box-sizing:border-box!important;
+  }
+  .main-nav>.nav-dropdown:nth-of-type(even)>.nav-menu{
+    left:auto!important;right:0!important;
+  }
+  .main-nav>.nav-dropdown:nth-of-type(odd)>.nav-menu{
+    left:0!important;right:auto!important;
+  }
+}
