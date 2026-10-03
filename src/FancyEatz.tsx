@@ -647,7 +647,7 @@ export default function FancyEatz() {
     <main>
       <header className="topbar">
         <button className="brand brand-logo-button" onClick={() => navigate('home')} aria-label="Fancy Eatz home">
-          <img className="brand-logo" src="/fancy-eatz-logo-mobile.jpg?v=4" alt="Fancy Eatz — Elevate Every Bite" />
+          <img className="brand-logo" src="/fancy-eatz-dark-logo.jpg?v=5" alt="Fancy Eatz — Elevate Every Bite" />
         </button>
         <nav className="main-nav">
           <button onClick={() => navigate('home')}><House size={19}/> <span>Home</span></button>
