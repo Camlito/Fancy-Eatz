@@ -359,7 +359,7 @@ export default function FancyEatz() {
     if(!cookedHistory.length&&!favorites.length) return [] as Recipe[];
     const corpus=[...cookedHistory,...favorites].map(x=>(x.title+' '+x.description+' '+x.ingredients.join(' ')).toLowerCase()).join(' ');
     const tokens=Array.from(new Set(corpus.match(/[a-z]{4,}/g)||[])).filter(x=>!['with','this','that','from','your','serve','fancy','eatz'].includes(x));
-    return featured.filter(r=>r.ingredients?.length).map(r=>({r,score:tokens.reduce((n,t)=>n+((r.title+' '+r.note+' '+r.ingredients.join(' ')).toLowerCase().includes(t)?1:0),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.r);
+    return featured.filter(r=>r.ingredients?.length).map(r=>({r,score:tokens.reduce((n,t)=>n+((r.title+' '+r.note+' '+(r.ingredients || []).join(' ')).toLowerCase().includes(t)?1:0),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.r);
   },[cookedHistory,favorites]);
 
   const filteredRecipes = useMemo(() => featured.filter(r => {
@@ -626,7 +626,7 @@ export default function FancyEatz() {
 
   function cookAgain(item:CookedMeal) {
     const saved:Meal={title:item.title,description:item.description,ingredients:item.ingredients,steps:item.steps,plating:item.plating||'Serve with a Fancy Eatz finish.',missing:[]};
-    setMeal(saved); setMealChoices([saved]); navigate('pantry');
+    setMeal(saved); setMealChoices([{...saved,category:'Saved meal'}]); navigate('pantry');
   }
 
   function saveFavorite() {
@@ -646,7 +646,7 @@ export default function FancyEatz() {
   return (
     <main>
       <header className="topbar">
-        <button className="brand brand-logo-button" onClick={() => navigate('home')} aria-label="Fancy Eatz home"><img className="brand-logo" src="https://dnznrvs05pmza.cloudfront.net/gemini/gemini-3.1-flash-image/images/36c52dc6-aeff-4998-9d76-777281be42e1/0455e687-9f94-477e-8f59-671534d1d3f4/Preserve_this_Fancy_Eatz_logo_composition_and_wording_exactl.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZTVjMDk3OWRiNmJjYmVjNCIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MTE5OTM4OX0.iG0ILkSgWbm5T-FmNF5yfxsJmWN0EuTigMSHppm1T04" alt="Fancy Eatz — Elevate Every Bite" /></button>
+        <button className="brand brand-logo-button" onClick={() => navigate('home')} aria-label="Fancy Eatz home"><span className="luxe-brand-mark"><ChefHat size={32}/></span><span className="luxe-brand-name">FANCY EATZ<small>Elevate Every Bite</small></span></button>
         <nav className="main-nav">
           <button onClick={() => navigate('home')}><House size={19}/> <span>Home</span></button>
           <div className="nav-dropdown"><button className={mobileMenu==='cook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cook'?'':'cook')}><ChefHat size={19}/> <span>Cook</span> <small>▾</small></button>{mobileMenu==='cook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('pantry')}}>Pantry Chef</button><button onClick={()=>{setMobileMenu('');navigate('photo')}}>Photo My Fridge</button><button onClick={()=>{setMobileMenu('');navigate('leftovers')}}>Leftovers → Luxury</button><button onClick={()=>{setMobileMenu('');navigate('ideas')}}>Meal Ideas</button><button onClick={()=>{setMobileMenu('');navigate('styles')}}>Cooking Styles</button></div>}</div>
@@ -667,9 +667,10 @@ export default function FancyEatz() {
           
           <div className="home-hero reference-hero">
             <div className="hero-copy">
-              <p className="eyebrow">SMARTER HOME COOKING · MADE FOR EVERY KITCHEN</p>
-              <h1>Make<br/>something<br/><strong>good.</strong><br/><em>With what<br/>you have.</em></h1>
-              <p className="lede">From weeknight dinners to weekend hosting, Fancy Eatz turns the ingredients you already have into meals, plans and grocery lists built around you.</p>
+              <p className="eyebrow">Elevate Every Bite</p>
+              <h1>Restaurant<br/>Flavors <em>at Home.</em></h1>
+              <p className="lede">Turn the ingredients you have into meals you’ll love. Simple ingredients. Extraordinary possibilities.</p>
+              <button className="primary luxe-hero-cta" onClick={()=>navigate('pantry')}>Find My Next Meal</button>
               <div className="reference-benefits">
                 <button onClick={()=>navigate('ideas')}><Sparkles/><span>Personalized<br/>Meal Ideas</span></button>
                 <button onClick={()=>navigate('grocery')}><ShoppingBasket/><span>Smart<br/>Grocery Lists</span></button>
@@ -678,6 +679,7 @@ export default function FancyEatz() {
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"></div>
           </div>
+          <section className="luxe-kitchen"><p className="eyebrow">USE WHAT YOU HAVE</p><h2>What’s in your kitchen?</h2><p>Add your ingredients to explore meal ideas.</p><form onSubmit={e=>{e.preventDefault();navigate('pantry')}}><label className="search-box"><Search size={20}/><input aria-label="Ingredients in your kitchen" value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="Chicken, spinach, rice…"/></label><button className="primary" type="submit">Generate Meal Ideas</button></form><div className="luxe-categories">{['Breakfast','Lunch','Dinner','Desserts'].map(x=><button key={x} onClick={()=>{if(x==='Desserts')navigate('desserts');else{setMealType(x);navigate('ideas')}}}>{x}</button>)}</div></section>
           {!onboarded&&!showOnboarding&&<section className="onboarding-invite"><div><p className="eyebrow">PERSONALIZE FANCY EATZ</p><h2>Want better picks from the start?</h2><p>Answer a few quick kitchen questions and tailor the experience to your household.</p></div><button className="primary" onClick={()=>setShowOnboarding(true)}>Personalize My Kitchen →</button></section>}
           <section className="discover-strip"><div className="discover-head"><p className="eyebrow">DISCOVER YOUR NEXT MEAL</p><h2>What sounds good today?</h2></div><div className="discover-chips">
             <button onClick={()=>{setTime('30 minutes');navigate('ideas')}}>Under 30 Minutes</button>
@@ -709,7 +711,7 @@ export default function FancyEatz() {
           <div className="home-recipe-section"><div className="home-section-title"><h2>Featured Recipes</h2><button onClick={()=>navigate('recipes')}>View All Recipes →</button></div>
             <div className="home-recipe-strip">{featured.filter(r=>r.image).slice(0,6).map(r=><button className="home-recipe-card" key={r.title} onClick={()=>openRecipe(r)}><div style={{backgroundImage:`url("${r.image}")`}}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div>
           </div>
-          <section className="premium-conversion"><div><p className="eyebrow">MAKE EVERY WEEK EASIER</p><h2>Your kitchen, organized around you.</h2><p>Save favorites, plan meals and keep one smart grocery list with Fancy Eatz.</p></div><div className="conversion-actions"><button className="ghost" onClick={()=>navigate('planner')}>Plan My Week</button><button className="primary" onClick={()=>openMembership('Join early access now and get your 7-day Premium trial when Fancy Eatz launches.')}>Join Early Access →</button></div></section>
+          <section className="premium-conversion"><div><p className="eyebrow">MAKE EVERY WEEK EASIER</p><h2>One membership.<br/>More delicious possibilities.</h2><p>Save favorites, plan meals and keep one smart grocery list with Fancy Eatz.</p></div><div className="luxe-prices"><span><b>$9.99</b> / month</span><span><b>$79</b> / year</span><small>Planned pricing · Join early access</small></div><div className="conversion-actions"><button className="ghost" onClick={()=>navigate('planner')}>Plan My Week</button><button className="primary" onClick={()=>openMembership('Join early access now and get your 7-day Premium trial when Fancy Eatz launches.')}>Join Early Access →</button></div></section>
         </section>
       )}
 
