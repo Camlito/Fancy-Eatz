@@ -726,12 +726,12 @@ export default function FancyEatz() {
               </label>
               {photoPreview && <img src={photoPreview} alt="Kitchen ingredients preview" style={{width:'100%',maxHeight:360,objectFit:'cover',borderRadius:18,marginTop:18}} />}
               {photoItems.length > 0 && <div className="plating"><b>Ingredients I can see</b><p>{photoItems.join(' · ')}</p></div>}
-              {!photoBusy && photoPreview && photoItems.length === 0 && <p className="error">I couldn't confidently identify ingredients in that photo. Try a brighter, closer photo or enter them manually.</p>}
+              {!photoBusy && photoPreview && photoItems.length === 0 && <p className="error" role="status">{photoError || 'No clear ingredients were detected. Enter them in the ingredient box to continue.'}</p>}
             </div>
             <div className="panel">
               <p className="eyebrow">FROM CAMERA TO DINNER</p><h3>Turn the scan into a meal</h3>
-              <label>Detected / editable ingredients</label>
-              <textarea value={pantry} onChange={e => setPantry(e.target.value)} placeholder="Detected ingredients will appear here…" />
+              <label>Review or enter ingredients</label>
+              <textarea value={pantry} onChange={e => setPantry(e.target.value)} placeholder="Enter ingredients, e.g. eggs, white rice, tomato sauce, Alfredo sauce…" />
               <button className="primary full" onClick={() => { setMeal(null); navigate('pantry'); void generateMeal(true, pantry, mealType); }} disabled={!pantry.trim()}><Sparkles size={18}/>Make Something Fancy</button>
               <p className="fine-print">Always confirm detected ingredients yourself, especially for allergies or dietary restrictions.</p>
             </div>
