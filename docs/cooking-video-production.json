@@ -1,0 +1,310 @@
+{
+  "project": "Fancy Eatz",
+  "status": "production_scripts_ready_media_blocked",
+  "publishable": false,
+  "totalPlannedClips": 21,
+  "blockers": [
+    "HeyGen returned insufficient_credit: monthly free videos used up. No video was created.",
+    "Runway connection requires reauthentication. No generation was submitted."
+  ],
+  "guides": [
+    {
+      "title": "Weeknight Garlic Butter Chicken",
+      "servings": "4",
+      "ingredients": [
+        "4 boneless chicken breasts",
+        "1 lb baby potatoes, halved",
+        "3 cups broccoli florets",
+        "3 tbsp butter",
+        "4 garlic cloves, minced",
+        "1 tsp paprika",
+        "salt and black pepper"
+      ],
+      "classicSteps": [
+        {
+          "step": 1,
+          "instruction": "Heat oven to 425\u00b0F.",
+          "narration": "Heat oven to 425\u00b0F.",
+          "caption": "Heat oven to 425\u00b0F.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 2,
+          "instruction": "Season chicken and potatoes with paprika, salt and pepper.",
+          "narration": "Season chicken and potatoes with paprika, salt and pepper.",
+          "caption": "Season chicken and potatoes with paprika, salt and pepper.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 3,
+          "instruction": "Melt butter with garlic and coat the chicken and potatoes.",
+          "narration": "Melt butter with garlic and coat the chicken and potatoes.",
+          "caption": "Melt butter with garlic and coat the chicken and potatoes.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 4,
+          "instruction": "Roast chicken and potatoes for 15 minutes.",
+          "narration": "Roast chicken and potatoes for 15 minutes.",
+          "caption": "Roast chicken and potatoes for 15 minutes.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 5,
+          "instruction": "Add broccoli and roast 10\u201315 minutes more, until chicken reaches 165\u00b0F and potatoes are tender.",
+          "narration": "Add broccoli and roast 10\u201315 minutes more, until chicken reaches 165\u00b0F and potatoes are tender.",
+          "caption": "Add broccoli and roast 10\u201315 minutes more, until chicken reaches 165\u00b0F and potatoes are tender.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 6,
+          "instruction": "Rest chicken 5 minutes and spoon the pan juices over each serving.",
+          "narration": "Rest chicken 5 minutes and spoon the pan juices over each serving.",
+          "caption": "Rest chicken 5 minutes and spoon the pan juices over each serving.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        }
+      ],
+      "signatureAdditionalIngredients": [
+        "2 tbsp extra-virgin olive oil per 4 servings",
+        "1 tbsp finely chopped parsley per 4 servings",
+        "1 tsp lemon zest per 4 servings"
+      ],
+      "signatureFinishingStep": {
+        "instruction": "Scale the additional olive oil, parsley and lemon zest to the recipe serving count. Mix in a clean bowl. Arrange the fully cooked dish on warm plates, drizzle sparingly with the lemon-herb oil and wipe the rims.",
+        "narration": "For the Fancy Eatz Signature finish, mix olive oil, fresh parsley and lemon zest. Plate neatly and finish with a light drizzle.",
+        "plannedPlaybackSeconds": 10,
+        "mediaStatus": "not_created",
+        "videoUrl": null
+      },
+      "playerRequirements": [
+        "Classic / Signature selector",
+        "One clip per step",
+        "Full recipe playback",
+        "Captions",
+        "Pause and replay",
+        "Previous and next step",
+        "Show written cooking times and thermometer targets",
+        "Identify AI-generated illustrations",
+        "Never display Watch controls until verified media exists"
+      ]
+    },
+    {
+      "title": "Creamy Family Chicken Pasta",
+      "servings": "4",
+      "ingredients": [
+        "12 oz pasta",
+        "1 lb chicken breast, diced",
+        "2 tbsp olive oil",
+        "3 garlic cloves, minced",
+        "1 cup chicken broth",
+        "1 cup heavy cream",
+        "3/4 cup grated Parmesan",
+        "2 cups spinach",
+        "salt and black pepper"
+      ],
+      "classicSteps": [
+        {
+          "step": 1,
+          "instruction": "Cook pasta until al dente and reserve 1/2 cup pasta water.",
+          "narration": "Cook pasta until al dente and reserve 1/2 cup pasta water.",
+          "caption": "Cook pasta until al dente and reserve 1/2 cup pasta water.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 2,
+          "instruction": "Season the diced chicken, then saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F on a food thermometer. Transfer to a clean plate.",
+          "narration": "Season the diced chicken, then saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F on a food thermometer. Transfer to a clean plate.",
+          "caption": "Season the diced chicken, then saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F on a food thermometer. Transfer to a clean plate.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 3,
+          "instruction": "Cook garlic for 30 seconds, then add broth and cream.",
+          "narration": "Cook garlic for 30 seconds, then add broth and cream.",
+          "caption": "Cook garlic for 30 seconds, then add broth and cream.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 4,
+          "instruction": "Simmer gently and whisk in Parmesan.",
+          "narration": "Simmer gently and whisk in Parmesan.",
+          "caption": "Simmer gently and whisk in Parmesan.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 5,
+          "instruction": "Return chicken, pasta and spinach to the pan.",
+          "narration": "Return chicken, pasta and spinach to the pan.",
+          "caption": "Return chicken, pasta and spinach to the pan.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 6,
+          "instruction": "Toss until spinach wilts, thinning with reserved pasta water as needed.",
+          "narration": "Toss until spinach wilts, thinning with reserved pasta water as needed.",
+          "caption": "Toss until spinach wilts, thinning with reserved pasta water as needed.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        }
+      ],
+      "signatureAdditionalIngredients": [
+        "2 tbsp extra-virgin olive oil per 4 servings",
+        "1 tbsp finely chopped parsley per 4 servings",
+        "1 tsp lemon zest per 4 servings"
+      ],
+      "signatureFinishingStep": {
+        "instruction": "Scale the additional olive oil, parsley and lemon zest to the recipe serving count. Mix in a clean bowl. Arrange the fully cooked dish on warm plates, drizzle sparingly with the lemon-herb oil and wipe the rims.",
+        "narration": "For the Fancy Eatz Signature finish, mix olive oil, fresh parsley and lemon zest. Plate neatly and finish with a light drizzle.",
+        "plannedPlaybackSeconds": 10,
+        "mediaStatus": "not_created",
+        "videoUrl": null
+      },
+      "playerRequirements": [
+        "Classic / Signature selector",
+        "One clip per step",
+        "Full recipe playback",
+        "Captions",
+        "Pause and replay",
+        "Previous and next step",
+        "Show written cooking times and thermometer targets",
+        "Identify AI-generated illustrations",
+        "Never display Watch controls until verified media exists"
+      ]
+    },
+    {
+      "title": "Pan-Seared Salmon with Lemon Cream",
+      "servings": "2",
+      "ingredients": [
+        "2 salmon fillets",
+        "1 tbsp olive oil",
+        "1 tbsp butter",
+        "1 shallot, minced",
+        "1/2 cup broth",
+        "1/3 cup heavy cream",
+        "1 tbsp lemon juice",
+        "1 tbsp chopped parsley",
+        "salt and black pepper"
+      ],
+      "classicSteps": [
+        {
+          "step": 1,
+          "instruction": "Pat salmon dry and season.",
+          "narration": "Pat salmon dry and season.",
+          "caption": "Pat salmon dry and season.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 2,
+          "instruction": "Sear seasoned salmon in olive oil until golden; turn carefully and continue cooking until the thickest part reaches 145\u00b0F on a food thermometer. Transfer to a warm plate.",
+          "narration": "Sear seasoned salmon in olive oil until golden; turn carefully and continue cooking until the thickest part reaches 145\u00b0F on a food thermometer. Transfer to a warm plate.",
+          "caption": "Sear seasoned salmon in olive oil until golden; turn carefully and continue cooking until the thickest part reaches 145\u00b0F on a food thermometer. Transfer to a warm plate.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 3,
+          "instruction": "Lower heat, add butter and shallot, and cook until soft.",
+          "narration": "Lower heat, add butter and shallot, and cook until soft.",
+          "caption": "Lower heat, add butter and shallot, and cook until soft.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 4,
+          "instruction": "Add broth and reduce by about half.",
+          "narration": "Add broth and reduce by about half.",
+          "caption": "Add broth and reduce by about half.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 5,
+          "instruction": "Stir in cream and lemon juice and simmer until lightly thickened.",
+          "narration": "Stir in cream and lemon juice and simmer until lightly thickened.",
+          "caption": "Stir in cream and lemon juice and simmer until lightly thickened.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        },
+        {
+          "step": 6,
+          "instruction": "Spoon sauce onto warm plates, add salmon and finish with parsley.",
+          "narration": "Spoon sauce onto warm plates, add salmon and finish with parsley.",
+          "caption": "Spoon sauce onto warm plates, add salmon and finish with parsley.",
+          "plannedPlaybackSeconds": 10,
+          "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
+          "mediaStatus": "not_created",
+          "videoUrl": null
+        }
+      ],
+      "signatureAdditionalIngredients": [
+        "2 tbsp extra-virgin olive oil per 4 servings",
+        "1 tbsp finely chopped parsley per 4 servings",
+        "1 tsp lemon zest per 4 servings"
+      ],
+      "signatureFinishingStep": {
+        "instruction": "Scale the additional olive oil, parsley and lemon zest to the recipe serving count. Mix in a clean bowl. Arrange the fully cooked dish on warm plates, drizzle sparingly with the lemon-herb oil and wipe the rims.",
+        "narration": "For the Fancy Eatz Signature finish, mix olive oil, fresh parsley and lemon zest. Plate neatly and finish with a light drizzle.",
+        "plannedPlaybackSeconds": 10,
+        "mediaStatus": "not_created",
+        "videoUrl": null
+      },
+      "playerRequirements": [
+        "Classic / Signature selector",
+        "One clip per step",
+        "Full recipe playback",
+        "Captions",
+        "Pause and replay",
+        "Previous and next step",
+        "Show written cooking times and thermometer targets",
+        "Identify AI-generated illustrations",
+        "Never display Watch controls until verified media exists"
+      ]
+    }
+  ]
+}
