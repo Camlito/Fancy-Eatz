@@ -1,12 +1,8 @@
 {
   "project": "Fancy Eatz",
-  "status": "production_scripts_ready_media_blocked",
-  "publishable": false,
+  "status": "illustrated_walkthroughs_rendered",
+  "publishable": true,
   "totalPlannedClips": 21,
-  "blockers": [
-    "HeyGen returned insufficient_credit: monthly free videos used up. No video was created.",
-    "Runway connection requires reauthentication. No generation was submitted."
-  ],
   "guides": [
     {
       "title": "Weeknight Garlic Butter Chicken",
@@ -23,63 +19,69 @@
       "classicSteps": [
         {
           "step": 1,
-          "instruction": "Heat oven to 425\u00b0F.",
-          "narration": "Heat oven to 425\u00b0F.",
-          "caption": "Heat oven to 425\u00b0F.",
+          "instruction": "Heat the oven to 425\u00b0F. Halve the baby potatoes, wash the broccoli, and keep raw chicken on a separate tray.",
+          "narration": "Heat the oven to 425\u00b0F. Halve the baby potatoes, wash the broccoli, and keep raw chicken on a separate tray.",
+          "caption": "Heat the oven to 425\u00b0F. Halve the baby potatoes, wash the broccoli, and keep raw chicken on a separate tray.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/garlic-butter-chicken-classic.mp4",
+          "chapterStart": 0.0
         },
         {
           "step": 2,
-          "instruction": "Season chicken and potatoes with paprika, salt and pepper.",
-          "narration": "Season chicken and potatoes with paprika, salt and pepper.",
-          "caption": "Season chicken and potatoes with paprika, salt and pepper.",
+          "instruction": "Season chicken and potatoes with paprika, salt and pepper. Melt the butter with garlic, then coat the chicken and potatoes.",
+          "narration": "Season chicken and potatoes with paprika, salt and pepper. Melt the butter with garlic, then coat the chicken and potatoes.",
+          "caption": "Season chicken and potatoes with paprika, salt and pepper. Melt the butter with garlic, then coat the chicken and potatoes.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/garlic-butter-chicken-classic.mp4",
+          "chapterStart": 10.145
         },
         {
           "step": 3,
-          "instruction": "Melt butter with garlic and coat the chicken and potatoes.",
-          "narration": "Melt butter with garlic and coat the chicken and potatoes.",
-          "caption": "Melt butter with garlic and coat the chicken and potatoes.",
+          "instruction": "Place chicken and potatoes on a sheet pan. Roast at 425\u00b0F for 15 minutes before adding the broccoli.",
+          "narration": "Place chicken and potatoes on a sheet pan. Roast at 425\u00b0F for 15 minutes before adding the broccoli.",
+          "caption": "Place chicken and potatoes on a sheet pan. Roast at 425\u00b0F for 15 minutes before adding the broccoli.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/garlic-butter-chicken-classic.mp4",
+          "chapterStart": 19.085
         },
         {
           "step": 4,
-          "instruction": "Roast chicken and potatoes for 15 minutes.",
-          "narration": "Roast chicken and potatoes for 15 minutes.",
-          "caption": "Roast chicken and potatoes for 15 minutes.",
+          "instruction": "Add broccoli to the pan. Roast 10\u201315 minutes more. Cooking time varies with chicken thickness and potato size.",
+          "narration": "Add broccoli to the pan. Roast 10\u201315 minutes more. Cooking time varies with chicken thickness and potato size.",
+          "caption": "Add broccoli to the pan. Roast 10\u201315 minutes more. Cooking time varies with chicken thickness and potato size.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/garlic-butter-chicken-classic.mp4",
+          "chapterStart": 29.235
         },
         {
           "step": 5,
-          "instruction": "Add broccoli and roast 10\u201315 minutes more, until chicken reaches 165\u00b0F and potatoes are tender.",
-          "narration": "Add broccoli and roast 10\u201315 minutes more, until chicken reaches 165\u00b0F and potatoes are tender.",
-          "caption": "Add broccoli and roast 10\u201315 minutes more, until chicken reaches 165\u00b0F and potatoes are tender.",
+          "instruction": "Check the thickest part of the chicken with a food thermometer. It must reach 165\u00b0F. Continue cooking as needed until potatoes are tender.",
+          "narration": "Check the thickest part of the chicken with a food thermometer. It must reach 165\u00b0F. Continue cooking as needed until potatoes are tender.",
+          "caption": "Check the thickest part of the chicken with a food thermometer. It must reach 165\u00b0F. Continue cooking as needed until potatoes are tender.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/garlic-butter-chicken-classic.mp4",
+          "chapterStart": 38.235
         },
         {
           "step": 6,
-          "instruction": "Rest chicken 5 minutes and spoon the pan juices over each serving.",
-          "narration": "Rest chicken 5 minutes and spoon the pan juices over each serving.",
-          "caption": "Rest chicken 5 minutes and spoon the pan juices over each serving.",
+          "instruction": "Rest the chicken for 5 minutes. Serve with roasted potatoes and broccoli, spooning the pan juices over each plate.",
+          "narration": "Rest the chicken for 5 minutes. Serve with roasted potatoes and broccoli, spooning the pan juices over each plate.",
+          "caption": "Rest the chicken for 5 minutes. Serve with roasted potatoes and broccoli, spooning the pan juices over each plate.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/garlic-butter-chicken-classic.mp4",
+          "chapterStart": 49.702
         }
       ],
       "signatureAdditionalIngredients": [
@@ -88,11 +90,11 @@
         "1 tsp lemon zest per 4 servings"
       ],
       "signatureFinishingStep": {
-        "instruction": "Scale the additional olive oil, parsley and lemon zest to the recipe serving count. Mix in a clean bowl. Arrange the fully cooked dish on warm plates, drizzle sparingly with the lemon-herb oil and wipe the rims.",
+        "instruction": "For four servings, mix 2 tablespoons extra-virgin olive oil, 1 tablespoon chopped parsley and 1 teaspoon lemon zest. Drizzle lightly over the plated dish.",
         "narration": "For the Fancy Eatz Signature finish, mix olive oil, fresh parsley and lemon zest. Plate neatly and finish with a light drizzle.",
         "plannedPlaybackSeconds": 10,
-        "mediaStatus": "not_created",
-        "videoUrl": null
+        "mediaStatus": "illustrated_video_rendered",
+        "videoUrl": "/videos/cooking/garlic-butter-chicken-signature.mp4"
       },
       "playerRequirements": [
         "Classic / Signature selector",
@@ -104,7 +106,103 @@
         "Show written cooking times and thermometer targets",
         "Identify AI-generated illustrations",
         "Never display Watch controls until verified media exists"
-      ]
+      ],
+      "walkthroughs": {
+        "classic": {
+          "src": "/videos/cooking/garlic-butter-chicken-classic.mp4",
+          "captions": "/videos/cooking/garlic-butter-chicken-classic.vtt",
+          "duration": 58.499,
+          "steps": [
+            {
+              "label": "Prep your kitchen",
+              "start": 0.0,
+              "end": 10.145,
+              "caption": "Heat the oven to 425\u00b0F. Halve the baby potatoes, wash the broccoli, and keep raw chicken on a separate tray."
+            },
+            {
+              "label": "Season and coat",
+              "start": 10.145,
+              "end": 19.085,
+              "caption": "Season chicken and potatoes with paprika, salt and pepper. Melt the butter with garlic, then coat the chicken and potatoes."
+            },
+            {
+              "label": "Start roasting",
+              "start": 19.085,
+              "end": 29.235,
+              "caption": "Place chicken and potatoes on a sheet pan. Roast at 425\u00b0F for 15 minutes before adding the broccoli."
+            },
+            {
+              "label": "Add the broccoli",
+              "start": 29.235,
+              "end": 38.235,
+              "caption": "Add broccoli to the pan. Roast 10\u201315 minutes more. Cooking time varies with chicken thickness and potato size."
+            },
+            {
+              "label": "Check doneness",
+              "start": 38.235,
+              "end": 49.702,
+              "caption": "Check the thickest part of the chicken with a food thermometer. It must reach 165\u00b0F. Continue cooking as needed until potatoes are tender."
+            },
+            {
+              "label": "Rest and serve",
+              "start": 49.702,
+              "end": 58.457,
+              "caption": "Rest the chicken for 5 minutes. Serve with roasted potatoes and broccoli, spooning the pan juices over each plate."
+            }
+          ],
+          "poster": "/videos/cooking/garlic-butter-chicken-classic.jpg"
+        },
+        "signature": {
+          "src": "/videos/cooking/garlic-butter-chicken-signature.mp4",
+          "captions": "/videos/cooking/garlic-butter-chicken-signature.vtt",
+          "duration": 70.849,
+          "steps": [
+            {
+              "label": "Prep your kitchen",
+              "start": 0.0,
+              "end": 10.145,
+              "caption": "Heat the oven to 425\u00b0F. Halve the baby potatoes, wash the broccoli, and keep raw chicken on a separate tray."
+            },
+            {
+              "label": "Season and coat",
+              "start": 10.145,
+              "end": 19.085,
+              "caption": "Season chicken and potatoes with paprika, salt and pepper. Melt the butter with garlic, then coat the chicken and potatoes."
+            },
+            {
+              "label": "Start roasting",
+              "start": 19.085,
+              "end": 29.235,
+              "caption": "Place chicken and potatoes on a sheet pan. Roast at 425\u00b0F for 15 minutes before adding the broccoli."
+            },
+            {
+              "label": "Add the broccoli",
+              "start": 29.235,
+              "end": 38.235,
+              "caption": "Add broccoli to the pan. Roast 10\u201315 minutes more. Cooking time varies with chicken thickness and potato size."
+            },
+            {
+              "label": "Check doneness",
+              "start": 38.235,
+              "end": 49.702,
+              "caption": "Check the thickest part of the chicken with a food thermometer. It must reach 165\u00b0F. Continue cooking as needed until potatoes are tender."
+            },
+            {
+              "label": "Rest and serve",
+              "start": 49.702,
+              "end": 58.457,
+              "caption": "Rest the chicken for 5 minutes. Serve with roasted potatoes and broccoli, spooning the pan juices over each plate."
+            },
+            {
+              "label": "Your Signature finish",
+              "start": 58.457,
+              "end": 70.807,
+              "caption": "For four servings, mix 2 tablespoons extra-virgin olive oil, 1 tablespoon chopped parsley and 1 teaspoon lemon zest. Drizzle lightly over the plated dish."
+            }
+          ],
+          "poster": "/videos/cooking/garlic-butter-chicken-signature.jpg"
+        }
+      }
     },
     {
       "title": "Creamy Family Chicken Pasta",
@@ -123,63 +221,69 @@
       "classicSteps": [
         {
           "step": 1,
-          "instruction": "Cook pasta until al dente and reserve 1/2 cup pasta water.",
-          "narration": "Cook pasta until al dente and reserve 1/2 cup pasta water.",
-          "caption": "Cook pasta until al dente and reserve 1/2 cup pasta water.",
+          "instruction": "Cook 12 ounces of pasta until al dente. Reserve half a cup of pasta water, then drain.",
+          "narration": "Cook 12 ounces of pasta until al dente. Reserve half a cup of pasta water, then drain.",
+          "caption": "Cook 12 ounces of pasta until al dente. Reserve half a cup of pasta water, then drain.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/creamy-chicken-pasta-classic.mp4",
+          "chapterStart": 0.0
         },
         {
           "step": 2,
-          "instruction": "Season the diced chicken, then saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F on a food thermometer. Transfer to a clean plate.",
-          "narration": "Season the diced chicken, then saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F on a food thermometer. Transfer to a clean plate.",
-          "caption": "Season the diced chicken, then saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F on a food thermometer. Transfer to a clean plate.",
+          "instruction": "Season the diced chicken. Saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F. Transfer to a clean plate.",
+          "narration": "Season the diced chicken. Saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F. Transfer to a clean plate.",
+          "caption": "Season the diced chicken. Saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F. Transfer to a clean plate.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/creamy-chicken-pasta-classic.mp4",
+          "chapterStart": 7.87
         },
         {
           "step": 3,
-          "instruction": "Cook garlic for 30 seconds, then add broth and cream.",
-          "narration": "Cook garlic for 30 seconds, then add broth and cream.",
-          "caption": "Cook garlic for 30 seconds, then add broth and cream.",
+          "instruction": "Lower the heat. Cook minced garlic for about 30 seconds, then add chicken broth and heavy cream.",
+          "narration": "Lower the heat. Cook minced garlic for about 30 seconds, then add chicken broth and heavy cream.",
+          "caption": "Lower the heat. Cook minced garlic for about 30 seconds, then add chicken broth and heavy cream.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/creamy-chicken-pasta-classic.mp4",
+          "chapterStart": 19.337
         },
         {
           "step": 4,
-          "instruction": "Simmer gently and whisk in Parmesan.",
-          "narration": "Simmer gently and whisk in Parmesan.",
-          "caption": "Simmer gently and whisk in Parmesan.",
+          "instruction": "Simmer the sauce gently. Stir in grated Parmesan until smooth; avoid a hard boil.",
+          "narration": "Simmer the sauce gently. Stir in grated Parmesan until smooth; avoid a hard boil.",
+          "caption": "Simmer the sauce gently. Stir in grated Parmesan until smooth; avoid a hard boil.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/creamy-chicken-pasta-classic.mp4",
+          "chapterStart": 27.27
         },
         {
           "step": 5,
-          "instruction": "Return chicken, pasta and spinach to the pan.",
-          "narration": "Return chicken, pasta and spinach to the pan.",
-          "caption": "Return chicken, pasta and spinach to the pan.",
+          "instruction": "Return the cooked chicken, pasta and spinach to the pan. Toss until spinach wilts and everything is hot.",
+          "narration": "Return the cooked chicken, pasta and spinach to the pan. Toss until spinach wilts and everything is hot.",
+          "caption": "Return the cooked chicken, pasta and spinach to the pan. Toss until spinach wilts and everything is hot.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/creamy-chicken-pasta-classic.mp4",
+          "chapterStart": 34.54
         },
         {
           "step": 6,
-          "instruction": "Toss until spinach wilts, thinning with reserved pasta water as needed.",
-          "narration": "Toss until spinach wilts, thinning with reserved pasta water as needed.",
-          "caption": "Toss until spinach wilts, thinning with reserved pasta water as needed.",
+          "instruction": "Loosen the sauce with reserved pasta water as needed. Taste, adjust salt and pepper, and serve warm.",
+          "narration": "Loosen the sauce with reserved pasta water as needed. Taste, adjust salt and pepper, and serve warm.",
+          "caption": "Loosen the sauce with reserved pasta water as needed. Taste, adjust salt and pepper, and serve warm.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/creamy-chicken-pasta-classic.mp4",
+          "chapterStart": 42.615
         }
       ],
       "signatureAdditionalIngredients": [
@@ -188,11 +292,11 @@
         "1 tsp lemon zest per 4 servings"
       ],
       "signatureFinishingStep": {
-        "instruction": "Scale the additional olive oil, parsley and lemon zest to the recipe serving count. Mix in a clean bowl. Arrange the fully cooked dish on warm plates, drizzle sparingly with the lemon-herb oil and wipe the rims.",
+        "instruction": "For four servings, mix 2 tablespoons extra-virgin olive oil, 1 tablespoon chopped parsley and 1 teaspoon lemon zest. Finish each bowl with a light drizzle.",
         "narration": "For the Fancy Eatz Signature finish, mix olive oil, fresh parsley and lemon zest. Plate neatly and finish with a light drizzle.",
         "plannedPlaybackSeconds": 10,
-        "mediaStatus": "not_created",
-        "videoUrl": null
+        "mediaStatus": "illustrated_video_rendered",
+        "videoUrl": "/videos/cooking/creamy-chicken-pasta-signature.mp4"
       },
       "playerRequirements": [
         "Classic / Signature selector",
@@ -204,7 +308,103 @@
         "Show written cooking times and thermometer targets",
         "Identify AI-generated illustrations",
         "Never display Watch controls until verified media exists"
-      ]
+      ],
+      "walkthroughs": {
+        "classic": {
+          "src": "/videos/cooking/creamy-chicken-pasta-classic.mp4",
+          "captions": "/videos/cooking/creamy-chicken-pasta-classic.vtt",
+          "duration": 51.19,
+          "steps": [
+            {
+              "label": "Cook the pasta",
+              "start": 0.0,
+              "end": 7.87,
+              "caption": "Cook 12 ounces of pasta until al dente. Reserve half a cup of pasta water, then drain."
+            },
+            {
+              "label": "Cook the chicken",
+              "start": 7.87,
+              "end": 19.337,
+              "caption": "Season the diced chicken. Saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F. Transfer to a clean plate."
+            },
+            {
+              "label": "Build the sauce",
+              "start": 19.337,
+              "end": 27.27,
+              "caption": "Lower the heat. Cook minced garlic for about 30 seconds, then add chicken broth and heavy cream."
+            },
+            {
+              "label": "Add Parmesan",
+              "start": 27.27,
+              "end": 34.54,
+              "caption": "Simmer the sauce gently. Stir in grated Parmesan until smooth; avoid a hard boil."
+            },
+            {
+              "label": "Bring it together",
+              "start": 34.54,
+              "end": 42.615,
+              "caption": "Return the cooked chicken, pasta and spinach to the pan. Toss until spinach wilts and everything is hot."
+            },
+            {
+              "label": "Finish and serve",
+              "start": 42.615,
+              "end": 51.148,
+              "caption": "Loosen the sauce with reserved pasta water as needed. Taste, adjust salt and pepper, and serve warm."
+            }
+          ],
+          "poster": "/videos/cooking/creamy-chicken-pasta-classic.jpg"
+        },
+        "signature": {
+          "src": "/videos/cooking/creamy-chicken-pasta-signature.mp4",
+          "captions": "/videos/cooking/creamy-chicken-pasta-signature.vtt",
+          "duration": 63.471,
+          "steps": [
+            {
+              "label": "Cook the pasta",
+              "start": 0.0,
+              "end": 7.87,
+              "caption": "Cook 12 ounces of pasta until al dente. Reserve half a cup of pasta water, then drain."
+            },
+            {
+              "label": "Cook the chicken",
+              "start": 7.87,
+              "end": 19.337,
+              "caption": "Season the diced chicken. Saut\u00e9 in olive oil until the center of the pieces reaches 165\u00b0F. Transfer to a clean plate."
+            },
+            {
+              "label": "Build the sauce",
+              "start": 19.337,
+              "end": 27.27,
+              "caption": "Lower the heat. Cook minced garlic for about 30 seconds, then add chicken broth and heavy cream."
+            },
+            {
+              "label": "Add Parmesan",
+              "start": 27.27,
+              "end": 34.54,
+              "caption": "Simmer the sauce gently. Stir in grated Parmesan until smooth; avoid a hard boil."
+            },
+            {
+              "label": "Bring it together",
+              "start": 34.54,
+              "end": 42.615,
+              "caption": "Return the cooked chicken, pasta and spinach to the pan. Toss until spinach wilts and everything is hot."
+            },
+            {
+              "label": "Finish and serve",
+              "start": 42.615,
+              "end": 51.148,
+              "caption": "Loosen the sauce with reserved pasta water as needed. Taste, adjust salt and pepper, and serve warm."
+            },
+            {
+              "label": "Your Signature finish",
+              "start": 51.148,
+              "end": 63.428,
+              "caption": "For four servings, mix 2 tablespoons extra-virgin olive oil, 1 tablespoon chopped parsley and 1 teaspoon lemon zest. Finish each bowl with a light drizzle."
+            }
+          ],
+          "poster": "/videos/cooking/creamy-chicken-pasta-signature.jpg"
+        }
+      }
     },
     {
       "title": "Pan-Seared Salmon with Lemon Cream",
@@ -223,63 +423,69 @@
       "classicSteps": [
         {
           "step": 1,
-          "instruction": "Pat salmon dry and season.",
-          "narration": "Pat salmon dry and season.",
-          "caption": "Pat salmon dry and season.",
+          "instruction": "Pat the salmon dry on a separate prep tray. Season with salt and pepper. Have the measured sauce ingredients ready.",
+          "narration": "Pat the salmon dry on a separate prep tray. Season with salt and pepper. Have the measured sauce ingredients ready.",
+          "caption": "Pat the salmon dry on a separate prep tray. Season with salt and pepper. Have the measured sauce ingredients ready.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/salmon-lemon-cream-classic.mp4",
+          "chapterStart": 0.0
         },
         {
           "step": 2,
-          "instruction": "Sear seasoned salmon in olive oil until golden; turn carefully and continue cooking until the thickest part reaches 145\u00b0F on a food thermometer. Transfer to a warm plate.",
-          "narration": "Sear seasoned salmon in olive oil until golden; turn carefully and continue cooking until the thickest part reaches 145\u00b0F on a food thermometer. Transfer to a warm plate.",
-          "caption": "Sear seasoned salmon in olive oil until golden; turn carefully and continue cooking until the thickest part reaches 145\u00b0F on a food thermometer. Transfer to a warm plate.",
+          "instruction": "Sear salmon in olive oil until golden, then turn carefully. Continue until the thickest part reaches 145\u00b0F. Transfer to a warm plate.",
+          "narration": "Sear salmon in olive oil until golden, then turn carefully. Continue until the thickest part reaches 145\u00b0F. Transfer to a warm plate.",
+          "caption": "Sear salmon in olive oil until golden, then turn carefully. Continue until the thickest part reaches 145\u00b0F. Transfer to a warm plate.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/salmon-lemon-cream-classic.mp4",
+          "chapterStart": 8.467
         },
         {
           "step": 3,
-          "instruction": "Lower heat, add butter and shallot, and cook until soft.",
-          "narration": "Lower heat, add butter and shallot, and cook until soft.",
-          "caption": "Lower heat, add butter and shallot, and cook until soft.",
+          "instruction": "Lower the heat. Add butter and minced shallot to the skillet and cook until the shallot softens.",
+          "narration": "Lower the heat. Add butter and minced shallot to the skillet and cook until the shallot softens.",
+          "caption": "Lower the heat. Add butter and minced shallot to the skillet and cook until the shallot softens.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/salmon-lemon-cream-classic.mp4",
+          "chapterStart": 20.6
         },
         {
           "step": 4,
-          "instruction": "Add broth and reduce by about half.",
-          "narration": "Add broth and reduce by about half.",
-          "caption": "Add broth and reduce by about half.",
+          "instruction": "Add the broth and gently scrape up browned bits. Simmer until the liquid reduces by about half.",
+          "narration": "Add the broth and gently scrape up browned bits. Simmer until the liquid reduces by about half.",
+          "caption": "Add the broth and gently scrape up browned bits. Simmer until the liquid reduces by about half.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/salmon-lemon-cream-classic.mp4",
+          "chapterStart": 27.933
         },
         {
           "step": 5,
-          "instruction": "Stir in cream and lemon juice and simmer until lightly thickened.",
-          "narration": "Stir in cream and lemon juice and simmer until lightly thickened.",
-          "caption": "Stir in cream and lemon juice and simmer until lightly thickened.",
+          "instruction": "Stir in heavy cream and lemon juice. Simmer gently until the sauce lightly thickens.",
+          "narration": "Stir in heavy cream and lemon juice. Simmer gently until the sauce lightly thickens.",
+          "caption": "Stir in heavy cream and lemon juice. Simmer gently until the sauce lightly thickens.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/salmon-lemon-cream-classic.mp4",
+          "chapterStart": 35.733
         },
         {
           "step": 6,
-          "instruction": "Spoon sauce onto warm plates, add salmon and finish with parsley.",
-          "narration": "Spoon sauce onto warm plates, add salmon and finish with parsley.",
-          "caption": "Spoon sauce onto warm plates, add salmon and finish with parsley.",
+          "instruction": "Spoon lemon cream sauce onto warm plates. Add the fully cooked salmon and finish with chopped parsley.",
+          "narration": "Spoon lemon cream sauce onto warm plates. Add the fully cooked salmon and finish with chopped parsley.",
+          "caption": "Spoon lemon cream sauce onto warm plates. Add the fully cooked salmon and finish with chopped parsley.",
           "plannedPlaybackSeconds": 10,
           "visualBrief": "Close-up cooking demonstration of only this instruction. Show the measured ingredients and method accurately. Use clean equipment and separate raw protein from ready-to-eat food. Label any compressed cooking sequence as time-lapse. Never imply that playback duration equals cooking duration.",
-          "mediaStatus": "not_created",
-          "videoUrl": null
+          "mediaStatus": "illustrated_video_rendered",
+          "videoUrl": "/videos/cooking/salmon-lemon-cream-classic.mp4",
+          "chapterStart": 42.478
         }
       ],
       "signatureAdditionalIngredients": [
@@ -288,11 +494,11 @@
         "1 tsp lemon zest per 4 servings"
       ],
       "signatureFinishingStep": {
-        "instruction": "Scale the additional olive oil, parsley and lemon zest to the recipe serving count. Mix in a clean bowl. Arrange the fully cooked dish on warm plates, drizzle sparingly with the lemon-herb oil and wipe the rims.",
+        "instruction": "For two servings, mix 1 tablespoon extra-virgin olive oil, half a tablespoon chopped parsley and half a teaspoon lemon zest. Drizzle sparingly around the plated salmon.",
         "narration": "For the Fancy Eatz Signature finish, mix olive oil, fresh parsley and lemon zest. Plate neatly and finish with a light drizzle.",
         "plannedPlaybackSeconds": 10,
-        "mediaStatus": "not_created",
-        "videoUrl": null
+        "mediaStatus": "illustrated_video_rendered",
+        "videoUrl": "/videos/cooking/salmon-lemon-cream-signature.mp4"
       },
       "playerRequirements": [
         "Classic / Signature selector",
@@ -304,7 +510,108 @@
         "Show written cooking times and thermometer targets",
         "Identify AI-generated illustrations",
         "Never display Watch controls until verified media exists"
-      ]
+      ],
+      "walkthroughs": {
+        "classic": {
+          "src": "/videos/cooking/salmon-lemon-cream-classic.mp4",
+          "captions": "/videos/cooking/salmon-lemon-cream-classic.vtt",
+          "duration": 50.52,
+          "steps": [
+            {
+              "label": "Prep the salmon",
+              "start": 0.0,
+              "end": 8.467,
+              "caption": "Pat the salmon dry on a separate prep tray. Season with salt and pepper. Have the measured sauce ingredients ready."
+            },
+            {
+              "label": "Sear and check",
+              "start": 8.467,
+              "end": 20.6,
+              "caption": "Sear salmon in olive oil until golden, then turn carefully. Continue until the thickest part reaches 145\u00b0F. Transfer to a warm plate."
+            },
+            {
+              "label": "Soften the shallot",
+              "start": 20.6,
+              "end": 27.933,
+              "caption": "Lower the heat. Add butter and minced shallot to the skillet and cook until the shallot softens."
+            },
+            {
+              "label": "Reduce the broth",
+              "start": 27.933,
+              "end": 35.733,
+              "caption": "Add the broth and gently scrape up browned bits. Simmer until the liquid reduces by about half."
+            },
+            {
+              "label": "Finish the sauce",
+              "start": 35.733,
+              "end": 42.478,
+              "caption": "Stir in heavy cream and lemon juice. Simmer gently until the sauce lightly thickens."
+            },
+            {
+              "label": "Plate and serve",
+              "start": 42.478,
+              "end": 50.478,
+              "caption": "Spoon lemon cream sauce onto warm plates. Add the fully cooked salmon and finish with chopped parsley."
+            }
+          ],
+          "poster": "/videos/cooking/salmon-lemon-cream-classic.jpg"
+        },
+        "signature": {
+          "src": "/videos/cooking/salmon-lemon-cream-signature.mp4",
+          "captions": "/videos/cooking/salmon-lemon-cream-signature.vtt",
+          "duration": 63.401,
+          "steps": [
+            {
+              "label": "Prep the salmon",
+              "start": 0.0,
+              "end": 8.467,
+              "caption": "Pat the salmon dry on a separate prep tray. Season with salt and pepper. Have the measured sauce ingredients ready."
+            },
+            {
+              "label": "Sear and check",
+              "start": 8.467,
+              "end": 20.6,
+              "caption": "Sear salmon in olive oil until golden, then turn carefully. Continue until the thickest part reaches 145\u00b0F. Transfer to a warm plate."
+            },
+            {
+              "label": "Soften the shallot",
+              "start": 20.6,
+              "end": 27.933,
+              "caption": "Lower the heat. Add butter and minced shallot to the skillet and cook until the shallot softens."
+            },
+            {
+              "label": "Reduce the broth",
+              "start": 27.933,
+              "end": 35.733,
+              "caption": "Add the broth and gently scrape up browned bits. Simmer until the liquid reduces by about half."
+            },
+            {
+              "label": "Finish the sauce",
+              "start": 35.733,
+              "end": 42.478,
+              "caption": "Stir in heavy cream and lemon juice. Simmer gently until the sauce lightly thickens."
+            },
+            {
+              "label": "Plate and serve",
+              "start": 42.478,
+              "end": 50.478,
+              "caption": "Spoon lemon cream sauce onto warm plates. Add the fully cooked salmon and finish with chopped parsley."
+            },
+            {
+              "label": "Your Signature finish",
+              "start": 50.478,
+              "end": 63.358,
+              "caption": "For two servings, mix 1 tablespoon extra-virgin olive oil, half a tablespoon chopped parsley and half a teaspoon lemon zest. Drizzle sparingly around the plated salmon."
+            }
+          ],
+          "poster": "/videos/cooking/salmon-lemon-cream-signature.jpg"
+        }
+      }
     }
+  ],
+  "format": "AI-created still illustrations with locally synthesized narration and captions; not live cooking footage",
+  "generationAttempts": [
+    "HeyGen returned insufficient_credit: monthly free videos used up. No video was created.",
+    "Runway connection requires reauthentication. No generation was submitted."
   ]
 }

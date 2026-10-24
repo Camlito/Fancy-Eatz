@@ -1,3 +1,4 @@
+import CookingWalkthrough from './CookingWalkthrough';
 import { useEffect, useMemo, useState } from 'react';
 import { tastingPhotoPairs } from './tastingPhotography';
 
@@ -141,6 +142,7 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
             <button className='primary' disabled={expired || (!picks.includes(preview.title) && picks.length >= pickLimit)} onClick={() => picks.includes(preview.title) ? remove(preview) : choose(preview)}>{picks.includes(preview.title) ? 'Remove from My 7' : 'Add to My 7'}</button>
           </div>
         </div>
+        <CookingWalkthrough key={preview.title} title={preview.title} version={version} />
         <div className='tasting-directions'><div><h4>Ingredients</h4><ul>{activeRecipe.ingredients?.map(item => <li key={item}>{item}</li>)}</ul></div><div><h4>Step-by-step directions</h4><ol>{activeRecipe.method?.map(step => <li key={step}>{step}</li>)}</ol>{version === 'signature' && <div className='tasting-finish'><b>Your Signature finish</b><p>{signatureRecipe(preview).finish}</p></div>}</div></div>
         <button className='primary' onClick={() => onAddGroceries(activeRecipe.ingredients || [], activeRecipe.title)}>Add Ingredients to Grocery List</button>
       </article> : <>

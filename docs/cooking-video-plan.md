@@ -1,9 +1,9 @@
-# Fancy Eatz step-by-step cooking videos
+# Fancy Eatz illustrated cooking walkthroughs
 
-Production scripts are ready for garlic butter chicken, creamy chicken pasta, and pan-seared salmon with lemon cream. Each guide has six Classic scenes plus one additional Signature finishing scene: 21 clips total.
+Six narrated, captioned picture walkthroughs cover garlic butter chicken, creamy chicken pasta, and salmon with lemon cream, each in Classic and Signature versions. These are illustrated guides, not filmed demonstrations.
 
-The instructions, narration and caption drafts are in [cooking-video-production.json](cooking-video-production.json). Planned playback times describe clip lengths, not actual cooking times. The scripts use thermometer targets of 165°F for chicken and 145°F for salmon.
+AI-created storyboards supply six step-specific images per recipe; the existing Signature meal images illustrate the additional finishing chapters. FFmpeg and its local Flite speech engine render narration and video without external video credits or speech API purchases. Captions are burned in and also supplied as English WebVTT tracks. Playback duration is explicitly distinguished from cooking time.
 
-No video footage has been created or published. HeyGen reported no monthly free video credits; Runway requires reauthentication. No plan or credit purchase was made.
+The production manifest contains scripts, media paths and chapter times. The reusable renderer is `scripts/build-cooking-walkthroughs.py`.
 
-A narrated illustrated walkthrough is a possible free alternative, but it is a different format and has not been substituted without the user choosing it. Existing recipe pages and images remain available.
+Validation: all six MP4s decode successfully and include H.264 video plus AAC audio; chapter times remain within their media durations. TypeScript and production build checks pass. Browser checks verify chapter seeking, active playback, and switching from the six-step Classic video to the seven-step Signature version.
