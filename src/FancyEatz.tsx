@@ -165,7 +165,7 @@ const valueRecipes: Recipe[] = [
 ];
 
 const featured: Recipe[] = [...featuredBase, ...valueRecipes, ...styleRecipeVault];
-const tastingCollection = [...valueRecipes, ...featuredBase, ...styleRecipeVault].filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 30);
+const tastingCollection = [...valueRecipes, ...featuredBase, ...styleRecipeVault].filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 12);
 
 
 const basicGroceryCategories: Record<string,string[]> = {
@@ -679,7 +679,7 @@ export default function FancyEatz() {
               <p className="eyebrow">Elevate Every Bite</p>
               <h1>Simple dishes.<br/><em>Made delicious.</em></h1>
               <p className="lede">The comfort of Classic. The magic of Fancy Eatz Signature. Cook the familiar favorite—or give it a beautiful restaurant-style finish.</p>
-              <button className='primary luxe-hero-cta' onClick={() => document.getElementById('recipe-tasting')?.scrollIntoView({behavior:'smooth'})}>Choose My 7 Free Recipes →</button><p className='tasting-hero-note'>7 days · Both versions included · No card required</p>
+              <button className='primary luxe-hero-cta' onClick={() => document.getElementById('recipe-tasting')?.scrollIntoView({behavior:'smooth'})}>Choose My 3 Free Recipes →</button><p className='tasting-hero-note'>7 days · Both versions included · No card required</p>
               <div className="reference-benefits">
                 <button onClick={()=>navigate('ideas')}><Sparkles/><span>Personalized<br/>Meal Ideas</span></button>
                 <button onClick={()=>navigate('grocery')}><ShoppingBasket/><span>Smart<br/>Grocery Lists</span></button>
@@ -1076,7 +1076,7 @@ export default function FancyEatz() {
           <div className="membership-mark"><Crown size={30}/></div>
           <p className="eyebrow">FANCY EATZ PREMIUM</p>
           <h2>Keep something delicious on the menu.</h2>
-          <p className="membership-lede">{membershipNotice || 'Join the membership launch list. Your free tasting includes 7 cards from 30, with both versions of every selected recipe.'}</p>
+          <p className="membership-lede">{membershipNotice || 'Join the membership launch list. Your free tasting includes 3 cards from 12, with both versions of every selected recipe.'}</p>
           <div className="membership-benefits">
             <span><ShieldCheck size={17}/> Photo My Fridge ingredient recognition</span>
             <span><ShieldCheck size={17}/> Pantry Chef & personalized meal ideas</span>

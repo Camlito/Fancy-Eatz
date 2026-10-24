@@ -1,13 +1,13 @@
-# Seven-of-thirty tasting verification
+# Three-of-twelve tasting verification
 
 Verified 2026-10-24:
 
-- TypeScript check and Vite production build passed.
-- All 30 recipe image pairs are valid WebP assets, matched by exact recipe title.
-- Picker displays six cards per page; filters/search are scoped to the same 30 recipes.
-- Existing three selections remain after upgrading to a seven-card limit.
-- Seven selections persist after page refresh; an eighth selection is disabled.
-- Classic/Signature selection changes the displayed image panel, ingredients and directions.
-- Tasting detail renders zero catalogue cards. The full cookbook remains a separate browsing screen.
+- Tasting collection is limited to 12 complete recipes; the full cookbook remains separate.
+- Visitors select at most 3 recipes, with six cards per page and two pages total.
+- Browser checks confirm the fourth selection is disabled and three selections persist after refresh.
+- Existing saved selections are deduplicated, restricted to the current collection and limited to three. The previous browser record is backed up before normalization.
+- Seven-day trial duration is retained; the remaining-day display is capped at seven.
+- Existing Classic/Signature images and the three illustrated cooking walkthrough recipes remain available.
+- TypeScript check and Vite production build pass.
 
-The tasting is browser-local. Account-based entitlements and membership billing remain outside this update. Food imagery is AI-created serving illustration.
+Tasting selections remain browser-local. Account-based entitlements and paid billing are outside this change.

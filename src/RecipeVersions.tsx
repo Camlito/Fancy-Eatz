@@ -68,7 +68,7 @@ export function MealPhoto({ title, version = 'classic', className = '' }: {
 type TastingState = { startedAt: number; picks: string[] };
 const storageKey = 'fancy-eatz-tasting-v1';
 const trialDuration = 7 * 24 * 60 * 60 * 1000;
-const pickLimit = 7;
+const pickLimit = 3;
 const pageSize = 6;
 
 export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
@@ -76,14 +76,26 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
   onJoin: () => void;
   onAddGroceries: (ingredients: string[], title: string) => void;
 }) {
-  const collection = useMemo(() => recipes.filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 30), [recipes]);
+  const collection = useMemo(() => recipes.filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 12), [recipes]);
   const [trial, setTrial] = useState<TastingState | null>(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
       return saved && Number.isFinite(saved.startedAt) && Array.isArray(saved.picks)
-        ? { startedAt: saved.startedAt, picks: saved.picks.filter((title: unknown) => typeof title === 'string').slice(0, pickLimit) } : null;
+        ? { startedAt: saved.startedAt, picks: Array.from(new Set<string>((saved.picks as unknown[]).filter((title: unknown): title is string => typeof title === 'string' && collection.some(recipe => recipe.title === title)))).slice(0, pickLimit) } : null;
     } catch { return null; }
   });
+  useEffect(() => {
+    if (!trial) return;
+    try {
+      const previous = localStorage.getItem(storageKey);
+      const normalized = JSON.stringify(trial);
+      if (previous && previous !== normalized) {
+        const backupKey = storageKey + '-before-12-recipes';
+        if (!localStorage.getItem(backupKey)) localStorage.setItem(backupKey, previous);
+        localStorage.setItem(storageKey, normalized);
+      }
+    } catch { /* Selection controls still handle storage failures visibly. */ }
+  }, [trial]);
   const [notice, setNotice] = useState('');
   const [now, setNow] = useState(Date.now());
   const [page, setPage] = useState(0);
@@ -96,9 +108,9 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
     return () => window.clearInterval(timer);
   }, []);
   const expired = !!trial && now >= trial.startedAt + trialDuration;
-  const remaining = trial ? Math.max(0, Math.ceil((trial.startedAt + trialDuration - now) / 86400000)) : 7;
+  const remaining = trial ? Math.min(7, Math.max(0, Math.ceil((trial.startedAt + trialDuration - now) / 86400000))) : 7;
   const filtered = collection.filter(recipe =>
-    (filter === 'All' || (filter === 'My 7' ? trial?.picks.includes(recipe.title) : recipe.mealType === filter)) &&
+    (filter === 'All' || (filter === 'My 3' ? trial?.picks.includes(recipe.title) : recipe.mealType === filter)) &&
     (recipe.title + ' ' + recipe.note).toLowerCase().includes(query.trim().toLowerCase()));
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
   const currentPage = Math.min(page, pageCount - 1);
@@ -113,7 +125,7 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
   function choose(recipe: VersionRecipe) {
     if (expired) { setNotice('Your tasting has ended. Join the membership launch list for updates.'); return; }
     if (picks.includes(recipe.title)) return;
-    if (picks.length >= pickLimit) { setNotice('Your seven cards are selected. Remove a selection to choose a different dish.'); return; }
+    if (picks.length >= pickLimit) { setNotice('Your three cards are selected. Remove a selection to choose a different dish.'); return; }
     if (savePicks({ startedAt: trial?.startedAt || Date.now(), picks: [...picks, recipe.title] })) {
       setNotice(`${recipe.title} added. ${pickLimit - picks.length - 1} choices left.`);
     }
@@ -128,36 +140,36 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
     document.getElementById('recipe-tasting')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   return (
-    <section id='recipe-tasting' className='recipe-tasting' aria-label='Choose seven from thirty recipes'>
+    <section id='recipe-tasting' className='recipe-tasting' aria-label='Choose three from twelve recipes'>
       <div className='tasting-heading'>
-        <div><p className='eyebrow'>YOUR SEVEN DELICIOUS PICKS</p><h2>30 dishes to discover.<br/><em>7 favorites to make yours.</em></h2><p>Choose seven recipe cards for your seven-day tasting. Every card includes Classic and Fancy Eatz Signature.</p></div>
+        <div><p className='eyebrow'>YOUR THREE DELICIOUS PICKS</p><h2>12 dishes to discover.<br/><em>3 favorites to make yours.</em></h2><p>Choose three recipe cards for your seven-day tasting. Every card includes Classic and Fancy Eatz Signature.</p></div>
         <div className='tasting-summary'><strong>{picks.length} / {pickLimit}</strong><span>recipe cards selected</span><b>{expired ? 'Tasting ended' : trial ? `${remaining} days remaining` : 'Free · No card required'}</b><small>Selections are saved in this browser. Your seven days begin with your first selection.</small></div>
       </div>
       <p className='tasting-status' role='status'>{notice || 'Browse six dishes at a time. Preview a recipe, then add the ones you love.'}</p>
       {activeRecipe && preview ? <article className='tasting-detail' aria-label='Tasting recipe detail'>
-        <button className='tasting-back' onClick={() => setPreview(null)}>← Back to the 30 tasting recipes</button>
+        <button className='tasting-back' onClick={() => setPreview(null)}>← Back to the 12 tasting recipes</button>
         <div className='tasting-detail-layout'>
           <div><MealPhoto title={preview.title} version={version} /><small className='photo-caption'>AI-created serving illustration</small></div>
           <div><RecipeVersionSelector value={version} onChange={setVersion} /><p className='eyebrow'>{activeRecipe.mealType} · {activeRecipe.time}</p><h3>{activeRecipe.title}</h3><p>{activeRecipe.note}</p><p>Servings: {activeRecipe.servings || 'See ingredients'}</p>
-            <button className='primary' disabled={expired || (!picks.includes(preview.title) && picks.length >= pickLimit)} onClick={() => picks.includes(preview.title) ? remove(preview) : choose(preview)}>{picks.includes(preview.title) ? 'Remove from My 7' : 'Add to My 7'}</button>
+            <button className='primary' disabled={expired || (!picks.includes(preview.title) && picks.length >= pickLimit)} onClick={() => picks.includes(preview.title) ? remove(preview) : choose(preview)}>{picks.includes(preview.title) ? 'Remove from My 3' : 'Add to My 3'}</button>
           </div>
         </div>
         <CookingWalkthrough key={preview.title} title={preview.title} version={version} />
         <div className='tasting-directions'><div><h4>Ingredients</h4><ul>{activeRecipe.ingredients?.map(item => <li key={item}>{item}</li>)}</ul></div><div><h4>Step-by-step directions</h4><ol>{activeRecipe.method?.map(step => <li key={step}>{step}</li>)}</ol>{version === 'signature' && <div className='tasting-finish'><b>Your Signature finish</b><p>{signatureRecipe(preview).finish}</p></div>}</div></div>
         <button className='primary' onClick={() => onAddGroceries(activeRecipe.ingredients || [], activeRecipe.title)}>Add Ingredients to Grocery List</button>
       </article> : <>
-        <div className='tasting-controls'><label><span>Search these 30 dishes</span><input value={query} placeholder='Chicken, pasta, dessert…' onChange={event => { setQuery(event.target.value); setPage(0); }} /></label><div className='tasting-filters' role='group' aria-label='Tasting recipe filter'>{['All', 'Dinner', 'Dessert', 'Breakfast', 'Lunch', 'My 7'].map(name => <button key={name} aria-pressed={filter === name} onClick={() => { setFilter(name); setPage(0); }}>{name}</button>)}</div></div>
+        <div className='tasting-controls'><label><span>Search these 12 dishes</span><input value={query} placeholder='Chicken, pasta, dessert…' onChange={event => { setQuery(event.target.value); setPage(0); }} /></label><div className='tasting-filters' role='group' aria-label='Tasting recipe filter'>{['All', ...Array.from(new Set(collection.map(recipe => recipe.mealType))), 'My 3'].map(name => <button key={name} aria-pressed={filter === name} onClick={() => { setFilter(name); setPage(0); }}>{name}</button>)}</div></div>
         <div className='tasting-grid'>{filtered.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map(recipe => {
           const selected = picks.includes(recipe.title);
           return <article className={`tasting-card${selected ? ' picked' : ''}`} key={recipe.title}>
-            <button className='tasting-image-button' aria-label={`Preview ${recipe.title}`} onClick={() => openPreview(recipe)}><MealPhoto title={recipe.title} />{selected && <span className='picked-label'>✓ In My 7</span>}</button>
-            <div><small>{recipe.mealType} · {recipe.time}</small><h3>{recipe.title}</h3><p>{recipe.note}</p><span className='two-versions'>Classic + Signature included</span><button className='tasting-preview-button' onClick={() => openPreview(recipe)}>Preview Both Versions</button><button className={selected ? 'ghost' : 'primary'} disabled={expired || (!selected && picks.length >= pickLimit)} onClick={() => selected ? remove(recipe) : choose(recipe)}>{selected ? 'Remove from My 7' : 'Add to My 7'}</button></div>
+            <button className='tasting-image-button' aria-label={`Preview ${recipe.title}`} onClick={() => openPreview(recipe)}><MealPhoto title={recipe.title} />{selected && <span className='picked-label'>✓ In My 3</span>}</button>
+            <div><small>{recipe.mealType} · {recipe.time}</small><h3>{recipe.title}</h3><p>{recipe.note}</p><span className='two-versions'>Classic + Signature included</span><button className='tasting-preview-button' onClick={() => openPreview(recipe)}>Preview Both Versions</button><button className={selected ? 'ghost' : 'primary'} disabled={expired || (!selected && picks.length >= pickLimit)} onClick={() => selected ? remove(recipe) : choose(recipe)}>{selected ? 'Remove from My 3' : 'Add to My 3'}</button></div>
           </article>;
         })}</div>
-        {filtered.length === 0 && <p className='tasting-empty'>{filter === 'My 7' ? 'Your selected recipes will appear here.' : 'No match in this tasting collection. Try another search.'}</p>}
+        {filtered.length === 0 && <p className='tasting-empty'>{filter === 'My 3' ? 'Your selected recipes will appear here.' : 'No match in this tasting collection. Try another search.'}</p>}
         <nav className='tasting-pagination' aria-label='Tasting recipe pages'><button disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>← Previous</button><span>{filtered.length ? currentPage * pageSize + 1 : 0}–{Math.min((currentPage + 1) * pageSize, filtered.length)} of {filtered.length} dishes</span><button disabled={currentPage >= pageCount - 1} onClick={() => setPage(currentPage + 1)}>Next →</button></nav>
       </>}
-      <div className='tasting-next'><div><h3>{picks.length === pickLimit ? 'Your seven favorites are ready.' : 'Make this your everyday kitchen companion.'}</h3><p>Membership launch updates: planned pricing is $9.99/month or $79/year. No payment collected today.</p></div><button className='primary' onClick={onJoin}>Keep Me in the Kitchen →</button></div>
+      <div className='tasting-next'><div><h3>{picks.length === pickLimit ? 'Your three favorites are ready.' : 'Make this your everyday kitchen companion.'}</h3><p>Membership launch updates: planned pricing is $9.99/month or $79/year. No payment collected today.</p></div><button className='primary' onClick={onJoin}>Keep Me in the Kitchen →</button></div>
     </section>
   );
 }
