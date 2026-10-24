@@ -1373,3 +1373,5 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
   .official-brand-logo { width: 44px; height: 44px; }
 }
 .tasting-expand { display: block; margin: 24px auto; padding: 14px 22px; border: 1px solid #a66d21; border-radius: 30px; background: transparent; color: #590b16; font-weight: 700; cursor: pointer; }
+.topbar .brand-logo-button img.official-brand-logo { display: block !important; width: 54px !important; height: 54px !important; object-fit: contain !important; }
+.home-showcase .reference-hero .tasting-hero-note { color: #f1d7b6 !important; opacity: 1 !important; font-size: 13px !important; }
