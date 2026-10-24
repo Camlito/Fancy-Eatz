@@ -1,3 +1,4 @@
+import RecipeTasting, { RecipeVersionSelector, signatureRecipe } from './RecipeVersions';
 import { useEffect, useMemo, useState } from 'react';
 import { drinks } from './drinks';
 import { styleRecipeVault, styleRecipeCounts } from './styleRecipeVault';
@@ -228,7 +229,7 @@ export default function FancyEatz() {
   const [ownerCode, setOwnerCode] = useState('');
   const premiumTabs = new Set(['pantry','photo','leftovers','ideas','styles','experience','planner','grocery','basics','grill','desserts','drinks','recipes','favorites']);
   const paymentsLive = false; // QA/open-access mode until billing is intentionally launched.
-  const openMembership = (message='Start your 7-day Fancy Eatz Premium trial to unlock this feature.') => { setMembershipNotice(message); setShowMembership(true); };
+  const openMembership = (message='Join the Fancy Eatz membership launch list.') => { setMembershipNotice(message); setShowMembership(true); };
 
   const [tabHistory, setTabHistory] = useState<string[]>([]);
   const [drinkSearch, setDrinkSearch] = useState('');
@@ -331,6 +332,8 @@ export default function FancyEatz() {
   const [recipeType, setRecipeType] = useState('All');
   const [cookStyleFilter, setCookStyleFilter] = useState('All');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [recipeVersion, setRecipeVersion] = useState<'classic' | 'signature'>('classic');
+  const displayedRecipe = selectedRecipe && recipeVersion === 'signature' ? signatureRecipe(selectedRecipe) : selectedRecipe;
   const [showSourceLibrary, setShowSourceLibrary] = useState(false);
   const [recentRecipes, setRecentRecipes] = useState<Recipe[]>(()=>{try{return JSON.parse(localStorage.getItem('fancy-recent-recipes')||'[]') as Recipe[]}catch{return []}});
   type CookedMeal = { title:string; description:string; ingredients:string[]; steps:string[]; plating?:string; cookedAt:string; source:'Pantry Chef'|'Recipe Vault'; image?:string; time?:string; budget?:string };
@@ -376,7 +379,7 @@ export default function FancyEatz() {
       (!q || (r.title + ' ' + r.tag + ' ' + r.note).toLowerCase().includes(q));
   }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType, recipeLetter, cookStyleFilter]);
 
-  const openRecipe=(r:Recipe)=>{ setSelectedRecipe(r); setRecentRecipes(prev=>{const next=[r,...prev.filter(x=>x.title!==r.title)].slice(0,8);localStorage.setItem('fancy-recent-recipes',JSON.stringify(next));return next}); navigate('recipes'); setTimeout(()=>document.getElementById('full-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),80); };
+  const openRecipe=(r:Recipe)=>{ setRecipeVersion('classic'); setSelectedRecipe(r); setRecentRecipes(prev=>{const next=[r,...prev.filter(x=>x.title!==r.title)].slice(0,8);localStorage.setItem('fancy-recent-recipes',JSON.stringify(next));return next}); navigate('recipes'); setTimeout(()=>document.getElementById('full-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),80); };
 
   const alphabetizedFavorites = useMemo(
     () => [...favorites].sort((a, b) => a.title.localeCompare(b.title)),
@@ -613,6 +616,7 @@ export default function FancyEatz() {
   function addItems(items: string[], name: string) {
     setGrocery(p => Array.from(new Set([...p, ...items])));
     setListName(name);
+    setGroceryMode('list');
     navigate('grocery');
   }
 
@@ -646,14 +650,14 @@ export default function FancyEatz() {
   return (
     <main>
       <header className="topbar">
-        <button className="brand brand-logo-button" onClick={() => navigate('home')} aria-label="Fancy Eatz home"><span className="luxe-brand-mark"><ChefHat size={32}/></span><span className="luxe-brand-name">FANCY EATZ<small>Elevate Every Bite</small></span></button>
+        <button className="brand brand-logo-button" onClick={() => navigate('home')} aria-label="Fancy Eatz home"><img className='official-brand-logo' src='/fancy-eatz-logo.webp' alt='Fancy Eatz' /><span className="luxe-brand-name">FANCY EATZ<small>Elevate Every Bite</small></span></button>
         <nav className="main-nav">
           <button onClick={() => navigate('home')}><House size={19}/> <span>Home</span></button>
           <div className="nav-dropdown"><button className={mobileMenu==='cook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cook'?'':'cook')}><ChefHat size={19}/> <span>Cook</span> <small>▾</small></button>{mobileMenu==='cook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('pantry')}}>Pantry Chef</button><button onClick={()=>{setMobileMenu('');navigate('photo')}}>Photo My Fridge</button><button onClick={()=>{setMobileMenu('');navigate('leftovers')}}>Leftovers → Luxury</button><button onClick={()=>{setMobileMenu('');navigate('ideas')}}>Meal Ideas</button><button onClick={()=>{setMobileMenu('');navigate('styles')}}>Cooking Styles</button></div>}</div>
           <div className="nav-dropdown"><button className={mobileMenu==='explore'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='explore'?'':'explore')}><Compass size={19}/> <span>Explore</span> <small>▾</small></button>{mobileMenu==='explore'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('experience')}}>Dining Experience</button><button onClick={()=>{setMobileMenu('');navigate('planner')}}>Weekly Planner</button><button onClick={()=>{setMobileMenu('');navigate('grocery')}}>Grocery Lists</button><button onClick={()=>{setMobileMenu('');navigate('grill')}}>Grill Master</button><button onClick={()=>{setMobileMenu('');navigate('desserts')}}>Desserts</button><button onClick={()=>{setMobileMenu('');navigate('drinks')}}>Drinks</button></div>}</div>
           <div className="nav-dropdown"><button className={mobileMenu==='cookbook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cookbook'?'':'cookbook')}><BookOpen size={19}/> <span>Cookbook</span> <small>▾</small></button>{mobileMenu==='cookbook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('recipes')}}>A–Z Recipe Vault</button><button onClick={()=>{setMobileMenu('');navigate('favorites')}}>My Fancy Cookbook</button></div>}</div>
         </nav>
-        <button className="membership-nav" onClick={()=>openMembership('Choose your Fancy Eatz Premium plan and start your 7-day trial.')}><Crown size={16}/> Get Early Access</button>
+        <button className="membership-nav" onClick={()=>openMembership('Join the membership launch list. No payment is collected today.')}><Crown size={16}/> Get Early Access</button>
       </header>
 
       {tab !== 'home' && <div className="backbar">
@@ -668,17 +672,18 @@ export default function FancyEatz() {
           <div className="home-hero reference-hero">
             <div className="hero-copy">
               <p className="eyebrow">Elevate Every Bite</p>
-              <h1>Restaurant<br/>Flavors <em>at Home.</em></h1>
-              <p className="lede">Turn the ingredients you have into meals you’ll love. Simple ingredients. Extraordinary possibilities.</p>
-              <button className="primary luxe-hero-cta" onClick={()=>navigate('pantry')}>Find My Next Meal</button>
+              <h1>Simple dishes.<br/><em>Made delicious.</em></h1>
+              <p className="lede">The comfort of Classic. The magic of Fancy Eatz Signature. Cook the familiar favorite—or give it a beautiful restaurant-style finish.</p>
+              <button className='primary luxe-hero-cta' onClick={() => document.getElementById('recipe-tasting')?.scrollIntoView({behavior:'smooth'})}>Choose My 3 Free Recipes →</button><p className='tasting-hero-note'>7 days · Both versions included · No card required</p>
               <div className="reference-benefits">
                 <button onClick={()=>navigate('ideas')}><Sparkles/><span>Personalized<br/>Meal Ideas</span></button>
                 <button onClick={()=>navigate('grocery')}><ShoppingBasket/><span>Smart<br/>Grocery Lists</span></button>
-                <button onClick={()=>navigate('recipes')}><BookOpen/><span>1,000+<br/>Recipes</span></button>
+                <button onClick={()=>navigate('recipes')}><BookOpen/><span>Classic +<br/>Signature</span></button>
               </div>
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"></div>
           </div>
+          <RecipeTasting recipes={[...valueRecipes, ...featuredBase, ...styleRecipeVault]} onOpen={r => openRecipe(r as Recipe)} onJoin={() => openMembership('Keep the inspiration coming. Join our membership launch list.')} />
           <section className="luxe-kitchen"><p className="eyebrow">USE WHAT YOU HAVE</p><h2>What’s in your kitchen?</h2><p>Add your ingredients to explore meal ideas.</p><form onSubmit={e=>{e.preventDefault();navigate('pantry')}}><label className="search-box"><Search size={20}/><input aria-label="Ingredients in your kitchen" value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="Chicken, spinach, rice…"/></label><button className="primary" type="submit">Generate Meal Ideas</button></form><div className="luxe-categories">{['Breakfast','Lunch','Dinner','Desserts'].map(x=><button key={x} onClick={()=>{if(x==='Desserts')navigate('desserts');else{setMealType(x);navigate('ideas')}}}>{x}</button>)}</div></section>
           {!onboarded&&!showOnboarding&&<section className="onboarding-invite"><div><p className="eyebrow">PERSONALIZE FANCY EATZ</p><h2>Want better picks from the start?</h2><p>Answer a few quick kitchen questions and tailor the experience to your household.</p></div><button className="primary" onClick={()=>setShowOnboarding(true)}>Personalize My Kitchen →</button></section>}
           <section className="discover-strip"><div className="discover-head"><p className="eyebrow">DISCOVER YOUR NEXT MEAL</p><h2>What sounds good today?</h2></div><div className="discover-chips">
@@ -935,6 +940,26 @@ export default function FancyEatz() {
           <div className="cook-style-filter">
             {['All','Fancy Dining','Grill Master','Everyday Mom',"Chef's Kitchen",'Pastry Chef'].map(x=><button key={x} className={cookStyleFilter===x?'active':''} onClick={()=>setCookStyleFilter(x)}>{x}{x!=='All' && styleRecipeCounts[x] ? ` (${styleRecipeCounts[x]})` : ''}</button>)}
           </div>
+          {displayedRecipe && <div id="full-recipe" className="panel recipe-detail" style={{marginTop:24}}>
+            {displayedRecipe.image && <div className="recipe-hero-photo" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.48)),url("${displayedRecipe.image}")`}}><span>{recipeVersion === 'classic' ? 'CLASSIC RECIPE' : 'FANCY EATZ SIGNATURE'} · Serving inspiration</span></div>}
+            <RecipeVersionSelector value={recipeVersion} onChange={setRecipeVersion} />
+            <div className="section-head"><p className="eyebrow">{displayedRecipe.category || displayedRecipe.mealType}</p><h2>{displayedRecipe.title}</h2><p>{displayedRecipe.note}</p></div>
+            <div className="meta"><span><Clock3 size={16}/>{displayedRecipe.time}</span>{displayedRecipe.servings && <span><Users size={16}/>{displayedRecipe.servings}</span>}</div>
+            <div className="generator-grid">
+              <div><h3>Ingredients</h3>{displayedRecipe.ingredients?.length ? <ul>{displayedRecipe.ingredients.map(x => <li key={x}>{x}</li>)}</ul> : <p>Ingredients have not yet been converted from the source cookbook.</p>}</div>
+              <div><h3>Method / Directions</h3>{displayedRecipe.method?.length ? <ol>{displayedRecipe.method.map(x => <li key={x}>{x}</li>)}</ol> : <p>Directions have not yet been converted from the source cookbook.</p>}</div>
+            </div>
+            {recipeVersion === 'signature' && selectedRecipe && <div className='signature-finish'><h3>Your Signature Finish</h3><p>{signatureRecipe(selectedRecipe).finish}</p></div>}
+            <div className="result-actions">
+              {displayedRecipe.ingredients && <button className="ghost" onClick={() => addItems(displayedRecipe.ingredients || [], displayedRecipe.title)}><ShoppingBasket size={18}/>Add Ingredients to Grocery List</button>}
+              <button className="ghost" onClick={() => { const p=displayedRecipe.title+' ingredients'; setPantry(p); setMealType(displayedRecipe.mealType); navigate('pantry'); void generateMeal(true,p,displayedRecipe.mealType); }}><Sparkles size={18}/>Make My Version</button>
+              <button className="ghost" onClick={() => { if (!displayedRecipe) return; const saved: Meal = { title:displayedRecipe.title, description:displayedRecipe.note, ingredients:displayedRecipe.ingredients || [], steps:displayedRecipe.method || [], plating:'Serve with an elevated Fancy Eatz presentation.', missing:[] }; setFavorites(prev => prev.some(x=>x.title===saved.title) ? prev : [...prev,saved]); }}><Heart size={18}/>Save to My Cookbook</button>
+              <button className="primary" onClick={()=>markCooked({title:displayedRecipe.title,description:displayedRecipe.note,ingredients:displayedRecipe.ingredients||[],steps:displayedRecipe.method||[],plating:'Serve with an elevated Fancy Eatz presentation.',cookedAt:new Date().toISOString(),source:'Recipe Vault',image:displayedRecipe.image,time:displayedRecipe.time,budget:displayedRecipe.budget})}><ChefHat size={18}/>I Made This</button>
+              <button className="ghost" onClick={() => window.print()}>Print Recipe</button>
+              <button className="ghost" onClick={async () => { if (navigator.share && displayedRecipe) await navigator.share({title:displayedRecipe.title,text:displayedRecipe.note,url:window.location.href}); }}>Share Recipe</button>
+              <button className="ghost" onClick={() => setSelectedRecipe(null)}>Close Recipe</button>
+            </div>
+          </div>}
           <div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search chicken, steak, pasta, seafood, dessert..." /></label>
             <label>Category<select value={recipeType} onChange={e => setRecipeType(e.target.value)}><option>All</option><option>Appetizers</option><option>Entrées</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
@@ -945,24 +970,6 @@ export default function FancyEatz() {
             {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)} style={r.image ? {backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.35)),url("${r.image}")`,backgroundSize:'cover',backgroundPosition:'center'} : undefined}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p>{r.ingredients?.length ? <button className="ghost" onClick={()=>openRecipe(r)}><BookOpen size={16}/>Open Full Recipe</button> : <small>Full recipe details being added from the source collection.</small>}<button onClick={() => { const recipePrompt = r.title + ' ingredients'; setPantry(recipePrompt); setMealType(r.mealType); setMeal(null); navigate('pantry'); void generateMeal(true, recipePrompt, r.mealType); }}>Make My Version →</button></div></article>)}
           </div>
           {filteredRecipes.length === 0 && <div className="empty panel"><Search size={36} /><h3>No exact match yet</h3><p>Try another search, or use Pantry Chef to generate the meal you have in mind.</p></div>}
-          {selectedRecipe && <div id="full-recipe" className="panel recipe-detail" style={{marginTop:24}}>
-            {selectedRecipe.image && <div className="recipe-hero-photo" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.48)),url("${selectedRecipe.image}")`}}><span>FANCY EATZ SIGNATURE RECIPE</span></div>}
-            <div className="section-head"><p className="eyebrow">{selectedRecipe.category || selectedRecipe.mealType}</p><h2>{selectedRecipe.title}</h2><p>{selectedRecipe.note}</p></div>
-            <div className="meta"><span><Clock3 size={16}/>{selectedRecipe.time}</span>{selectedRecipe.servings && <span><Users size={16}/>{selectedRecipe.servings}</span>}</div>
-            <div className="generator-grid">
-              <div><h3>Ingredients</h3>{selectedRecipe.ingredients?.length ? <ul>{selectedRecipe.ingredients.map(x => <li key={x}>{x}</li>)}</ul> : <p>Ingredients have not yet been converted from the source cookbook.</p>}</div>
-              <div><h3>Method / Directions</h3>{selectedRecipe.method?.length ? <ol>{selectedRecipe.method.map(x => <li key={x}>{x}</li>)}</ol> : <p>Directions have not yet been converted from the source cookbook.</p>}</div>
-            </div>
-            <div className="result-actions">
-              {selectedRecipe.ingredients && <button className="ghost" onClick={() => addItems(selectedRecipe.ingredients || [], selectedRecipe.title)}><ShoppingBasket size={18}/>Add Ingredients to Grocery List</button>}
-              <button className="ghost" onClick={() => { const p=selectedRecipe.title+' ingredients'; setPantry(p); setMealType(selectedRecipe.mealType); navigate('pantry'); void generateMeal(true,p,selectedRecipe.mealType); }}><Sparkles size={18}/>Make My Version</button>
-              <button className="ghost" onClick={() => { if (!selectedRecipe) return; const saved: Meal = { title:selectedRecipe.title, description:selectedRecipe.note, ingredients:selectedRecipe.ingredients || [], steps:selectedRecipe.method || [], plating:'Serve with an elevated Fancy Eatz presentation.', missing:[] }; setFavorites(prev => prev.some(x=>x.title===saved.title) ? prev : [...prev,saved]); }}><Heart size={18}/>Save to My Cookbook</button>
-              <button className="primary" onClick={()=>markCooked({title:selectedRecipe.title,description:selectedRecipe.note,ingredients:selectedRecipe.ingredients||[],steps:selectedRecipe.method||[],plating:'Serve with an elevated Fancy Eatz presentation.',cookedAt:new Date().toISOString(),source:'Recipe Vault',image:selectedRecipe.image,time:selectedRecipe.time,budget:selectedRecipe.budget})}><ChefHat size={18}/>I Made This</button>
-              <button className="ghost" onClick={() => window.print()}>Print Recipe</button>
-              <button className="ghost" onClick={async () => { if (navigator.share && selectedRecipe) await navigator.share({title:selectedRecipe.title,text:selectedRecipe.note,url:window.location.href}); }}>Share Recipe</button>
-              <button className="ghost" onClick={() => setSelectedRecipe(null)}>Close Recipe</button>
-            </div>
-          </div>}
           <div className="source-note"><BookOpen size={20} /><div><b>Ultimate Collection of Seafood Recipes</b><p>The seafood collection is available as a source library alongside Fancy Eatz generated ideas.</p><a href="./resources/seafood-recipes.pdf" target="_blank" rel="noreferrer">Open source collection</a></div></div>
         </section>
       )}
@@ -1059,8 +1066,8 @@ export default function FancyEatz() {
           <button className="membership-close" aria-label="Close membership window" onClick={()=>setShowMembership(false)}>×</button>
           <div className="membership-mark"><Crown size={30}/></div>
           <p className="eyebrow">FANCY EATZ PREMIUM</p>
-          <h2>Your kitchen just got smarter.</h2>
-          <p className="membership-lede">{membershipNotice || 'Try the complete Fancy Eatz experience for 7 days.'}</p>
+          <h2>Keep something delicious on the menu.</h2>
+          <p className="membership-lede">{membershipNotice || 'Join the membership launch list. Your free tasting includes 3 cards from 30, with both versions of every selected recipe.'}</p>
           <div className="membership-benefits">
             <span><ShieldCheck size={17}/> Photo My Fridge ingredient recognition</span>
             <span><ShieldCheck size={17}/> Pantry Chef & personalized meal ideas</span>

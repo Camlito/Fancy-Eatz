@@ -1329,3 +1329,47 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #b97a
  .choice-scroll{grid-template-columns:minmax(0,1fr)!important;max-height:none!important;overflow:visible!important}.choice-studio{padding:16px!important;width:100%!important}.meal-choice{width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important}.meal-choice small,.meal-choice strong{font-size:13px!important}.meal-choice b{font-size:23px!important}.meal-choice span{font-size:16px!important}
  .choice-categories{max-width:100%!important;min-width:0!important}.choice-categories button{font-size:14px!important}.mix-builder{position:static!important;margin-top:24px!important;clear:both}.mix-grid{grid-template-columns:minmax(0,1fr)!important}.mix-note{font-size:14px!important}
 }
+
+/* Classic / Signature tasting experience */
+.official-brand-logo { width: 62px; height: 62px; object-fit: contain; border-radius: 50%; }
+.tasting-hero-note { font-size: 13px; color: #f5ddb4; line-height: 1.6; }
+.recipe-tasting { max-width: 1180px; margin: 50px auto; padding: 42px 30px; color: #590b16; scroll-margin-top: 110px; }
+.tasting-heading { display: grid; grid-template-columns: 1fr 250px; gap: 40px; align-items: center; }
+.tasting-heading h2 { font: 500 clamp(30px,4vw,48px)/1.1 Georgia,serif; margin: 10px 0 18px; }
+.tasting-heading h2 em { color: #a66d21; }
+.tasting-heading p { line-height: 1.7; max-width: 640px; }
+.tasting-summary { display: flex; flex-direction: column; text-align: center; gap: 9px; padding: 24px; border: 1px solid #c8a86e; border-radius: 18px; background: #fffaf1; }
+.tasting-summary strong { font: 42px Georgia,serif; }
+.tasting-summary small { line-height: 1.5; color: #695544; font-size: 12px; }
+.tasting-status { min-height: 24px; font-size: 14px; margin: 28px 0 18px; }
+.tasting-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
+.tasting-card { background: #fffaf1; border: 1px solid #d8c29c; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+.tasting-card.picked { border: 2px solid #9c7429; }
+.tasting-card img { width: 100%; height: 180px; object-fit: cover; }
+.tasting-card > div { padding: 22px; display: flex; flex-direction: column; align-items: stretch; flex: 1; }
+.tasting-card h3 { font: 25px/1.2 Georgia,serif; margin: 10px 0; }
+.tasting-card p { line-height: 1.6; font-size: 14px; flex: 1; }
+.tasting-card small { color: #7b6044; }
+.two-versions { font-size: 12px; font-weight: 700; color: #8d661e; padding: 12px 0; }
+.tasting-card .ghost { color: #590b16; border-color: #a66d21; }
+.tasting-card button:disabled { opacity: .5; cursor: default; }
+.tasting-next { margin-top: 32px; padding: 28px; background: #590b16; color: #fff5e4; border-radius: 16px; display: flex; align-items: center; gap: 25px; }
+.tasting-next > div { flex: 1; }
+.tasting-next h3 { font: 28px Georgia,serif; margin: 0 0 12px; }
+.tasting-next p { font-size: 14px; line-height: 1.6; margin: 0; }
+.version-selector { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px; border: 1px solid #c49a52; border-radius: 999px; margin: 24px 0; }
+.version-selector button { flex: 1; border: 0; min-height: 48px; border-radius: 999px; padding: 10px 18px; background: transparent; color: #fff5e4; font-weight: 700; cursor: pointer; }
+.version-selector button[aria-pressed='true'] { background: #e4bd72; color: #390811; }
+.signature-finish { padding: 20px; margin: 24px 0; border-left: 3px solid #d5aa60; background: #43101b; line-height: 1.7; }
+button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
+@media(max-width:800px) {
+  .recipe-tasting { margin: 24px auto; padding: 24px 18px; }
+  .tasting-heading { grid-template-columns: 1fr; gap: 20px; }
+  .tasting-grid { grid-template-columns: 1fr; }
+  .tasting-summary { text-align: left; }
+  .tasting-next { flex-direction: column; align-items: stretch; padding: 22px; }
+  .version-selector { border-radius: 15px; }
+  .version-selector button { font-size: 13px; border-radius: 10px; padding: 10px; }
+  .official-brand-logo { width: 44px; height: 44px; }
+}
+.tasting-expand { display: block; margin: 24px auto; padding: 14px 22px; border: 1px solid #a66d21; border-radius: 30px; background: transparent; color: #590b16; font-weight: 700; cursor: pointer; }
