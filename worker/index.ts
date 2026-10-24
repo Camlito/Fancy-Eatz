@@ -96,6 +96,27 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/api/_healthcheck") return json({ ok: true, service: "fancy-eatz" });
+    if (url.pathname === '/api/early-access' && request.method === 'POST') {
+      try {
+        const body = await request.json() as { email?: string };
+        const email = String(body.email || '').trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+          return json({ error: 'A valid email is required' }, 400);
+        }
+        // Keep the existing signup service and its records as the single source of truth.
+        const upstream = await fetch('https://fancy-eatzzz.netlify.app/api/early-access', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ email, source: 'fancyeatz.com-tasting' }),
+        });
+        if (!upstream.ok) return json({ error: 'Signup could not be saved. Please try again.' }, 502);
+        const result = await upstream.json() as { ok?: boolean };
+        if (result.ok !== true) return json({ error: 'Signup could not be verified.' }, 502);
+        return json({ ok: true });
+      } catch {
+        return json({ error: 'Signup could not be saved. Please try again.' }, 502);
+      }
+    }
     if (request.method === "POST" && url.pathname === "/api/generate-meal") {
       try { return json({ meal: await createMeal(env, await request.json()) }); }
       catch (error) { return json({ error: "Meal generation failed", detail: String(error) }, 500); }

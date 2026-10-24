@@ -255,6 +255,8 @@ export default function FancyEatz() {
     try{
       const response=await fetch('/api/early-access',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email,source:'website'})});
       if(!response.ok) throw new Error('signup');
+      const saved = await response.json();
+      if (saved.ok !== true) throw new Error('Signup was not verified');
       setEarlyJoined(true);setMembershipNotice('');setShowMembership(false);window.location.hash='early-access-confirmed';setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),50);
     }catch{setMembershipNotice('Signup did not save. Please try again.');setEarlyError('We could not save your signup. Please try again.');}
     finally{setEarlySubmitting(false);}
