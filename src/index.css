@@ -1470,3 +1470,29 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
   font-size: clamp(12px, 1.15vw, 14px) !important;
   line-height: 1.4 !important;
 }
+
+/* Calmer navigation and focused collection browsing. */
+.backbar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding-bottom:8px; }
+.back-home { display:inline-flex; align-items:center; gap:7px; background:transparent; color:#f5ddb4; border:0; padding:12px; cursor:pointer; }
+.collection-pagination { display:flex; justify-content:center; align-items:center; gap:18px; margin:32px 0; }
+.collection-pagination button { background:#3b0a16; border:1px solid #b59462; border-radius:8px; color:#fff5e4; padding:12px 18px; min-height:44px; cursor:pointer; }
+.collection-pagination button:disabled { opacity:.4; cursor:default; }
+.collection-pagination span { font-size:14px; color:#e5c994; }
+.alphabet-filter { width:100%; border-top:1px solid #82533b; padding:16px 0; }
+.alphabet-filter summary { cursor:pointer; color:#e5c994; padding:8px 0; }
+.alphabet-filter .filter-row { margin-top:16px; }
+.page > .section-head { margin-bottom:28px; }
+.page .recipe-tools { gap:16px; }
+.recipe-detail { scroll-margin-top:160px; }
+.home-showcase .return-home { border-top:1px solid #d5bc92!important; padding-top:32px!important; }
+@media(max-width:800px) {
+ .backbar { padding:12px 16px 0; }
+ .backbar .back-button { font-size:14px; }
+ .page { padding-top:20px!important; }
+ .collection-pagination { gap:10px; }
+ .collection-pagination button { padding:10px 12px; }
+ .collection-pagination span { font-size:12px; }
+ .recipe-tools > label { width:100%; min-width:0; }
+ .page .section-head > p { line-height:1.6; }
+ .result-actions { gap:12px; }
+}

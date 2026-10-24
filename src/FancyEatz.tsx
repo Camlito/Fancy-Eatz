@@ -271,6 +271,7 @@ export default function FancyEatz() {
       openMembership();
       return;
     }
+    setMobileMenu('');
     if (nextTab === tab) return;
     setTabHistory(history => [...history, tab]);
     setTab(nextTab);
@@ -278,6 +279,9 @@ export default function FancyEatz() {
   }
 
   function goBack() {
+    setMobileMenu('');
+    if (tab === 'recipes' && selectedRecipe) { setSelectedRecipe(null); window.scrollTo({top:0}); return; }
+    if (tab === 'drinks' && selectedDrink) { setSelectedDrink(null); window.scrollTo({top:0}); return; }
     setTabHistory(history => {
       if (history.length === 0) {
         setTab('home');
@@ -332,7 +336,7 @@ export default function FancyEatz() {
   const [checked, setChecked] = useState<string[]>([]);
   const [newItem, setNewItem] = useState('');
   const [grocerySearch, setGrocerySearch] = useState('');
-  const [groceryMode, setGroceryMode] = useState<'list'|'basics'>('basics');
+  const [groceryMode, setGroceryMode] = useState<'list'|'basics'>('list');
   const [search, setSearch] = useState('');
   const [recipeType, setRecipeType] = useState('All');
   const [cookStyleFilter, setCookStyleFilter] = useState('All');
@@ -343,7 +347,11 @@ export default function FancyEatz() {
   const [recentRecipes, setRecentRecipes] = useState<Recipe[]>(()=>{try{return JSON.parse(localStorage.getItem('fancy-recent-recipes')||'[]') as Recipe[]}catch{return []}});
   type CookedMeal = { title:string; description:string; ingredients:string[]; steps:string[]; plating?:string; cookedAt:string; source:'Pantry Chef'|'Recipe Vault'; image?:string; time?:string; budget?:string };
   const [cookedHistory, setCookedHistory] = useState<CookedMeal[]>(()=>{try{return JSON.parse(localStorage.getItem('fancy-cooked-history')||'[]') as CookedMeal[]}catch{return []}});
+  const [recipePage, setRecipePage] = useState(0);
+  const [drinkPage, setDrinkPage] = useState(0);
+  useEffect(()=>setDrinkPage(0),[drinkSearch,drinkCategory,drinkPantryOnly,pantry]);
   const [recipeLetter, setRecipeLetter] = useState('All');
+  useEffect(()=>setRecipePage(0),[search,recipeType,cookStyleFilter,recipeLetter]);
   const [favorites, setFavorites] = useState<Meal[]>(() => {
     try { return JSON.parse(localStorage.getItem('fancy-eatz-favorites') || '[]') as Meal[]; } catch { return []; }
   });
@@ -356,19 +364,6 @@ export default function FancyEatz() {
     localStorage.setItem('fancy-household',household); localStorage.setItem('fancy-skill',skill); localStorage.setItem('fancy-appliance',appliance); localStorage.setItem('fancy-diet',profileDiet); localStorage.setItem('fancy-allergies',allergies); localStorage.setItem('fancy-day-meal',dayMeal); localStorage.setItem('fancy-food-mood',foodMood); localStorage.setItem('fancy-weekly-goal',weeklyGoal);
   }, [household,skill,appliance,profileDiet,allergies,dayMeal,foodMood,weeklyGoal]);
 
-
-  const tasteSignals = useMemo(() => {
-    const words=[...cookedHistory.slice(0,12).map(x=>x.title+' '+x.description),...favorites.slice(0,12).map(x=>x.title+' '+x.description)].join(' ').toLowerCase();
-    const signals=[['Chicken',/chicken/],['Seafood',/salmon|shrimp|crab|fish|tuna|scallop/],['Pasta',/pasta|spaghetti|linguine|noodle|macaroni/],['Comfort',/casserole|creamy|comfort|potato|cheese/],['Fresh',/salad|vegetable|greens|fresh|citrus/],['Grill',/grill|steak|burger|barbecue|bbq/]] as const;
-    return signals.filter(([,re])=>re.test(words)).map(([name])=>name).slice(0,3);
-  },[cookedHistory,favorites]);
-
-  const recommendedRecipes = useMemo(() => {
-    if(!cookedHistory.length&&!favorites.length) return [] as Recipe[];
-    const corpus=[...cookedHistory,...favorites].map(x=>(x.title+' '+x.description+' '+x.ingredients.join(' ')).toLowerCase()).join(' ');
-    const tokens=Array.from(new Set(corpus.match(/[a-z]{4,}/g)||[])).filter(x=>!['with','this','that','from','your','serve','fancy','eatz'].includes(x));
-    return featured.filter(r=>r.ingredients?.length).map(r=>({r,score:tokens.reduce((n,t)=>n+((r.title+' '+r.note+' '+(r.ingredients || []).join(' ')).toLowerCase().includes(t)?1:0),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.r);
-  },[cookedHistory,favorites]);
 
   const filteredRecipes = useMemo(() => featured.filter(r => {
     const q = search.toLowerCase();
@@ -383,6 +378,15 @@ export default function FancyEatz() {
       (recipeLetter === 'All' || r.title.toUpperCase().startsWith(recipeLetter)) &&
       (!q || (r.title + ' ' + r.tag + ' ' + r.note).toLowerCase().includes(q));
   }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType, recipeLetter, cookStyleFilter]);
+
+  const filteredDrinks = drinks.filter(d => {
+              const q=drinkSearch.trim().toLowerCase();
+              const matchesCategory=drinkCategory==='All'||d.category===drinkCategory;
+              const matchesSearch=!q||d.title.toLowerCase().includes(q)||d.ingredients.some(i=>i.toLowerCase().includes(q));
+              const have=pantry.toLowerCase().split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
+              const matchesPantry=!drinkPantryOnly||have.length===0||d.ingredients.some(i=>have.some(h=>i.toLowerCase().includes(h)));
+              return matchesCategory&&matchesSearch&&matchesPantry;
+            });
 
   const openRecipe=(r:Recipe)=>{ setRecipeVersion('classic'); setSelectedRecipe(r); setRecentRecipes(prev=>{const next=[r,...prev.filter(x=>x.title!==r.title)].slice(0,8);localStorage.setItem('fancy-recent-recipes',JSON.stringify(next));return next}); navigate('recipes'); setTimeout(()=>document.getElementById('full-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),80); };
 
@@ -666,7 +670,7 @@ export default function FancyEatz() {
       </header>
 
       {tab !== 'home' && <div className="backbar">
-        <button className="back-button" onClick={goBack} aria-label="Go back"><ArrowLeft size={18} /> Back</button>
+        <button className="back-button" onClick={goBack} aria-label="Go back"><ArrowLeft size={18} /> {tab === 'recipes' && selectedRecipe ? 'Back to Cookbook' : tab === 'drinks' && selectedDrink ? 'Back to Drinks' : 'Back'}</button><button className='back-home' onClick={()=>navigate('home')}><House size={16}/> Home</button>
       </div>}
 
       {earlyJoined && tab === 'home' && <section className="early-access-confirmation"><ShieldCheck size={30}/><div><p className="eyebrow">FOUNDING EARLY ACCESS</p><h2>You're on the Fancy Eatz list.</h2><p>Your spot is saved. You'll receive your 7-day Premium trial invitation when Fancy Eatz launches.</p></div></section>}
@@ -691,18 +695,6 @@ export default function FancyEatz() {
           <RecipeTasting recipes={tastingCollection} onAddGroceries={addItems} onJoin={() => openMembership('Keep the inspiration coming. Join our membership launch list.')} />
           <section className="luxe-kitchen"><p className="eyebrow">USE WHAT YOU HAVE</p><h2>What’s in your kitchen?</h2><p>Add your ingredients to explore meal ideas.</p><form onSubmit={e=>{e.preventDefault();navigate('pantry')}}><label className="search-box"><Search size={20}/><input aria-label="Ingredients in your kitchen" value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="Chicken, spinach, rice…"/></label><button className="primary" type="submit">Generate Meal Ideas</button></form><div className="luxe-categories">{['Breakfast','Lunch','Dinner','Desserts'].map(x=><button key={x} onClick={()=>{if(x==='Desserts')navigate('desserts');else{setMealType(x);navigate('ideas')}}}>{x}</button>)}</div></section>
           {!onboarded&&!showOnboarding&&<section className="onboarding-invite"><div><p className="eyebrow">PERSONALIZE FANCY EATZ</p><h2>Want better picks from the start?</h2><p>Answer a few quick kitchen questions and tailor the experience to your household.</p></div><button className="primary" onClick={()=>setShowOnboarding(true)}>Personalize My Kitchen →</button></section>}
-          <section className="discover-strip"><div className="discover-head"><p className="eyebrow">DISCOVER YOUR NEXT MEAL</p><h2>What sounds good today?</h2></div><div className="discover-chips">
-            <button onClick={()=>{setTime('30 minutes');navigate('ideas')}}>Under 30 Minutes</button>
-            <button onClick={()=>{setOccasion('Family Dinner');navigate('ideas')}}>Family Favorites</button>
-            <button onClick={()=>{setDiet('Vegetarian');navigate('ideas')}}>More Veggies</button>
-            <button onClick={()=>{setBudget('$25');navigate('ideas')}}>Budget Friendly</button>
-            <button onClick={()=>{setOccasion('Date Night at Home');navigate('ideas')}}>Date Night</button>
-            <button onClick={()=>navigate('leftovers')}>Use My Leftovers</button>
-          </div></section>
-          <section className="premium-preview" id="premium-preview"><p className="eyebrow">ONE KITCHEN COMPANION</p><h2>From “what can I make?” to dinner on the table.</h2><p>Fancy Eatz brings meal inspiration, ingredient-first cooking, planning, grocery organization, drinks, desserts and entertaining tools into one polished experience.</p><div className="premium-preview-grid"><article><ChefHat/><b>Pantry Chef</b><span>Tell us what you have. Get complete meal possibilities.</span></article><article><Sparkles/><b>Photo My Fridge</b><span>Upload your kitchen photo and turn visible ingredients into ideas.</span></article><article><BookOpen/><b>Recipe Vault</b><span>Explore complete recipes, drinks, desserts and cooking styles.</span></article><article><CalendarDays/><b>Plan the Week</b><span>Build weekly meals and one organized grocery list.</span></article></div></section><div className="home-search-row">
-            <label className="search-box"><Search size={18}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search recipes (salmon, chicken, pasta, healthy...)" /><button onClick={()=>navigate('recipes')}>Search</button></label>
-            <button className="ai-generator-callout" onClick={()=>navigate('pantry')}><ChefHat size={30}/><span><b>AI Meal Generator</b><small>Enter what you have and get 22–35 meal ideas</small></span><strong>Generate Meals →</strong></button>
-          </div>
           {!onboarded&&showOnboarding&&<section className="onboarding-card"><div className="onboarding-copy"><p className="eyebrow">WELCOME TO FANCY EATZ</p><h2>Make your kitchen feel easier in under a minute.</h2><p>Tell us how you cook. We’ll use these choices to shape your starting experience on this device.</p></div><div className="onboarding-grid">
             <label>How many are you feeding?<select value={household} onChange={e=>{setHousehold(e.target.value);setServings(e.target.value==='6+'?'6':e.target.value)}}>{['1','2','3','4','5','6+'].map(x=><option key={x}>{x}</option>)}</select></label>
             <label>What sounds most like you?<select value={foodMood} onChange={e=>setFoodMood(e.target.value)}><option>A little of everything</option><option>Comfort food</option><option>Fresh & lighter</option><option>High-protein meals</option><option>Family favorites</option><option>Restaurant-style at home</option></select></label>
@@ -711,16 +703,11 @@ export default function FancyEatz() {
             <label>Cooking confidence<select value={skill} onChange={e=>setSkill(e.target.value)}><option>Keep it simple</option><option>Comfortable</option><option>Confident cook</option></select></label>
             <label>My main goal<select value={weeklyGoal} onChange={e=>setWeeklyGoal(e.target.value)}><option>Make dinner easier</option><option>Spend less on food</option><option>Use what I already have</option><option>Plan my whole week</option><option>Cook more at home</option><option>Make meals feel special</option></select></label>
           </div><div className="onboarding-actions"><button className="primary" onClick={()=>{localStorage.setItem('fancy-onboarded','yes');setOnboarded(true);setShowOnboarding(false);setMealType(dayMeal);setDiet(profileDiet)}}>Personalize My Kitchen →</button><button className="ghost" onClick={()=>{localStorage.setItem('fancy-onboarded','yes');setOnboarded(true);setShowOnboarding(false)}}>Skip for now</button></div><small className="onboarding-note">Food-avoid settings guide suggestions but are not a guarantee against allergens or cross-contact.</small></section>}
-          <section className="tonight-card"><div className="tonight-copy"><p className="eyebrow">FOR YOU TODAY</p><h2>What are we making?</h2><p>Choose the moment and Fancy Eatz will start with the preferences you already saved.</p><div className="meal-switch">{['Breakfast','Lunch','Dinner'].map(x=><button key={x} className={dayMeal===x?'active':''} onClick={()=>{setDayMeal(x);setMealType(x)}}>{x}</button>)}</div></div><div className="tonight-action"><span>{profileDiet==='No restriction'?'Flexible':profileDiet} · {household} serving{household==='1'?'':'s'} · {foodMood}</span><h3>{dayMeal === 'Breakfast' ? 'Start the day with something worth making.' : dayMeal === 'Lunch' ? 'Make lunch feel less like an afterthought.' : 'Turn tonight into something good.'}</h3><button className="primary" onClick={()=>{setMealType(dayMeal);setDiet(profileDiet);setServings(household==='6+'?'6':household);navigate('pantry')}}>Find My {dayMeal} →</button></div></section>
           <section className="return-home"><div className="home-section-title"><div><p className="eyebrow">MADE FOR YOU</p><h2>Pick up where you left off.</h2></div></div><div className="return-grid">
             <button onClick={()=>navigate('favorites')}><span>♥</span><div><b>Saved Meals</b><small>{favorites.length ? favorites.length+' saved creation'+(favorites.length===1?'':'s') : 'Save meals you want to make again'}</small></div></button>
             <button onClick={()=>navigate('planner')}><span>7</span><div><b>This Week</b><small>{weeklyPlan ? 'Your weekly plan is ready to revisit' : 'Build a simple plan for the week ahead'}</small></div></button>
             <button onClick={()=>cookedHistory.length?cookAgain(cookedHistory[0]):navigate('pantry')}><span>↻</span><div><b>Cook Again</b><small>{cookedHistory.length ? cookedHistory[0].title : 'Start with your saved kitchen preferences'}</small></div></button>
           </div>{cookedHistory.length>0&&<div className="recent-wrap"><div className="home-section-title"><h3>Cooked Recently</h3><span>{cookedHistory.length} meal{cookedHistory.length===1?'':'s'}</span></div><div className="home-recipe-strip">{cookedHistory.slice(0,5).map((r,i)=><button className="home-recipe-card cooked-card" key={'cooked-'+r.title+i} onClick={()=>cookAgain(r)}><div style={r.image?{backgroundImage:`url("${r.image}")`}:undefined}/><b>{r.title}</b><small>{new Date(r.cookedAt).toLocaleDateString(undefined,{month:'short',day:'numeric'})} · Cook Again</small></button>)}</div></div>}{recentRecipes.length>0&&<div className="recent-wrap"><div className="home-section-title"><h3>Recently Viewed</h3><button onClick={()=>navigate('recipes')}>Browse All →</button></div><div className="home-recipe-strip">{recentRecipes.slice(0,5).map(r=><button className="home-recipe-card" key={'recent-'+r.title} onClick={()=>openRecipe(r)}><div style={r.image?{backgroundImage:`url("${r.image}")`}:undefined}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div></div>}</section>
-          {recommendedRecipes.length>0&&<section className="taste-profile-card"><div className="home-section-title"><div><p className="eyebrow">BASED ON WHAT YOU COOK</p><h2>Your Taste Profile</h2><p>{tasteSignals.length ? 'We’re noticing '+tasteSignals.join(' · ')+' in your kitchen.' : 'Fancy Eatz is learning from meals you make and save.'}</p></div></div><div className="home-recipe-strip">{recommendedRecipes.map(r=><button className="home-recipe-card" key={'taste-'+r.title} onClick={()=>openRecipe(r)}><div style={r.image?{backgroundImage:`url("${r.image}")`}:undefined}/><b>{r.title}</b><small>Picked from your cooking history</small></button>)}</div></section>}
-          <div className="home-recipe-section"><div className="home-section-title"><h2>Featured Recipes</h2><button onClick={()=>navigate('recipes')}>View All Recipes →</button></div>
-            <div className="home-recipe-strip">{featured.filter(r=>r.image).slice(0,6).map(r=><button className="home-recipe-card" key={r.title} onClick={()=>openRecipe(r)}><div style={{backgroundImage:`url("${r.image}")`}}/><b>{r.title}</b><small>{r.time} · {r.budget}</small></button>)}</div>
-          </div>
           <section className="premium-conversion"><div><p className="eyebrow">MAKE EVERY WEEK EASIER</p><h2>One membership.<br/>More delicious possibilities.</h2><p>Save favorites, plan meals and keep one smart grocery list with Fancy Eatz.</p></div><div className="luxe-prices"><span><b>$9.99</b> / month</span><span><b>$79</b> / year</span><small>Planned pricing · Join early access</small></div><div className="conversion-actions"><button className="ghost" onClick={()=>navigate('planner')}>Plan My Week</button><button className="primary" onClick={()=>openMembership('Join early access now and get your 7-day Premium trial when Fancy Eatz launches.')}>Join Early Access →</button></div></section>
         </section>
       )}
@@ -900,6 +887,7 @@ export default function FancyEatz() {
 
       {tab === 'drinks' && (
         <section className="page">
+          {!selectedDrink && <>
           <div className="section-head">
             <p className="eyebrow">FANCY EATZ BAR & DRINKS</p>
             <h2>Make the drink. Know the method.</h2>
@@ -915,17 +903,13 @@ export default function FancyEatz() {
             <div className="plating"><b>21+ RESPONSIBLE SERVICE</b><p>Alcoholic recipes are for adults of legal drinking age. Serve responsibly and never drink and drive.</p></div>
           </div>
           <div className="cards">
-            {drinks.filter(d => {
-              const q=drinkSearch.trim().toLowerCase();
-              const matchesCategory=drinkCategory==='All'||d.category===drinkCategory;
-              const matchesSearch=!q||d.title.toLowerCase().includes(q)||d.ingredients.some(i=>i.toLowerCase().includes(q));
-              const have=pantry.toLowerCase().split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
-              const matchesPantry=!drinkPantryOnly||have.length===0||d.ingredients.some(i=>have.some(h=>i.toLowerCase().includes(h)));
-              return matchesCategory&&matchesSearch&&matchesPantry;
-            }).map(d => <article className="recipe-card" key={d.title}>
+            {filteredDrinks.slice(drinkPage*12,(drinkPage+1)*12).map(d => <article className="recipe-card" key={d.title}>
               <div className="card-body"><small>{d.category} · {d.glassware}</small><h3>{d.title}</h3><p>{d.ingredients.slice(0,3).join(' · ')}</p><button className="ghost" onClick={()=>{setSelectedDrink(d);setTimeout(()=>document.getElementById('full-drink-recipe')?.scrollIntoView({behavior:'smooth',block:'start'}),50)}}><BookOpen size={16}/>Open Full Recipe</button></div>
             </article>)}
           </div>
+          <nav className="collection-pagination" aria-label="Drink pages"><button disabled={drinkPage===0} onClick={()=>{setDrinkPage(p=>p-1);window.scrollTo({top:0})}}>← Previous</button><span>{filteredDrinks.length ? drinkPage*12+1 : 0}–{Math.min((drinkPage+1)*12,filteredDrinks.length)} of {filteredDrinks.length}</span><button disabled={(drinkPage+1)*12>=filteredDrinks.length} onClick={()=>{setDrinkPage(p=>p+1);window.scrollTo({top:0})}}>Next →</button></nav>
+          {filteredDrinks.length===0 && <p className="empty">No drinks match. Try another ingredient or category.</p>}
+          </>}
           {selectedDrink && <div id="full-drink-recipe" className="panel recipe-detail" style={{marginTop:24}}>
             <div className="section-head"><p className="eyebrow">{selectedDrink.category}</p><h2>{selectedDrink.title}</h2><p>Glassware: {selectedDrink.glassware}{selectedDrink.garnish ? ' · Garnish: '+selectedDrink.garnish : ''}</p></div>
             <div className="generator-grid">
@@ -971,12 +955,13 @@ export default function FancyEatz() {
           <div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search chicken, steak, pasta, seafood, dessert..." /></label>
             <label>Category<select value={recipeType} onChange={e => setRecipeType(e.target.value)}><option>All</option><option>Appetizers</option><option>Entrées</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
-          <div className="plating"><b>BROWSE A–Z</b><div className="filter-row">{['All',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(x => <button className={recipeLetter === x ? 'active' : ''} key={x} onClick={() => setRecipeLetter(x)}>{x}</button>)}</div></div>
+          <details className="alphabet-filter"><summary>Browse by letter · {recipeLetter}</summary><div className="filter-row">{['All',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(x => <button className={recipeLetter === x ? 'active' : ''} key={x} onClick={() => setRecipeLetter(x)}>{x}</button>)}</div></details>
           </div>
           
           <div className="cards">
-            {filteredRecipes.map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)} style={r.image ? {backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.35)),url("${r.image}")`,backgroundSize:'cover',backgroundPosition:'center'} : undefined}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p>{r.ingredients?.length ? <button className="ghost" onClick={()=>openRecipe(r)}><BookOpen size={16}/>Open Full Recipe</button> : <small>Full recipe details being added from the source collection.</small>}<button onClick={() => { const recipePrompt = r.title + ' ingredients'; setPantry(recipePrompt); setMealType(r.mealType); setMeal(null); navigate('pantry'); void generateMeal(true, recipePrompt, r.mealType); }}>Make My Version →</button></div></article>)}
+            {filteredRecipes.slice(recipePage*12,(recipePage+1)*12).map((r, i) => <article className="recipe-card" key={r.title}><div className={'food-art art-' + (i % 6)} style={r.image ? {backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.35)),url("${r.image}")`,backgroundSize:'cover',backgroundPosition:'center'} : undefined}><span>{r.tag}</span></div><div className="card-body"><small>{r.mealType} · {r.time} · {r.budget}</small><h3>{r.title}</h3><p>{r.note}</p>{r.ingredients?.length ? <button className="ghost" onClick={()=>openRecipe(r)}><BookOpen size={16}/>Open Full Recipe</button> : <small>Full recipe details being added from the source collection.</small>}<button onClick={() => { const recipePrompt = r.title + ' ingredients'; setPantry(recipePrompt); setMealType(r.mealType); setMeal(null); navigate('pantry'); void generateMeal(true, recipePrompt, r.mealType); }}>Make My Version →</button></div></article>)}
           </div>
+          <nav className="collection-pagination" aria-label="Cookbook pages"><button disabled={recipePage===0} onClick={()=>{setRecipePage(p=>p-1);window.scrollTo({top:0})}}>← Previous</button><span>{filteredRecipes.length ? recipePage*12+1 : 0}–{Math.min((recipePage+1)*12,filteredRecipes.length)} of {filteredRecipes.length}</span><button disabled={(recipePage+1)*12>=filteredRecipes.length} onClick={()=>{setRecipePage(p=>p+1);window.scrollTo({top:0})}}>Next →</button></nav>
           {filteredRecipes.length === 0 && <div className="empty panel"><Search size={36} /><h3>No exact match yet</h3><p>Try another search, or use Pantry Chef to generate the meal you have in mind.</p></div>}
           <div className="source-note"><BookOpen size={20} /><div><b>Ultimate Collection of Seafood Recipes</b><p>The seafood collection is available as a source library alongside Fancy Eatz generated ideas.</p><a href="./resources/seafood-recipes.pdf" target="_blank" rel="noreferrer">Open source collection</a></div></div>
           </>}
@@ -1036,7 +1021,7 @@ export default function FancyEatz() {
 
       {tab === 'grocery' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">SMART SHOPPING</p><h2>My Grocery Command Center</h2><p>Build one clean shopping list from recipes, weekly plans, or your own items. Check things off as you shop and keep the list organized by aisle.</p></div>
+          <div className="section-head"><p className="eyebrow">SMART SHOPPING</p><h2>My Grocery List</h2><p>Build one clean shopping list from recipes, weekly plans, or your own items. Check things off as you shop and keep the list organized by aisle.</p></div>
           <div className="grocery-mode-tabs">
             <button className={groceryMode==='basics'?'active':''} onClick={()=>setGroceryMode('basics')}>Basic Grocery Checklist</button>
             <button className={groceryMode==='list'?'active':''} onClick={()=>setGroceryMode('list')}>My Shopping List</button>
