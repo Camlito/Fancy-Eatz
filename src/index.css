@@ -1438,3 +1438,35 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
   .walkthrough-chapters { grid-template-columns: 1fr 1fr; }
   .walkthrough-transport button { flex: 1; font-size: 12px; padding: 9px; }
 }
+
+/* Keep each benefit icon above a consistently aligned two-line label. */
+.home-showcase .reference-benefits {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: start !important;
+  gap: clamp(8px, 2vw, 22px) !important;
+}
+.home-showcase .reference-benefits > button {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  text-align: center !important;
+}
+.home-showcase .reference-benefits > button > svg {
+  display: block !important;
+  flex: 0 0 auto !important;
+  width: 60px !important;
+  height: 60px !important;
+  margin: 0 !important;
+}
+.home-showcase .reference-benefits > button > span {
+  display: block !important;
+  width: 100% !important;
+  min-height: 2.8em;
+  font-size: clamp(12px, 1.15vw, 14px) !important;
+  line-height: 1.4 !important;
+}
