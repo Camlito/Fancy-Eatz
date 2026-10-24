@@ -15,11 +15,26 @@ export default function CookingWalkthrough({ title, version }: {
   async function playStep(index: number) {
     const video = videoRef.current;
     if (!video || !guide.steps[index]) return;
-    video.currentTime = guide.steps[index].start;
-    setActiveStep(index);
     setError('');
-    try { await video.play(); }
-    catch { setError('Press Play in the video controls to continue.'); }
+    try {
+      if (video.readyState < 1) {
+        await new Promise<void>((resolve, reject) => {
+          const cleanup = () => {
+            video.removeEventListener('loadedmetadata', ready);
+            video.removeEventListener('error', failed);
+          };
+          const ready = () => { cleanup(); resolve(); };
+          const failed = () => { cleanup(); reject(new Error('Video could not load')); };
+          video.addEventListener('loadedmetadata', ready, { once: true });
+          video.addEventListener('error', failed, { once: true });
+          video.load();
+        });
+      }
+      if (video !== videoRef.current) return;
+      video.currentTime = guide.steps[index].start;
+      setActiveStep(index);
+      await video.play();
+    } catch { setError('Press Play in the video controls to continue.'); }
   }
 
   return (
