@@ -1375,3 +1375,40 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .tasting-expand { display: block; margin: 24px auto; padding: 14px 22px; border: 1px solid #a66d21; border-radius: 30px; background: transparent; color: #590b16; font-weight: 700; cursor: pointer; }
 .topbar .brand-logo-button img.official-brand-logo { display: block !important; width: 54px !important; height: 54px !important; object-fit: contain !important; }
 .home-showcase .reference-hero .tasting-hero-note { color: #f1d7b6 !important; opacity: 1 !important; font-size: 13px !important; }
+
+/* Focused tasting: six cards per page; complete cookbook remains a separate screen. */
+.meal-version-photo { width: 100%; aspect-ratio: 1; background-size: 200% 100%; background-repeat: no-repeat; background-color: #ead6b5; }
+.tasting-image-button { display: block; position: relative; width: 100%; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.tasting-card .tasting-image-button .meal-version-photo { aspect-ratio: 1; }
+.picked-label { position: absolute; left: 12px; top: 12px; background: #590b16; color: #fff5e4; border-radius: 24px; padding: 8px 12px; font-size: 12px; font-weight: 700; }
+.tasting-controls { display: flex; gap: 20px; align-items: end; justify-content: space-between; margin: 20px 0; flex-wrap: wrap; }
+.tasting-controls label { display: grid; gap: 7px; flex: 1; min-width: 220px; max-width: 360px; font-size: 13px; }
+.tasting-controls input { min-height: 48px; padding: 12px 14px; border: 1px solid #b59462; border-radius: 8px; background: #fffaf1; color: #590b16; width: 100%; }
+.tasting-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.tasting-filters button,.tasting-pagination button,.tasting-back,.tasting-preview-button { background: transparent; border: 1px solid #b59462; color: #590b16; border-radius: 24px; min-height: 44px; padding: 9px 14px; font-weight: 600; cursor: pointer; }
+.tasting-filters button[aria-pressed='true'] { background: #590b16; color: #fff5e4; }
+.tasting-preview-button { margin: 4px 0 10px; border-radius: 6px; }
+.tasting-pagination { display: flex; gap: 15px; align-items: center; justify-content: center; margin: 28px 0; font-size: 13px; }
+.tasting-pagination button:disabled { opacity: .4; cursor: default; }
+.tasting-detail { padding: 24px; background: #fffaf1; border: 1px solid #ccb087; border-radius: 18px; }
+.tasting-detail-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; margin-top: 24px; }
+.tasting-detail-layout .meal-version-photo { border-radius: 12px; }
+.tasting-detail-layout h3 { font: 35px/1.15 Georgia,serif; margin: 18px 0; }
+.tasting-detail p { line-height: 1.7; }
+.tasting-detail .version-selector button { color: #590b16; }
+.tasting-detail .version-selector button[aria-pressed='true'] { color: #fff5e4; background: #590b16; }
+.tasting-detail .version-selector { margin-top: 0; }
+.tasting-directions { display: grid; grid-template-columns: .8fr 1.2fr; gap: 30px; margin: 25px 0; }
+.tasting-directions h4 { font: 25px Georgia,serif; margin: 18px 0; }
+.tasting-directions li { margin-bottom: 12px; line-height: 1.7; }
+.tasting-finish { padding: 20px; border-left: 3px solid #b59462; background: #f6ebd7; }
+.photo-caption { display: block; margin-top: 8px; color: #7b6044; font-size: 11px; }
+.vault-meal-photo { max-width: 600px; margin: 0 auto 20px; border-radius: 12px; }
+@media(max-width:800px) {
+  .tasting-detail { padding: 16px; }
+  .tasting-detail-layout,.tasting-directions { grid-template-columns: 1fr; gap: 18px; }
+  .tasting-detail-layout h3 { font-size: 29px; }
+  .tasting-controls label { max-width: none; }
+  .tasting-pagination { gap: 8px; font-size: 12px; }
+  .tasting-pagination button { padding: 8px 11px; }
+}

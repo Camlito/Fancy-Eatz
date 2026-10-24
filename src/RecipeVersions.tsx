@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { tastingPhotoPairs } from './tastingPhotography';
 
 export type VersionRecipe = {
   title: string;
@@ -50,58 +51,111 @@ export function RecipeVersionSelector({ value, onChange }: {
   );
 }
 
+export function MealPhoto({ title, version = 'classic', className = '' }: {
+  title: string;
+  version?: 'classic' | 'signature';
+  className?: string;
+}) {
+  const originalTitle = title.replace(/^Fancy Eatz Signature /, '');
+  const src = tastingPhotoPairs[originalTitle];
+  if (!src) return null;
+  return <div className={`meal-version-photo ${className}`} role='img'
+    aria-label={`${originalTitle}, ${version === 'classic' ? 'Classic' : 'Fancy Eatz Signature'} serving illustration`}
+    style={{ backgroundImage: `url("${src}")`, backgroundPosition: version === 'classic' ? 'left center' : 'right center' }} />;
+}
+
 type TastingState = { startedAt: number; picks: string[] };
 const storageKey = 'fancy-eatz-tasting-v1';
 const trialDuration = 7 * 24 * 60 * 60 * 1000;
+const pickLimit = 7;
+const pageSize = 6;
 
-export default function RecipeTasting({ recipes, onOpen, onJoin }: {
+export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
   recipes: VersionRecipe[];
-  onOpen: (recipe: VersionRecipe) => void;
   onJoin: () => void;
+  onAddGroceries: (ingredients: string[], title: string) => void;
 }) {
-  const collection = recipes.filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 30);
+  const collection = useMemo(() => recipes.filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 30), [recipes]);
   const [trial, setTrial] = useState<TastingState | null>(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
-      return saved && Number.isFinite(saved.startedAt) && Array.isArray(saved.picks) ? saved : null;
+      return saved && Number.isFinite(saved.startedAt) && Array.isArray(saved.picks)
+        ? { startedAt: saved.startedAt, picks: saved.picks.filter((title: unknown) => typeof title === 'string').slice(0, pickLimit) } : null;
     } catch { return null; }
   });
   const [notice, setNotice] = useState('');
-  const [showAll, setShowAll] = useState(false);
   const [now, setNow] = useState(Date.now());
+  const [page, setPage] = useState(0);
+  const [filter, setFilter] = useState('All');
+  const [query, setQuery] = useState('');
+  const [preview, setPreview] = useState<VersionRecipe | null>(null);
+  const [version, setVersion] = useState<'classic' | 'signature'>('classic');
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 30000);
     return () => window.clearInterval(timer);
   }, []);
   const expired = !!trial && now >= trial.startedAt + trialDuration;
   const remaining = trial ? Math.max(0, Math.ceil((trial.startedAt + trialDuration - now) / 86400000)) : 7;
-  function choose(recipe: VersionRecipe) {
-    if (expired) { setNotice('Your tasting has ended. Join the membership launch list to hear when full membership opens.'); return; }
-    if (trial?.picks.includes(recipe.title)) { onOpen(recipe); return; }
-    if ((trial?.picks.length || 0) >= 3) { setNotice('Your three recipe cards are selected. Open any selected card to enjoy both versions.'); return; }
-    const next = { startedAt: trial?.startedAt || Date.now(), picks: [...(trial?.picks || []), recipe.title] };
+  const filtered = collection.filter(recipe =>
+    (filter === 'All' || (filter === 'My 7' ? trial?.picks.includes(recipe.title) : recipe.mealType === filter)) &&
+    (recipe.title + ' ' + recipe.note).toLowerCase().includes(query.trim().toLowerCase()));
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const currentPage = Math.min(page, pageCount - 1);
+  const activeRecipe = preview && version === 'signature' ? signatureRecipe(preview) : preview;
+  const picks = trial?.picks || [];
+  function savePicks(next: TastingState) {
     try { localStorage.setItem(storageKey, JSON.stringify(next)); }
-    catch { setNotice('Your browser could not save the tasting. Enable website storage and try again.'); return; }
+    catch { setNotice('Your browser could not save your choices. Enable website storage and try again.'); return; }
     setTrial(next);
-    setNotice('Recipe selected. You can switch between Classic and Fancy Eatz Signature.');
-    onOpen(recipe);
+    return true;
+  }
+  function choose(recipe: VersionRecipe) {
+    if (expired) { setNotice('Your tasting has ended. Join the membership launch list for updates.'); return; }
+    if (picks.includes(recipe.title)) return;
+    if (picks.length >= pickLimit) { setNotice('Your seven cards are selected. Remove a selection to choose a different dish.'); return; }
+    if (savePicks({ startedAt: trial?.startedAt || Date.now(), picks: [...picks, recipe.title] })) {
+      setNotice(`${recipe.title} added. ${pickLimit - picks.length - 1} choices left.`);
+    }
+  }
+  function remove(recipe: VersionRecipe) {
+    if (expired || !trial) return;
+    if (savePicks({ ...trial, picks: picks.filter(title => title !== recipe.title) })) setNotice(`${recipe.title} removed. Choose another favorite.`);
+  }
+  function openPreview(recipe: VersionRecipe) {
+    setPreview(recipe);
+    setVersion('classic');
+    document.getElementById('recipe-tasting')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   return (
-    <section id='recipe-tasting' className='recipe-tasting'>
+    <section id='recipe-tasting' className='recipe-tasting' aria-label='Choose seven from thirty recipes'>
       <div className='tasting-heading'>
-        <div><p className='eyebrow'>TWO DELICIOUS WAYS TO ENJOY</p><h2>Your everyday favorite.<br/><em>Its Signature moment.</em></h2><p>Choose 3 recipe cards from {collection.length}. Enjoy the Classic and Fancy Eatz Signature versions of each for 7 days.</p></div>
-        <div className='tasting-summary'><strong>{trial?.picks.length || 0} / 3</strong><span>recipe cards selected</span><b>{expired ? 'Tasting ended' : trial ? `${remaining} day${remaining === 1 ? '' : 's'} remaining` : 'Free · No card required'}</b><small>Your tasting starts with your first pick and is saved in this browser. Membership billing is not active.</small></div>
+        <div><p className='eyebrow'>YOUR SEVEN DELICIOUS PICKS</p><h2>30 dishes to discover.<br/><em>7 favorites to make yours.</em></h2><p>Choose seven recipe cards for your seven-day tasting. Every card includes Classic and Fancy Eatz Signature.</p></div>
+        <div className='tasting-summary'><strong>{picks.length} / {pickLimit}</strong><span>recipe cards selected</span><b>{expired ? 'Tasting ended' : trial ? `${remaining} days remaining` : 'Free · No card required'}</b><small>Selections are saved in this browser. Your seven days begin with your first selection.</small></div>
       </div>
-      <p className='tasting-status' role='status'>{notice || 'Choose thoughtfully: each selected card includes two complete versions.'}</p>
-      <div className='tasting-grid'>{(showAll ? collection : collection.slice(0, 6)).map(recipe => {
-        const selected = trial?.picks.includes(recipe.title);
-        return <article className={`tasting-card${selected ? ' picked' : ''}`} key={recipe.title}>
-          {recipe.image && <img loading='lazy' src={recipe.image} alt={`${recipe.title} serving inspiration`} />}
-          <div><small>{recipe.mealType} · {recipe.time}</small><h3>{recipe.title}</h3><p>{recipe.note}</p><span className='two-versions'>Classic + Signature included</span><button className={selected ? 'ghost' : 'primary'} disabled={expired || (!selected && (trial?.picks.length || 0) >= 3)} onClick={() => choose(recipe)}>{selected ? 'Open My Recipe' : 'Choose This Recipe'}</button></div>
-        </article>;
-      })}</div>
-      <button className='tasting-expand' onClick={() => setShowAll(value => !value)}>{showAll ? 'Show Fewer Recipes' : 'Explore All 30 Recipes →'}</button>
-      <div className='tasting-next'><div><h3>Make this your everyday kitchen companion.</h3><p>Love the tasting? Join the list for the membership launch. Planned pricing: $9.99/month or $79/year. No payment collected today.</p></div><button className='primary' onClick={onJoin}>Keep Me in the Kitchen →</button></div>
+      <p className='tasting-status' role='status'>{notice || 'Browse six dishes at a time. Preview a recipe, then add the ones you love.'}</p>
+      {activeRecipe && preview ? <article className='tasting-detail' aria-label='Tasting recipe detail'>
+        <button className='tasting-back' onClick={() => setPreview(null)}>← Back to the 30 tasting recipes</button>
+        <div className='tasting-detail-layout'>
+          <div><MealPhoto title={preview.title} version={version} /><small className='photo-caption'>AI-created serving illustration</small></div>
+          <div><RecipeVersionSelector value={version} onChange={setVersion} /><p className='eyebrow'>{activeRecipe.mealType} · {activeRecipe.time}</p><h3>{activeRecipe.title}</h3><p>{activeRecipe.note}</p><p>Servings: {activeRecipe.servings || 'See ingredients'}</p>
+            <button className='primary' disabled={expired || (!picks.includes(preview.title) && picks.length >= pickLimit)} onClick={() => picks.includes(preview.title) ? remove(preview) : choose(preview)}>{picks.includes(preview.title) ? 'Remove from My 7' : 'Add to My 7'}</button>
+          </div>
+        </div>
+        <div className='tasting-directions'><div><h4>Ingredients</h4><ul>{activeRecipe.ingredients?.map(item => <li key={item}>{item}</li>)}</ul></div><div><h4>Step-by-step directions</h4><ol>{activeRecipe.method?.map(step => <li key={step}>{step}</li>)}</ol>{version === 'signature' && <div className='tasting-finish'><b>Your Signature finish</b><p>{signatureRecipe(preview).finish}</p></div>}</div></div>
+        <button className='primary' onClick={() => onAddGroceries(activeRecipe.ingredients || [], activeRecipe.title)}>Add Ingredients to Grocery List</button>
+      </article> : <>
+        <div className='tasting-controls'><label><span>Search these 30 dishes</span><input value={query} placeholder='Chicken, pasta, dessert…' onChange={event => { setQuery(event.target.value); setPage(0); }} /></label><div className='tasting-filters' role='group' aria-label='Tasting recipe filter'>{['All', 'Dinner', 'Dessert', 'Breakfast', 'Lunch', 'My 7'].map(name => <button key={name} aria-pressed={filter === name} onClick={() => { setFilter(name); setPage(0); }}>{name}</button>)}</div></div>
+        <div className='tasting-grid'>{filtered.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map(recipe => {
+          const selected = picks.includes(recipe.title);
+          return <article className={`tasting-card${selected ? ' picked' : ''}`} key={recipe.title}>
+            <button className='tasting-image-button' aria-label={`Preview ${recipe.title}`} onClick={() => openPreview(recipe)}><MealPhoto title={recipe.title} />{selected && <span className='picked-label'>✓ In My 7</span>}</button>
+            <div><small>{recipe.mealType} · {recipe.time}</small><h3>{recipe.title}</h3><p>{recipe.note}</p><span className='two-versions'>Classic + Signature included</span><button className='tasting-preview-button' onClick={() => openPreview(recipe)}>Preview Both Versions</button><button className={selected ? 'ghost' : 'primary'} disabled={expired || (!selected && picks.length >= pickLimit)} onClick={() => selected ? remove(recipe) : choose(recipe)}>{selected ? 'Remove from My 7' : 'Add to My 7'}</button></div>
+          </article>;
+        })}</div>
+        {filtered.length === 0 && <p className='tasting-empty'>{filter === 'My 7' ? 'Your selected recipes will appear here.' : 'No match in this tasting collection. Try another search.'}</p>}
+        <nav className='tasting-pagination' aria-label='Tasting recipe pages'><button disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>← Previous</button><span>{filtered.length ? currentPage * pageSize + 1 : 0}–{Math.min((currentPage + 1) * pageSize, filtered.length)} of {filtered.length} dishes</span><button disabled={currentPage >= pageCount - 1} onClick={() => setPage(currentPage + 1)}>Next →</button></nav>
+      </>}
+      <div className='tasting-next'><div><h3>{picks.length === pickLimit ? 'Your seven favorites are ready.' : 'Make this your everyday kitchen companion.'}</h3><p>Membership launch updates: planned pricing is $9.99/month or $79/year. No payment collected today.</p></div><button className='primary' onClick={onJoin}>Keep Me in the Kitchen →</button></div>
     </section>
   );
 }

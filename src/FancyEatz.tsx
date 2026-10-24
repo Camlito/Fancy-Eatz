@@ -1,4 +1,5 @@
-import RecipeTasting, { RecipeVersionSelector, signatureRecipe } from './RecipeVersions';
+import { tastingPhotoPairs } from './tastingPhotography';
+import RecipeTasting, { MealPhoto, RecipeVersionSelector, signatureRecipe } from './RecipeVersions';
 import { useEffect, useMemo, useState } from 'react';
 import { drinks } from './drinks';
 import { styleRecipeVault, styleRecipeCounts } from './styleRecipeVault';
@@ -163,6 +164,7 @@ const valueRecipes: Recipe[] = [
 ];
 
 const featured: Recipe[] = [...featuredBase, ...valueRecipes, ...styleRecipeVault];
+const tastingCollection = [...valueRecipes, ...featuredBase, ...styleRecipeVault].filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 30);
 
 
 const basicGroceryCategories: Record<string,string[]> = {
@@ -676,7 +678,7 @@ export default function FancyEatz() {
               <p className="eyebrow">Elevate Every Bite</p>
               <h1>Simple dishes.<br/><em>Made delicious.</em></h1>
               <p className="lede">The comfort of Classic. The magic of Fancy Eatz Signature. Cook the familiar favorite—or give it a beautiful restaurant-style finish.</p>
-              <button className='primary luxe-hero-cta' onClick={() => document.getElementById('recipe-tasting')?.scrollIntoView({behavior:'smooth'})}>Choose My 3 Free Recipes →</button><p className='tasting-hero-note'>7 days · Both versions included · No card required</p>
+              <button className='primary luxe-hero-cta' onClick={() => document.getElementById('recipe-tasting')?.scrollIntoView({behavior:'smooth'})}>Choose My 7 Free Recipes →</button><p className='tasting-hero-note'>7 days · Both versions included · No card required</p>
               <div className="reference-benefits">
                 <button onClick={()=>navigate('ideas')}><Sparkles/><span>Personalized<br/>Meal Ideas</span></button>
                 <button onClick={()=>navigate('grocery')}><ShoppingBasket/><span>Smart<br/>Grocery Lists</span></button>
@@ -685,7 +687,7 @@ export default function FancyEatz() {
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"></div>
           </div>
-          <RecipeTasting recipes={[...valueRecipes, ...featuredBase, ...styleRecipeVault]} onOpen={r => openRecipe(r as Recipe)} onJoin={() => openMembership('Keep the inspiration coming. Join our membership launch list.')} />
+          <RecipeTasting recipes={tastingCollection} onAddGroceries={addItems} onJoin={() => openMembership('Keep the inspiration coming. Join our membership launch list.')} />
           <section className="luxe-kitchen"><p className="eyebrow">USE WHAT YOU HAVE</p><h2>What’s in your kitchen?</h2><p>Add your ingredients to explore meal ideas.</p><form onSubmit={e=>{e.preventDefault();navigate('pantry')}}><label className="search-box"><Search size={20}/><input aria-label="Ingredients in your kitchen" value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="Chicken, spinach, rice…"/></label><button className="primary" type="submit">Generate Meal Ideas</button></form><div className="luxe-categories">{['Breakfast','Lunch','Dinner','Desserts'].map(x=><button key={x} onClick={()=>{if(x==='Desserts')navigate('desserts');else{setMealType(x);navigate('ideas')}}}>{x}</button>)}</div></section>
           {!onboarded&&!showOnboarding&&<section className="onboarding-invite"><div><p className="eyebrow">PERSONALIZE FANCY EATZ</p><h2>Want better picks from the start?</h2><p>Answer a few quick kitchen questions and tailor the experience to your household.</p></div><button className="primary" onClick={()=>setShowOnboarding(true)}>Personalize My Kitchen →</button></section>}
           <section className="discover-strip"><div className="discover-head"><p className="eyebrow">DISCOVER YOUR NEXT MEAL</p><h2>What sounds good today?</h2></div><div className="discover-chips">
@@ -937,13 +939,14 @@ export default function FancyEatz() {
 
       {tab === 'recipes' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>One growing Fancy Eatz cookbook for every kind of meal — family favorites, grilling, fine dining, chef techniques, desserts, pastries, seafood and more.</p><div className="vault-stats"><span><b>{featured.length}</b><small>complete interactive recipes</small></span><span><b>All Styles</b><small>one unified cookbook</small></span><span><b>A–Z</b><small>recipe browsing</small></span></div></div>
+          {!selectedRecipe && <><div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>One growing Fancy Eatz cookbook for every kind of meal — family favorites, grilling, fine dining, chef techniques, desserts, pastries, seafood and more.</p><div className="vault-stats"><span><b>{featured.length}</b><small>complete interactive recipes</small></span><span><b>All Styles</b><small>one unified cookbook</small></span><span><b>A–Z</b><small>recipe browsing</small></span></div></div>
           
           <div className="cook-style-filter">
             {['All','Fancy Dining','Grill Master','Everyday Mom',"Chef's Kitchen",'Pastry Chef'].map(x=><button key={x} className={cookStyleFilter===x?'active':''} onClick={()=>setCookStyleFilter(x)}>{x}{x!=='All' && styleRecipeCounts[x] ? ` (${styleRecipeCounts[x]})` : ''}</button>)}
           </div>
+          </>}
           {displayedRecipe && <div id="full-recipe" className="panel recipe-detail" style={{marginTop:24}}>
-            {displayedRecipe.image && <div className="recipe-hero-photo" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.48)),url("${displayedRecipe.image}")`}}><span>{recipeVersion === 'classic' ? 'CLASSIC RECIPE' : 'FANCY EATZ SIGNATURE'} · Serving inspiration</span></div>}
+            {tastingPhotoPairs[selectedRecipe?.title || ''] ? <MealPhoto title={selectedRecipe?.title || ''} version={recipeVersion} className='vault-meal-photo' /> : displayedRecipe.image && <div className="recipe-hero-photo" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.48)),url("${displayedRecipe.image}")`}}><span>{recipeVersion === 'classic' ? 'CLASSIC RECIPE' : 'FANCY EATZ SIGNATURE'} · Serving inspiration</span></div>}
             <RecipeVersionSelector value={recipeVersion} onChange={setRecipeVersion} />
             <div className="section-head"><p className="eyebrow">{displayedRecipe.category || displayedRecipe.mealType}</p><h2>{displayedRecipe.title}</h2><p>{displayedRecipe.note}</p></div>
             <div className="meta"><span><Clock3 size={16}/>{displayedRecipe.time}</span>{displayedRecipe.servings && <span><Users size={16}/>{displayedRecipe.servings}</span>}</div>
@@ -959,9 +962,10 @@ export default function FancyEatz() {
               <button className="primary" onClick={()=>markCooked({title:displayedRecipe.title,description:displayedRecipe.note,ingredients:displayedRecipe.ingredients||[],steps:displayedRecipe.method||[],plating:'Serve with an elevated Fancy Eatz presentation.',cookedAt:new Date().toISOString(),source:'Recipe Vault',image:displayedRecipe.image,time:displayedRecipe.time,budget:displayedRecipe.budget})}><ChefHat size={18}/>I Made This</button>
               <button className="ghost" onClick={() => window.print()}>Print Recipe</button>
               <button className="ghost" onClick={async () => { if (navigator.share && displayedRecipe) await navigator.share({title:displayedRecipe.title,text:displayedRecipe.note,url:window.location.href}); }}>Share Recipe</button>
-              <button className="ghost" onClick={() => setSelectedRecipe(null)}>Close Recipe</button>
+              <button className="ghost" onClick={() => setSelectedRecipe(null)}>Back to Cookbook</button>
             </div>
           </div>}
+          {!selectedRecipe && <>
           <div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search chicken, steak, pasta, seafood, dessert..." /></label>
             <label>Category<select value={recipeType} onChange={e => setRecipeType(e.target.value)}><option>All</option><option>Appetizers</option><option>Entrées</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
@@ -973,6 +977,7 @@ export default function FancyEatz() {
           </div>
           {filteredRecipes.length === 0 && <div className="empty panel"><Search size={36} /><h3>No exact match yet</h3><p>Try another search, or use Pantry Chef to generate the meal you have in mind.</p></div>}
           <div className="source-note"><BookOpen size={20} /><div><b>Ultimate Collection of Seafood Recipes</b><p>The seafood collection is available as a source library alongside Fancy Eatz generated ideas.</p><a href="./resources/seafood-recipes.pdf" target="_blank" rel="noreferrer">Open source collection</a></div></div>
+          </>}
         </section>
       )}
 
@@ -1069,7 +1074,7 @@ export default function FancyEatz() {
           <div className="membership-mark"><Crown size={30}/></div>
           <p className="eyebrow">FANCY EATZ PREMIUM</p>
           <h2>Keep something delicious on the menu.</h2>
-          <p className="membership-lede">{membershipNotice || 'Join the membership launch list. Your free tasting includes 3 cards from 30, with both versions of every selected recipe.'}</p>
+          <p className="membership-lede">{membershipNotice || 'Join the membership launch list. Your free tasting includes 7 cards from 30, with both versions of every selected recipe.'}</p>
           <div className="membership-benefits">
             <span><ShieldCheck size={17}/> Photo My Fridge ingredient recognition</span>
             <span><ShieldCheck size={17}/> Pantry Chef & personalized meal ideas</span>
