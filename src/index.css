@@ -1514,3 +1514,41 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
   font-size: 14px !important;
   line-height: 1.7;
 }
+
+/* Membership tasting card must override the light homepage text palette. */
+.home-showcase .tasting-next {
+  background: #590b16;
+  color: #fff5e4;
+  min-height: 0;
+  padding: 24px;
+  gap: 20px;
+}
+.home-showcase .tasting-next h3 {
+  color: #fff5e4 !important;
+  margin: 0 0 12px;
+  font: 500 28px/1.2 Georgia, serif;
+}
+.home-showcase .tasting-next p,
+.home-showcase .tasting-next small {
+  color: #f1ddc9 !important;
+  opacity: 1 !important;
+}
+.home-showcase .tasting-next > div {
+  min-width: 0;
+}
+@media (max-width: 800px) {
+  .home-showcase .tasting-next {
+    padding: 22px;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .home-showcase .tasting-next h3 {
+    font-size: 26px;
+  }
+  .home-showcase .tasting-next .primary {
+    width: 100%;
+    white-space: normal;
+    padding: 14px 18px;
+    line-height: 1.35;
+  }
+}
