@@ -1496,3 +1496,21 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
  .page .section-head > p { line-height:1.6; }
  .result-actions { gap:12px; }
 }
+
+/* Preserve readable guide text inside the cream homepage theme. */
+.home-showcase .cooking-walkthrough p,
+.home-showcase .cooking-walkthrough small,
+.home-showcase .cooking-walkthrough h4,
+.home-showcase .cooking-walkthrough b,
+.cooking-walkthrough .walkthrough-disclosure {
+  color: #fff5e4 !important;
+  opacity: 1 !important;
+}
+.home-showcase .cooking-walkthrough .eyebrow,
+.home-showcase .cooking-walkthrough .walkthrough-version {
+  color: #e5bd77 !important;
+}
+.cooking-walkthrough .walkthrough-disclosure {
+  font-size: 14px !important;
+  line-height: 1.7;
+}
