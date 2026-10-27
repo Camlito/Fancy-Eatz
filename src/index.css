@@ -1572,3 +1572,14 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .human-chef-photo.leon{background-position:36.50% 91.62%}
 .human-chef-photo.rachel{background-position:62.91% 91.62%}
 .human-chef-photo.simone{background-position:89.68% 91.62%}
+
+/* Individual high-resolution chef portraits */
+.human-chef-photo{aspect-ratio:2/3;background-size:cover;background-position:center}
+.human-chef-photo.joy{background-image:url('/chefs/joy.webp');background-position:center}
+.human-chef-photo.oliver{background-image:url('/chefs/oliver.webp');background-position:center}
+.human-chef-photo.blaze{background-image:url('/chefs/blaze.webp');background-position:center}
+.human-chef-photo.dana{background-image:url('/chefs/dana.webp');background-position:center}
+.human-chef-photo.dom{background-image:url('/chefs/dom.webp');background-position:center}
+.human-chef-photo.leon{background-image:url('/chefs/leon.webp');background-position:center}
+.human-chef-photo.rachel{background-image:url('/chefs/rachel.webp');background-position:center}
+.human-chef-photo.simone{background-image:url('/chefs/simone.webp');background-position:center}
