@@ -76,7 +76,7 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
   onJoin: () => void;
   onAddGroceries: (ingredients: string[], title: string) => void;
 }) {
-  const collection = useMemo(() => recipes.filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 12), [recipes]);
+  const collection = useMemo(() => recipes.filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 30), [recipes]);
   const [trial, setTrial] = useState<TastingState | null>(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
@@ -140,14 +140,14 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
     document.getElementById('recipe-tasting')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   return (
-    <section id='recipe-tasting' className='recipe-tasting' aria-label='Choose three from twelve recipes'>
+    <section id='recipe-tasting' className='recipe-tasting' aria-label='Choose three from thirty recipes'>
       <div className='tasting-heading'>
-        <div><p className='eyebrow'>YOUR THREE DELICIOUS PICKS</p><h2>12 dishes to discover.<br/><em>3 favorites to make yours.</em></h2><p>Choose three recipe cards for your seven-day tasting. Every card includes Classic and Fancy Eatz Signature.</p></div>
+        <div><p className='eyebrow'>YOUR THREE DELICIOUS PICKS</p><h2>30 dishes to discover.<br/><em>3 favorites to make yours.</em></h2><p>Choose three recipe cards for your seven-day tasting. Every card includes Classic and Fancy Eatz Signature.</p></div>
         <div className='tasting-summary'><strong>{picks.length} / {pickLimit}</strong><span>recipe cards selected</span><b>{expired ? 'Tasting ended' : trial ? `${remaining} days remaining` : 'Free · No card required'}</b><small>Selections are saved in this browser. Your seven days begin with your first selection.</small></div>
       </div>
       <p className='tasting-status' role='status'>{notice || 'Browse six dishes at a time. Preview a recipe, then add the ones you love.'}</p>
       {activeRecipe && preview ? <article className='tasting-detail' aria-label='Tasting recipe detail'>
-        <button className='tasting-back' onClick={() => setPreview(null)}>← Back to the 12 tasting recipes</button>
+        <button className='tasting-back' onClick={() => setPreview(null)}>← Back to the 30 tasting recipes</button>
         <div className='tasting-detail-layout'>
           <div><MealPhoto title={preview.title} version={version} /><small className='photo-caption'>AI-created serving illustration</small></div>
           <div><RecipeVersionSelector value={version} onChange={setVersion} /><p className='eyebrow'>{activeRecipe.mealType} · {activeRecipe.time}</p><h3>{activeRecipe.title}</h3><p>{activeRecipe.note}</p><p>Servings: {activeRecipe.servings || 'See ingredients'}</p>
@@ -158,7 +158,7 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
         <div className='tasting-directions'><div><h4>Ingredients</h4><ul>{activeRecipe.ingredients?.map(item => <li key={item}>{item}</li>)}</ul></div><div><h4>Step-by-step directions</h4><ol>{activeRecipe.method?.map(step => <li key={step}>{step}</li>)}</ol>{version === 'signature' && <div className='tasting-finish'><b>Your Signature finish</b><p>{signatureRecipe(preview).finish}</p></div>}</div></div>
         <button className='primary' onClick={() => onAddGroceries(activeRecipe.ingredients || [], activeRecipe.title)}>Add Ingredients to Grocery List</button>
       </article> : <>
-        <div className='tasting-controls'><label><span>Search these 12 dishes</span><input value={query} placeholder='Chicken, pasta, dessert…' onChange={event => { setQuery(event.target.value); setPage(0); }} /></label><div className='tasting-filters' role='group' aria-label='Tasting recipe filter'>{['All', ...Array.from(new Set(collection.map(recipe => recipe.mealType))), 'My 3'].map(name => <button key={name} aria-pressed={filter === name} onClick={() => { setFilter(name); setPage(0); }}>{name}</button>)}</div></div>
+        <div className='tasting-controls'><label><span>Search these 30 dishes</span><input value={query} placeholder='Chicken, pasta, dessert…' onChange={event => { setQuery(event.target.value); setPage(0); }} /></label><div className='tasting-filters' role='group' aria-label='Tasting recipe filter'>{['All', ...Array.from(new Set(collection.map(recipe => recipe.mealType))), 'My 3'].map(name => <button key={name} aria-pressed={filter === name} onClick={() => { setFilter(name); setPage(0); }}>{name}</button>)}</div></div>
         <div className='tasting-grid'>{filtered.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map(recipe => {
           const selected = picks.includes(recipe.title);
           return <article className={`tasting-card${selected ? ' picked' : ''}`} key={recipe.title}>

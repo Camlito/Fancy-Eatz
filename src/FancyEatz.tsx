@@ -165,7 +165,7 @@ const valueRecipes: Recipe[] = [
 ];
 
 const featured: Recipe[] = [...featuredBase, ...valueRecipes, ...styleRecipeVault];
-const tastingCollection = [...valueRecipes, ...featuredBase, ...styleRecipeVault].filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 12);
+const tastingCollection = [...valueRecipes, ...featuredBase, ...styleRecipeVault].filter(recipe => recipe.ingredients?.length && recipe.method?.length).slice(0, 30);
 
 
 const basicGroceryCategories: Record<string,string[]> = {
