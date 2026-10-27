@@ -472,7 +472,7 @@ export default function FancyEatz() {
       })
       .filter(x=>x.score>0)
       .sort((a,b)=>b.score-a.score||a.r.title.localeCompare(b.r.title))
-      .slice(0,34)
+      .slice(0,11)
       .map(({r})=>({title:r.title,description:r.note,ingredients:r.ingredients||[],steps:r.method||[],plating:'Finish with a polished Fancy Eatz presentation.',missing:[],estimatedCost:r.budget,category:r.category||r.mealType} as MealChoice));
   }
 
@@ -492,7 +492,7 @@ export default function FancyEatz() {
       const avoidRule=avoidPattern[allergies];
       const sourceMatches = rankedMealChoices(pantryForRequest, mealTypeOverride ?? mealType, style, avoidRule);
       setChoiceCategory('All'); setShowAllChoices(false);
-      setMealChoices([{...primary, category:'Chef Pick'}, ...sourceMatches].slice(0,35));
+      setMealChoices([{...primary, category:'Chef Pick'}, ...sourceMatches].slice(0,12));
       navigate('pantry');
     } catch {
       const pantryItems = (pantryForRequest || '').split(',').map(x=>x.trim()).filter(Boolean);
@@ -512,7 +512,7 @@ export default function FancyEatz() {
         };
         setMeal(verifiedMeal);
         setChoiceCategory('All'); setShowAllChoices(false);
-        setMealChoices(rankedMealChoices(pantryForRequest, mealTypeOverride ?? mealType, style).slice(0,35));
+        setMealChoices(rankedMealChoices(pantryForRequest, mealTypeOverride ?? mealType, style).slice(0,12));
         setMealError('AI generation was unavailable, so Fancy Eatz loaded a complete cookbook recipe instead of showing incomplete directions.');
       } else {
         setMeal(null);
@@ -822,7 +822,7 @@ export default function FancyEatz() {
                   {mealChoices.length > 1 && <div className="choice-studio">
                     <div className="choice-heading"><div><small>MEAL DISCOVERY</small><h3>Choose Your Next Meal</h3><p>{mealChoices.length} relevant recipes available</p></div><span>Organized by the categories these recipes actually belong to.</span></div>
                     <div className="choice-categories">{['All',...Array.from(new Set(mealChoices.map(x=>x.category)))].map(cat=><button key={cat} className={choiceCategory===cat?'active':''} onClick={()=>{setChoiceCategory(cat);setShowAllChoices(false)}}>{cat}</button>)}</div>
-                    <div className="choice-scroll">{mealChoices.filter(x=>choiceCategory==='All'||x.category===choiceCategory).slice(0,showAllChoices?35:6).map((choice,i)=><button key={choice.title+i} className={choice.title===meal.title?'meal-choice active':'meal-choice'} onClick={()=>setMeal(choice)}><small>{choice.category}</small><b>{choice.title}</b><span>{choice.description}</span><strong>View Recipe →</strong></button>)}</div>
+                    <div className="choice-scroll">{mealChoices.filter(x=>choiceCategory==='All'||x.category===choiceCategory).slice(0,showAllChoices?12:6).map((choice,i)=><button key={choice.title+i} className={choice.title===meal.title?'meal-choice active':'meal-choice'} onClick={()=>setMeal(choice)}><small>{choice.category}</small><b>{choice.title}</b><span>{choice.description}</span><strong>View Recipe →</strong></button>)}</div>
                     {mealChoices.filter(x=>choiceCategory==='All'||x.category===choiceCategory).length>6&&<button className="ghost choice-more" onClick={()=>setShowAllChoices(v=>!v)}>{showAllChoices?'Show Fewer Meals':'Show More Meals'}</button>}
                     <p className="mix-note">Choose a complete recipe that fits your current meal direction, or build a custom plate below.</p>
                     <div className="component-builder">
