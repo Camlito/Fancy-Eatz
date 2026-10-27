@@ -194,11 +194,10 @@ const starterLists = {
 };
 
 const cookingStyles = [
-  {name:'Fancy Dining', desc:'Restaurant-style plating, elevated sauces and special-occasion presentation.', style:'Fine Dining', occasion:'Elegant Dinner'},
-  {name:'Grill Master', desc:'Fire-kissed meats, seafood, vegetables, burgers and backyard favorites.', style:'Grill Master', occasion:'Grill Night'},
-  {name:'Everyday Mom Cooking', desc:'Comforting, practical family meals with familiar ingredients and simpler cleanup.', style:'Everyday Family', occasion:'Family Dinner'},
-  {name:"Chef's Kitchen", desc:'Technique-driven dishes with composed sides, sauces and polished presentation.', style:"Chef's choice", occasion:'Chef Night'},
-  {name:"Pastry Chef", desc:'Cakes, pies, tarts, cookies, pastries and elegant plated desserts.', style:'Elegant Dessert', occasion:'Dessert Night'}
+  {name:'Mama Joy', specialty:'Everyday Mom Chef', desc:'Family favorites, quick meals and budget-friendly ideas.', style:'Comfort food', occasion:'Family Dinner', position:'joy'},
+  {name:'Chef Luxe', specialty:'Fancy Dining Chef', desc:'Fine dining, gourmet meals and elegant presentation.', style:'Fine Dining', occasion:'Elegant Dinner', position:'luxe'},
+  {name:'Chef Blaze', specialty:'Grill Master Chef', desc:'Grilling, barbecue and bold flavors.', style:'Grill Master', occasion:'Grill Night', position:'blaze'},
+  {name:'Chef Sweet', specialty:'Pastry Chef', desc:'Cakes, pastries and desserts.', style:'Elegant Dessert', occasion:'Dessert Night', position:'sweet'}
 ];
 
 const moods = ['Date Night at Home', 'Southern Luxe', 'Under $25', '20-Minute Fancy', 'Seafood Night', 'Sunday Family Table', 'Healthy but Fancy', 'Girls Night In'];
@@ -662,7 +661,7 @@ export default function FancyEatz() {
         <button className="brand brand-logo-button" onClick={() => navigate('home')} aria-label="Fancy Eatz home"><img className='official-brand-logo' src='/fancy-eatz-logo.webp' alt='Fancy Eatz' /><span className="luxe-brand-name">FANCY EATZ<small>Elevate Every Bite</small></span></button>
         <nav className="main-nav">
           <button onClick={() => navigate('home')}><House size={19}/> <span>Home</span></button>
-          <div className="nav-dropdown"><button className={mobileMenu==='cook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cook'?'':'cook')}><ChefHat size={19}/> <span>Cook</span> <small>▾</small></button>{mobileMenu==='cook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('pantry')}}>Pantry Chef</button><button onClick={()=>{setMobileMenu('');navigate('photo')}}>Photo My Fridge</button><button onClick={()=>{setMobileMenu('');navigate('leftovers')}}>Leftovers → Luxury</button><button onClick={()=>{setMobileMenu('');navigate('ideas')}}>Meal Ideas</button><button onClick={()=>{setMobileMenu('');navigate('styles')}}>Cooking Styles</button></div>}</div>
+          <div className="nav-dropdown"><button className={mobileMenu==='cook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cook'?'':'cook')}><ChefHat size={19}/> <span>Cook</span> <small>▾</small></button>{mobileMenu==='cook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('pantry')}}>Pantry Chef</button><button onClick={()=>{setMobileMenu('');navigate('photo')}}>Photo My Fridge</button><button onClick={()=>{setMobileMenu('');navigate('leftovers')}}>Leftovers → Luxury</button><button onClick={()=>{setMobileMenu('');navigate('ideas')}}>Meal Ideas</button><button onClick={()=>{setMobileMenu('');navigate('styles')}}>Meet Your AI Chefs</button></div>}</div>
           <div className="nav-dropdown"><button className={mobileMenu==='explore'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='explore'?'':'explore')}><Compass size={19}/> <span>Explore</span> <small>▾</small></button>{mobileMenu==='explore'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('experience')}}>Dining Experience</button><button onClick={()=>{setMobileMenu('');navigate('planner')}}>Weekly Planner</button><button onClick={()=>{setMobileMenu('');navigate('grocery')}}>Grocery Lists</button><button onClick={()=>{setMobileMenu('');navigate('grill')}}>Grill Master</button><button onClick={()=>{setMobileMenu('');navigate('desserts')}}>Desserts</button><button onClick={()=>{setMobileMenu('');navigate('drinks')}}>Drinks</button></div>}</div>
           <div className="nav-dropdown"><button className={mobileMenu==='cookbook'?'nav-trigger active':'nav-trigger'} onClick={()=>setMobileMenu(v=>v==='cookbook'?'':'cookbook')}><BookOpen size={19}/> <span>Cookbook</span> <small>▾</small></button>{mobileMenu==='cookbook'&&<div className="nav-menu"><button onClick={()=>{setMobileMenu('');navigate('recipes')}}>A–Z Recipe Vault</button><button onClick={()=>{setMobileMenu('');navigate('favorites')}}>My Fancy Cookbook</button></div>}</div>
         </nav>
@@ -692,6 +691,7 @@ export default function FancyEatz() {
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"></div>
           </div>
+          <section className="chef-invite"><div><small>YOUR KITCHEN, YOUR STYLE</small><h2>Meet your Fancy Eatz chefs</h2><p>Choose a cooking companion for family favorites, fine dining, grilling or desserts.</p></div><button className="primary" onClick={()=>navigate('styles')}>Meet Your AI Chefs →</button></section>
           <RecipeTasting recipes={tastingCollection} onAddGroceries={addItems} onJoin={() => openMembership('Keep the inspiration coming. Join our membership launch list.')} />
           <section className="luxe-kitchen"><p className="eyebrow">USE WHAT YOU HAVE</p><h2>What’s in your kitchen?</h2><p>Add your ingredients to explore meal ideas.</p><form onSubmit={e=>{e.preventDefault();navigate('pantry')}}><label className="search-box"><Search size={20}/><input aria-label="Ingredients in your kitchen" value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="Chicken, spinach, rice…"/></label><button className="primary" type="submit">Generate Meal Ideas</button></form><div className="luxe-categories">{['Breakfast','Lunch','Dinner','Desserts'].map(x=><button key={x} onClick={()=>{if(x==='Desserts')navigate('desserts');else{setMealType(x);navigate('ideas')}}}>{x}</button>)}</div></section>
           {!onboarded&&!showOnboarding&&<section className="onboarding-invite"><div><p className="eyebrow">PERSONALIZE FANCY EATZ</p><h2>Want better picks from the start?</h2><p>Answer a few quick kitchen questions and tailor the experience to your household.</p></div><button className="primary" onClick={()=>setShowOnboarding(true)}>Personalize My Kitchen →</button></section>}
@@ -978,13 +978,13 @@ export default function FancyEatz() {
 
       {tab === 'styles' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">COOK YOUR WAY</p><h2>Choose Your Cooking Style</h2><p>Pick the kind of cook you want Fancy Eatz to become, then use what you already have to build the meal.</p></div>
-          <div className="style-grid">
-            {cookingStyles.map(x=><button className="style-card" key={x.name} onClick={()=>{setStyle(x.style);setOccasion(x.occasion);setMealType(x.name==='Pastry Chef'?'Dessert':'Dinner');setPantry('');navigate('pantry')}}>
-              <small>{x.name==='Pastry Chef'?'BAKE & CREATE':x.name==='Grill Master'?'FIRE & SMOKE':x.name==='Everyday Mom Cooking'?'FAMILY FAVORITES':'ELEVATED COOKING'}</small>
-              <h3>{x.name}</h3><p>{x.desc}</p><strong>Cook this style →</strong>
+          <div className="section-head"><p className="eyebrow">MEET YOUR FANCY EATZ CHEFS</p><h2>Choose your cooking companion.</h2><p>Meet our human-style AI chef characters. Choose a specialty to start creating a meal with Pantry Chef.</p></div>
+          <div className="human-chef-grid">
+            {cookingStyles.map(x=><button className="human-chef-card" key={x.name} onClick={()=>{setStyle(x.style);setOccasion(x.occasion);setMealType(x.name==='Chef Sweet'?'Dessert':'Dinner');setPantry('');navigate('pantry')}}>
+              <span className={'human-chef-photo '+x.position} role="img" aria-label={x.name+' AI character portrait'} />
+              <span className="human-chef-copy"><small>{x.specialty}</small><b>{x.name}</b><span>{x.desc}</span><strong>Cook with {x.name} →</strong></span>
             </button>)}
-          </div>
+          </div><p className="human-chef-note">AI-created characters · Choose a chef to set your cooking style.</p>
         </section>
       )}
 
