@@ -194,10 +194,14 @@ const starterLists = {
 };
 
 const cookingStyles = [
-  {name:'Mama Joy', specialty:'Everyday Mom Chef', desc:'Family favorites, quick meals and budget-friendly ideas.', style:'Comfort food', occasion:'Family Dinner', position:'joy'},
-  {name:'Chef Luxe', specialty:'Fancy Dining Chef', desc:'Fine dining, gourmet meals and elegant presentation.', style:'Fine Dining', occasion:'Elegant Dinner', position:'luxe'},
-  {name:'Chef Blaze', specialty:'Grill Master Chef', desc:'Grilling, barbecue and bold flavors.', style:'Grill Master', occasion:'Grill Night', position:'blaze'},
-  {name:'Chef Sweet', specialty:'Pastry Chef', desc:'Cakes, pastries and desserts.', style:'Elegant Dessert', occasion:'Dessert Night', position:'sweet'}
+ {name:'Joy',specialty:'Home Cook',desc:'Comforting family meals made simple.',style:'Comfort food',occasion:'Family Dinner',position:'joy'},
+ {name:'Chef Oliver',specialty:'Fancy Dining',desc:'Elegant restaurant-style meals at home.',style:'Fine Dining',occasion:'Elegant Dinner',position:'oliver'},
+ {name:'Chef Blaze',specialty:'Grill Master',desc:'Grilling, smoking and bold flavors.',style:'Grill Master',occasion:'Grill Night',position:'blaze'},
+ {name:'Chef Dana',specialty:'Pastry Chef',desc:'Cakes, pastries and desserts.',style:'Elegant Dessert',occasion:'Dessert Night',position:'dana'},
+ {name:'Chef Dom',specialty:'International Kitchen',desc:'Global flavors and modern favorites.',style:'International',occasion:'Dinner',position:'dom'},
+ {name:'Chef Leon',specialty:'Seafood Kitchen',desc:'Fresh seafood from coast to table.',style:'Seafood-forward',occasion:'Seafood Night',position:'leon'},
+ {name:'Chef Rachel',specialty:'Healthy & Plant-Based',desc:'Nutritious meals for a balanced lifestyle.',style:'Fresh & light',occasion:'Healthy Dinner',position:'rachel'},
+ {name:'Chef Simone',specialty:'Southern Comfort',desc:'Traditional and modern Southern dishes.',style:'Southern upscale',occasion:'Family Dinner',position:'simone'}
 ];
 
 const moods = ['Date Night at Home', 'Southern Luxe', 'Under $25', '20-Minute Fancy', 'Seafood Night', 'Sunday Family Table', 'Healthy but Fancy', 'Girls Night In'];
@@ -980,7 +984,7 @@ export default function FancyEatz() {
         <section className="page">
           <div className="section-head"><p className="eyebrow">MEET YOUR FANCY EATZ CHEFS</p><h2>Choose your cooking companion.</h2><p>Meet our human-style AI chef characters. Choose a specialty to start creating a meal with Pantry Chef.</p></div>
           <div className="human-chef-grid">
-            {cookingStyles.map(x=><button className="human-chef-card" key={x.name} onClick={()=>{setStyle(x.style);setOccasion(x.occasion);setMealType(x.name==='Chef Sweet'?'Dessert':'Dinner');setPantry('');navigate('pantry')}}>
+            {cookingStyles.map(x=><button className="human-chef-card" key={x.name} onClick={()=>{setStyle(x.style);setOccasion(x.occasion);setMealType(x.name==='Chef Dana'?'Dessert':'Dinner');setPantry('');navigate('pantry')}}>
               <span className={'human-chef-photo '+x.position} role="img" aria-label={x.name+' AI character portrait'} />
               <span className="human-chef-copy"><small>{x.specialty}</small><b>{x.name}</b><span>{x.desc}</span><strong>Cook with {x.name} →</strong></span>
             </button>)}

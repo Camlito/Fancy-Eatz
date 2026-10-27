@@ -1561,3 +1561,14 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .human-chef-photo.joy{background-position:1.21% 21.27%}.human-chef-photo.luxe{background-position:15.04% 21.27%}.human-chef-photo.blaze{background-position:28.87% 21.27%}.human-chef-photo.sweet{background-position:42.70% 21.27%}
 .human-chef-copy{display:flex;flex-direction:column;gap:9px;padding:20px;line-height:1.5}.human-chef-copy small{color:#e8c785;letter-spacing:.06em}.human-chef-copy b{font:27px Georgia;color:#fff5e4}.human-chef-copy strong{color:#edc975}.human-chef-note{color:#cdbba4;font-size:13px;margin-top:20px}
 @media(max-width:800px){.human-chef-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.human-chef-copy{padding:14px}.human-chef-copy b{font-size:22px}.human-chef-copy span{font-size:13px}.chef-invite{margin:20px 16px;flex-direction:column;align-items:stretch;padding:22px}.chef-invite button{width:100%}}
+
+/* Lisa's human-style chef collection */
+.human-chef-photo{aspect-ratio:247/216;background-image:url('/images/lisa-human-chefs.jpeg');background-size:488.26% auto}
+.human-chef-photo.joy{background-position:9.49% 40.64%}
+.human-chef-photo.oliver{background-position:36.50% 40.64%}
+.human-chef-photo.blaze{background-position:62.91% 40.64%}
+.human-chef-photo.dana{background-position:89.68% 40.64%}
+.human-chef-photo.dom{background-position:9.49% 91.62%}
+.human-chef-photo.leon{background-position:36.50% 91.62%}
+.human-chef-photo.rachel{background-position:62.91% 91.62%}
+.human-chef-photo.simone{background-position:89.68% 91.62%}
