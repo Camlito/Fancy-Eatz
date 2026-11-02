@@ -1688,3 +1688,14 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 /* Recipe-card affordance on all interactive cookbook meals. */
 .mini-recipe-card-label{margin:10px 0 6px;color:#e2b968;font:700 11px/1.4 Georgia,serif;letter-spacing:.08em;overflow-wrap:anywhere}
 .chef-picked-recipes .recipe-card .ghost,.recipe-card .ghost{min-height:46px!important;white-space:normal!important;line-height:1.25!important}
+
+/* Premium step-by-step cooking lesson for meals without a produced video. */
+.guided-cook-mode{margin:24px 0;padding:20px;background:#fff4df;border:2px solid #d6aa59;border-radius:20px;color:#461222}
+.guided-cook-mode .walkthrough-intro{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.guided-cook-mode .walkthrough-intro h4{font:700 clamp(24px,4vw,36px) Georgia,serif;color:#59162b;margin:8px 0}
+.guided-cook-panel{margin-top:18px;padding:18px;background:#fffaf0;border-radius:16px;border:1px solid #d5b576}
+.guided-step-content{display:flex;align-items:flex-start;gap:18px;margin:18px 0;padding:22px;background:#60132a;border-radius:16px;color:#fff5dc;font-size:clamp(17px,2.5vw,22px);line-height:1.55}
+.guided-step-number{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:50%;background:#dfb86d;color:#3d1020;font-weight:800}
+.guided-step-content p{margin:0}.guided-progress{height:9px;background:#e7d5b5;border-radius:30px;overflow:hidden}.guided-progress span{display:block;height:100%;background:#9a4b45;transition:width .2s}
+.guided-cook-mode .walkthrough-transport{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.guided-cook-mode .walkthrough-transport button{flex:1;min-width:110px;min-height:48px;background:#60132a;color:#fff4dd;border:1px solid #d6ad67;border-radius:12px;font-weight:700}.guided-cook-mode .walkthrough-transport button:disabled{opacity:.45}
+@media(max-width:600px){.guided-cook-mode{padding:12px}.guided-cook-panel{padding:12px}.guided-step-content{padding:16px;gap:10px}.guided-step-number{flex-basis:34px;height:34px}}
