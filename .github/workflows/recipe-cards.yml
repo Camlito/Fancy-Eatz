@@ -1,4 +1,4 @@
-name: Publish Lisa recipe cards
+name: Correct Lisa recipe card banner text
 on:
   push:
     paths:
@@ -7,29 +7,46 @@ on:
 permissions:
   contents: write
 jobs:
-  publish:
+  correct:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install image converter
-        run: pip install pymupdf gdown
-      - name: Retrieve original cookbook
-        run: gdown --fuzzy 'https://drive.google.com/file/d/1FdEh8jvzhyfwXVgxwOUzZ69UTmlGCdp5/view' -O /tmp/recipes.pdf
-      - name: Export matching card images
+      - name: Install imaging library
+        run: python -m pip install Pillow
+      - name: Correct banner lettering on all original cards
         run: |
           python - <<'PY'
-          import fitz
+          from PIL import Image, ImageDraw, ImageFont
           from pathlib import Path
-          pdf=fitz.open('/tmp/recipes.pdf')
-          assert len(pdf)==95
-          out=Path('public/recipe-cards')
-          out.mkdir(parents=True,exist_ok=True)
-          for i,page in enumerate(pdf,1):
-              page.get_pixmap(matrix=fitz.Matrix(1.2,1.2)).save(str(out/f'recipe-card-{i:03d}.jpg'),jpg_quality=75)
+          files=sorted(Path('public/recipe-cards').glob('recipe-card-*.jpg'))
+          assert len(files)==95, f'Expected 95 cards; found {len(files)}'
+          fontfile='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf'
+          for file in files:
+              im=Image.open(file).convert('RGB')
+              w,h=im.size
+              draw=ImageDraw.Draw(im)
+              # Restore a consistent right-hand header, preserving the original food images,
+              # center Fancy Eatz seal, and all recipe text below the banner.
+              left=int(w*.565); right=int(w*.855)
+              top=int(h*.012); bottom=int(h*.040)
+              fill=(67,5,13)
+              draw.rectangle((left,top,right,bottom),fill=fill)
+              size=max(9,int(w*.024))
+              font=ImageFont.truetype(fontfile,size)
+              label='MADE DELICIOUS'
+              while draw.textbbox((0,0),label,font=font)[2]>right-left-8 and size>8:
+                  size-=1
+                  font=ImageFont.truetype(fontfile,size)
+              bounds=draw.textbbox((0,0),label,font=font)
+              x=(left+right-(bounds[2]-bounds[0]))/2
+              y=(top+bottom-(bounds[3]-bounds[1]))/2-bounds[1]
+              draw.text((x,y),label,fill=(255,245,225),font=font)
+              im.save(file,quality=90,optimize=True)
+          print('Corrected MADE DELICIOUS on',len(files),'cards')
           PY
-      - name: Save recipe card images
+      - name: Publish corrected cards
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/recipe-cards
-          git diff --cached --quiet || (git commit -m "Add Lisa original 95 recipe cards" && git push)
+          git diff --cached --quiet || (git commit -m "Correct MADE DELICIOUS on all 95 original cards" && git push)
