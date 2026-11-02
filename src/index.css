@@ -1619,3 +1619,8 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .walkthrough-text-steps ol{margin:12px 0 0;padding-left:24px}
 .walkthrough-text-steps li{padding:8px 0;line-height:1.55}
 .walkthrough-text-steps li p{margin:6px 0 0;line-height:1.65;color:#fff5e4}
+
+/* Chef-led cookbook browsing */
+.chef-recipe-banner{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:20px 24px;margin:18px 0 22px;border:1px solid #c9a36e;border-radius:16px;background:#fff8ed;color:#521324}
+.chef-recipe-banner>div{flex:1 1 250px}.chef-recipe-banner small{font-weight:700;letter-spacing:.1em}.chef-recipe-banner h3{font:500 27px/1.2 Georgia,serif;margin:7px 0}.chef-recipe-banner p{margin:0;line-height:1.5}.chef-recipe-banner button{min-height:44px;white-space:normal}
+@media(max-width:600px){.chef-recipe-banner{padding:18px}.chef-recipe-banner button{flex:1 1 100%}}
