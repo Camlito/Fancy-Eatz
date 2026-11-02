@@ -8,20 +8,20 @@ export default function LisaRecipeCollection({chef}:{chef?:string|null}) {
 
  const chefWords:Record<string,RegExp>={Joy:/chicken|potato|macaroni|pasta|casserole|beans|spaghetti|ziti|soup|hamburger|meatball|lasagna|cornbread|pudding/i,'Chef Oliver':/steak|lamb|lobster|halibut|cod|cornish|scallop|gourmet|ziti|souffl|rigatoni/i,'Chef Blaze':/barbecue|rib|steak|hamburger|pulled pork|grill|wings|pork chop/i,'Chef Dana':/pie|pudding|cake|muffin|turnover|cookie|cinnamon|cobbler|scone|ice cream|strawberry|chocolate/i,'Chef Dom':/taco|enchilada|quesadilla|rice|pasta|ziti|lasagna|manicotti|shell|spaghetti|pizza|rigatoni|alfredo/i,'Chef Leon':/crab|shrimp|seafood|fish|catfish|cod|halibut|lobster|tuna/i,'Chef Rachel':/salad|zucchini|cauliflower|squash|beans|greens|cabbage|brussels|vegetable|fruit/i,'Chef Simone':/southern|cornbread|fried|pudding|collard|beans|macaroni|dressing|cabbage|oxtail|sweet potato|biscuits/i};
  const matches=useMemo(()=>titles.map((title,index)=>({title,index})).filter(x=>x.title.toLowerCase().includes(query.trim().toLowerCase())&&(!chef||showAll||chefWords[chef]?.test(x.title))),[query,chef,showAll]);
- return <section className="panel" className='lisa-recipe-collection' style={{margin:'24px 0',padding:18,borderRadius:20}}>
+ return <section className="panel lisa-recipe-collection" style={{margin:'24px 0',padding:18,borderRadius:20}}>
   <p className="eyebrow">LISA'S ORIGINAL RECIPE COLLECTION</p>
   <h2>Classic & Signature Recipe Cards</h2>
-  <p>Browse Lisa's 95 original illustrated recipe-card pages. Most cards feature two ways to cook a dish: Classic and Fancy Eatz Signature. Open a card to read its original ingredients, directions and food photography.</p>
+  <p>Browse Lisa's 95 original illustrated recipe-card pages. Most cards feature two ways to cook a dish: Classic and Fancy Eatz Signature. Select a recipe to view its illustrated Classic and Signature card when available.</p>
   <label style={{display:'block',margin:'18px 0'}}><span style={{display:'block',marginBottom:6}}>Search Lisa's recipe cards</span><input style={{width:'100%',padding:12,borderRadius:10}} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search apple pie, chicken, seafood, desserts..." /></label>
   <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap',marginBottom:12}}><p style={{margin:0}}>{matches.length} matching recipe-card pages{chef&&!showAll ? ' for '+chef : ''}</p>{chef&&<button type='button' onClick={()=>{setShowAll(v=>!v);setSelected(null)}}>{showAll?'Show Chef Picks':'Browse All 95 Cards'}</button>}</div>
-  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(190px,1fr))',gap:10,maxHeight:340,overflowY:'auto',padding:'4px 0'}}>
+  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(190px,1fr))',gap:10,padding:'4px 0'}}>
    {matches.map(({title,index})=><button key={index} type="button" onClick={()=>{setSelected(index);setTimeout(()=>document.getElementById('lisa-card-preview')?.scrollIntoView({behavior:'smooth',block:'start'}),40)}} style={{textAlign:'left',padding:14,borderRadius:12,border:'1px solid #c9b8a1',background:selected===index?'#fff0d9':'transparent',color:selected===index?'#30211c':'inherit',cursor:'pointer'}}><strong>{title}</strong><span style={{display:'block',fontSize:12,opacity:.75,marginTop:5}}>Card {index+1} · Classic + Signature</span></button>)}
   </div>
   {selected!==null&&<div id='lisa-card-preview' style={{marginTop:24,scrollMarginTop:100}}>
    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,flexWrap:'wrap'}}><h3 style={{margin:0}}>{titles[selected]}</h3><button type="button" onClick={()=>setSelected(null)}>Close recipe</button></div>
    <p>Lisa's original {titles[selected]} illustrated recipe card — Classic and Signature versions.</p>
    {!missingCards.includes(selected) && <img className="lisa-individual-card" key={selected} src={'/recipe-cards/recipe-card-'+String(selected+1).padStart(3,'0')+'.jpg'} alt={titles[selected]+' illustrated Classic and Signature recipe card'} loading="lazy" onError={()=>setMissingCards(previous=>previous.includes(selected)?previous:[...previous,selected])}/>}
-   {missingCards.includes(selected) && <p className="lisa-page-note" role="status">The individual picture card for {titles[selected]} has not been published yet.</p>}
+   {missingCards.includes(selected) && <p className="lisa-page-note" role="status">This picture card is temporarily unavailable. We will not show a different meal or the complete cookbook in its place.</p>}
   </div>}
  </section>;
 }
