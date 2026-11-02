@@ -10,6 +10,7 @@ export default function CookingWalkthrough({ title, version }: {
   const [expanded, setExpanded] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [error, setError] = useState('');
+  const [showCaptions, setShowCaptions] = useState(false);
   if (!guide) return null;
 
   async function playStep(index: number) {
@@ -52,7 +53,7 @@ export default function CookingWalkthrough({ title, version }: {
             const index = guide.steps.findIndex(step => currentTime >= step.start && currentTime < step.end);
             if (index >= 0) setActiveStep(index);
           }}
-          onError={() => setError('This video could not load. Use the illustrated chapter captions below or the full written recipe.')}>
+          onError={() => { setError('This video could not load. Use the illustrated chapter captions below or the full written recipe.'); setShowCaptions(true); }}>
           <source src={guide.src} type='video/mp4' />
           <track kind='captions' src={guide.captions} srcLang='en' label='English captions' />
           Your browser does not support video playback. Use the written steps below.
@@ -67,7 +68,7 @@ export default function CookingWalkthrough({ title, version }: {
         </div>
         <div className='walkthrough-chapters' role='group' aria-label='Cooking video chapters'>{guide.steps.map((step, index) => <button type='button' key={step.label} aria-pressed={activeStep === index} onClick={() => playStep(index)}><span>{index + 1}</span>{step.label}</button>)}</div>
         {error && <p className='walkthrough-error' role='status'>{error}</p>}
-        <details className='walkthrough-text-steps' open={Boolean(error)}>
+        <details className='walkthrough-text-steps' open={showCaptions} onToggle={event => setShowCaptions(event.currentTarget.open)}>
           <summary>Read all {guide.steps.length} illustrated-guide captions</summary>
           <ol>{guide.steps.map(step => <li key={step.label}><strong>{step.label}</strong><p>{step.caption}</p></li>)}</ol>
         </details>
