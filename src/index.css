@@ -1641,3 +1641,12 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .recipe-collection-switch button.active{background:#fff;color:#392c24;box-shadow:0 2px 12px rgba(45,30,15,.12)}
 .recipe-collection-switch button:focus-visible{outline:3px solid #a26d38;outline-offset:2px}
 @media(max-width:600px){.recipe-collection-switch{position:sticky;top:0;z-index:5;box-shadow:0 5px 14px rgba(30,20,10,.08)}.recipe-collection-switch button{min-width:0;padding:12px 8px;font-size:.9rem}}
+
+/* Lisa cookbook mobile readability and navigation */
+.lisa-recipe-collection{min-width:0;overflow-wrap:anywhere;scroll-margin-top:92px}
+.lisa-recipe-collection input{box-sizing:border-box;max-width:100%;min-width:0}
+.lisa-recipe-collection button{color:inherit}
+.lisa-recipe-collection button:focus-visible{outline:3px solid #d49a5b;outline-offset:2px}
+.lisa-open-original{display:inline-flex;align-items:center;justify-content:center;padding:13px 18px;background:#fff0d9;color:#30211c!important;border-radius:12px;font-weight:700;text-decoration:none;margin:8px 0}
+.lisa-page-note{font-size:.88rem;opacity:.8;line-height:1.5}
+@media(max-width:600px){.recipe-collection-switch{position:relative;top:auto;z-index:auto}.lisa-recipe-collection{padding:14px!important}.lisa-recipe-collection h2{font-size:clamp(1.3rem,5vw,1.8rem);line-height:1.2}.lisa-recipe-collection input{font-size:16px}}
