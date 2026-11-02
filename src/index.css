@@ -1701,3 +1701,11 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 @media(max-width:600px){.guided-cook-mode{padding:12px}.guided-cook-panel{padding:12px}.guided-step-content{padding:16px;gap:10px}.guided-step-number{flex-basis:34px;height:34px}}
 
 .recipe-guided-lesson{background:#fff5e3;color:#461523;border:2px solid #dfb665;border-radius:16px;padding:clamp(14px,3vw,26px);margin:18px 0}.recipe-guided-lesson h4{font:700 clamp(24px,4vw,34px) Georgia,serif;color:#5b1023;margin:10px 0}.recipe-guided-lesson .recipe-guided-instruction{font-size:clamp(17px,2.3vw,23px);line-height:1.6;color:#381622}.recipe-guided-lesson .walkthrough-transport{display:flex;flex-wrap:wrap;gap:8px}.recipe-guided-lesson .walkthrough-transport button{flex:1;min-width:90px;min-height:48px;background:#5b1023;color:#fff2d7;border:1px solid #b98a4e;border-radius:12px;font-weight:700}.recipe-guided-lesson .walkthrough-transport button:disabled{opacity:.4}.recipe-guided-lesson .walkthrough-disclosure{color:#684b43!important}
+
+/* Original illustrated instructions: guided, zoomable card steps for all 95 Lisa recipes. */
+.original-card-step-view{margin:18px 0;padding:12px;background:#fffaf1;border:1px solid #d4b678;border-radius:14px;color:#452020}
+.original-card-step-image{position:relative;overflow:hidden;width:100%;height:clamp(230px,60vw,450px);border-radius:10px;background:#4b1222}
+.original-card-step-image img{display:block;width:100%;height:100%;object-fit:contain;transition:transform .3s ease,transform-origin .3s ease}
+.original-card-step-view p{font-size:14px;line-height:1.5;margin:10px 4px 2px;color:#56362f}
+.lisa-recipe-collection button{max-width:100%;overflow-wrap:anywhere}
+.lisa-recipe-collection button:not(.primary){color:#421927;background:#fff6e8;border:1px solid #c6a56c}
