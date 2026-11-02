@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 const titles = ["Apple Pie","Apple Turnovers","Bacon, Sausage & Ham Omelet","Baked Banana Pudding","Baked Beans","Baked Macaroni & Cheese","Baked Pork Chops","Baked Spaghetti","Baked White Rice, Early Peas & Cheese","Baked Ziti","Baked Zucchini","Banana Pudding","Barbecue Ribs","Beef Steak","Beef Stew","Beef Tacos","Black-Eyed Peas","Blueberry Muffins","Blueberry Pancakes","Breakfast Quiche","Brussels Sprouts","Butter Beans","Cauliflower","Chicken Alfredo","Chicken Noodle Soup","Chicken Pot Pie","Chicken Salad","Chili","Chocolate Cake","Chocolate Covered Strawberries","Cinnamon Rolls","Cod Fish","Coleslaw","Collard Greens with Ham Hocks","Cookie Brownie","Corn Stuffed Cornbread","Corn with Butter Sauce","Cornbread Dressing","Cornish Hen","Crab Legs","Crab Salad","Deviled Eggs","Enchiladas","French Toast","Fried Catfish","Fried Chicken","Fruit Salad","Gourmet Butter","Gourmet Popcorn","Ground Beef Vegetable Soup","Halibut","Hamburger","Homemade Biscuits","Homemade Ice Cream","Honey Baked Ham","Hush Puppies","Jumbo Stuffed Shells","Lamb Chops","Lasagna","Lemon Meringue Cheesecake","Lemon Pepper Wings","Liver and Onions","Lobster Tails","Manicotti","Meat Lovers Pizza","Meatballs","Oxtail","Pasta Salad","Peach Cobbler","Potato Soufflé","Pound Cake","Pulled Pork","Quesadillas","Rib Tips","Rice & Peas Casserole","Rigatoni","Roasted Turkey","Scalloped Potatoes","Scones","Seafood Boil","Shrimp Fried Rice","Southern Cabbage","Southern Green Beans","Southern Style Dressing","Spaghetti","Spinach Salad","Squash","Squash Casserole","Strawberry Pancakes","Street Corn","Stuffed Peppers","Sweet Potato Casserole","Sweet Potato Pie","Sweet Potato Soufflé","Tuna Salad"];
-const cookbookUrl = 'https://drive.google.com/file/d/1FdEh8jvzhyfwXVgxwOUzZ69UTmlGCdp5/view';
 export default function LisaRecipeCollection({chef}:{chef?:string|null}) {
  const [query,setQuery]=useState('');
  const [selected,setSelected]=useState<number|null>(null);
@@ -19,10 +18,8 @@ export default function LisaRecipeCollection({chef}:{chef?:string|null}) {
   </div>
   {selected!==null&&<div id='lisa-card-preview' style={{marginTop:24,scrollMarginTop:100}}>
    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,flexWrap:'wrap'}}><h3 style={{margin:0}}>{titles[selected]}</h3><button type="button" onClick={()=>setSelected(null)}>Close recipe</button></div>
-   <p><strong>{titles[selected]}</strong> is on page <strong>{selected+1}</strong> of Lisa's original cookbook. Open the cookbook and go to that page to see the matching food photos, Classic ingredients and Signature directions.</p>
-   <div className='lisa-book-viewer'><p><strong>Original illustrated recipe cards</strong> · The viewer begins at page 1. Navigate to page {selected+1} to see <strong>{titles[selected]}</strong> and its matching photos, ingredients and instructions.</p><iframe key='original-lisa-cookbook' title='Lisa original illustrated recipe cards' src='https://drive.google.com/file/d/1FdEh8jvzhyfwXVgxwOUzZ69UTmlGCdp5/preview' loading='lazy' style={{width:'100%',height:'min(75vh,740px)',border:'1px solid #c9b8a1',borderRadius:12}} /></div>
-   <p><a href={cookbookUrl} target='_blank' rel='noreferrer'>Open full illustrated cookbook in Google Drive ↗</a></p>
-   <p className='lisa-page-note'>The full illustrated cookbook is restored below. Its Google Drive viewer cannot reliably jump to the selected page automatically.</p>
+   <p><strong>{titles[selected]}</strong> is on page <strong>{selected+1}</strong> of Lisa's original cookbook. Its matching illustrated card will appear here once published.</p>
+   <p className='lisa-page-note' role='status'>The individual illustrated card for {titles[selected]} is being prepared. The full cookbook is not available to customers on this page.</p>
   </div>}
  </section>;
 }
