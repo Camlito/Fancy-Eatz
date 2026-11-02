@@ -1650,3 +1650,11 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .lisa-open-original{display:inline-flex;align-items:center;justify-content:center;padding:13px 18px;background:#fff0d9;color:#30211c!important;border-radius:12px;font-weight:700;text-decoration:none;margin:8px 0}
 .lisa-page-note{font-size:.88rem;opacity:.8;line-height:1.5}
 @media(max-width:600px){.recipe-collection-switch{position:relative;top:auto;z-index:auto}.lisa-recipe-collection{padding:14px!important}.lisa-recipe-collection h2{font-size:clamp(1.3rem,5vw,1.8rem);line-height:1.2}.lisa-recipe-collection input{font-size:16px}}
+
+/* Global image framing repair: avoid clipping logos, banners and recipe photography */
+.official-brand-logo{display:block!important;width:auto!important;max-width:100%!important;height:auto!important;max-height:90px!important;object-fit:contain!important;object-position:center!important}
+.brand-logo-button{min-width:0!important;max-width:100%!important;overflow:visible!important}
+.brand-logo-button .official-brand-logo{flex-shrink:1!important}
+.hero-food-photo,.recipe-hero-photo,.food-art,.home-recipe-card>div:first-child{background-position:center center!important;background-repeat:no-repeat!important}
+.lisa-individual-card{display:block;width:100%;max-width:100%;height:auto;object-fit:contain;border-radius:12px;margin:16px auto}
+@media(max-width:600px){.topbar{max-width:100vw!important;box-sizing:border-box!important}.official-brand-logo{max-height:66px!important;max-width:min(100%,230px)!important}.brand-logo-button{min-width:0!important}.reference-hero .hero-food-photo{background-position:center center!important;min-height:230px!important}.lisa-recipe-collection{padding:14px!important}.lisa-individual-card{width:100%!important;height:auto!important}}
