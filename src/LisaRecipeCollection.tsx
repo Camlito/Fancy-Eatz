@@ -3,6 +3,7 @@ const titles = ["Apple Pie","Apple Turnovers","Bacon, Sausage & Ham Omelet","Bak
 export default function LisaRecipeCollection({chef}:{chef?:string|null}) {
  const [query,setQuery]=useState('');
  const [selected,setSelected]=useState<number|null>(null);
+ const [missingCards,setMissingCards]=useState<number[]>([]);
  const [showAll,setShowAll]=useState(false);
 
  const chefWords:Record<string,RegExp>={Joy:/chicken|potato|macaroni|pasta|casserole|beans|spaghetti|ziti|soup|hamburger|meatball|lasagna|cornbread|pudding/i,'Chef Oliver':/steak|lamb|lobster|halibut|cod|cornish|scallop|gourmet|ziti|souffl|rigatoni/i,'Chef Blaze':/barbecue|rib|steak|hamburger|pulled pork|grill|wings|pork chop/i,'Chef Dana':/pie|pudding|cake|muffin|turnover|cookie|cinnamon|cobbler|scone|ice cream|strawberry|chocolate/i,'Chef Dom':/taco|enchilada|quesadilla|rice|pasta|ziti|lasagna|manicotti|shell|spaghetti|pizza|rigatoni|alfredo/i,'Chef Leon':/crab|shrimp|seafood|fish|catfish|cod|halibut|lobster|tuna/i,'Chef Rachel':/salad|zucchini|cauliflower|squash|beans|greens|cabbage|brussels|vegetable|fruit/i,'Chef Simone':/southern|cornbread|fried|pudding|collard|beans|macaroni|dressing|cabbage|oxtail|sweet potato|biscuits/i};
@@ -18,8 +19,9 @@ export default function LisaRecipeCollection({chef}:{chef?:string|null}) {
   </div>
   {selected!==null&&<div id='lisa-card-preview' style={{marginTop:24,scrollMarginTop:100}}>
    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,flexWrap:'wrap'}}><h3 style={{margin:0}}>{titles[selected]}</h3><button type="button" onClick={()=>setSelected(null)}>Close recipe</button></div>
-   <p><strong>{titles[selected]}</strong> is on page <strong>{selected+1}</strong> of Lisa's original cookbook. Its matching illustrated card will appear here once published.</p>
-   <p className='lisa-page-note' role='status'>The individual illustrated card for {titles[selected]} is being prepared. The full cookbook is not available to customers on this page.</p>
+   <p>Lisa's original {titles[selected]} illustrated recipe card — Classic and Signature versions.</p>
+   {!missingCards.includes(selected) && <img className="lisa-individual-card" key={selected} src={'/recipe-cards/recipe-card-'+String(selected+1).padStart(3,'0')+'.jpg'} alt={titles[selected]+' illustrated Classic and Signature recipe card'} loading="lazy" onError={()=>setMissingCards(previous=>previous.includes(selected)?previous:[...previous,selected])}/>}
+   {missingCards.includes(selected) && <p className="lisa-page-note" role="status">The individual picture card for {titles[selected]} has not been published yet.</p>}
   </div>}
  </section>;
 }
