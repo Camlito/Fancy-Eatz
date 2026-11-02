@@ -1,0 +1,43 @@
+name: Build all chef recipe instruction videos
+on:
+  push:
+    paths:
+      - 'scripts/build-recipe-card-videos.py'
+      - '.github/workflows/recipe-videos.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: recipe-card-video-production
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install video renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install Pillow
+      - name: Render both versions of all 95 original recipe cards
+        run: python scripts/build-recipe-card-videos.py
+      - name: Verify every video
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess, json
+          files=list(Path('public/videos/recipe-cards').glob('*.mp4'))
+          assert len(files)==190
+          for path in files:
+              info=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_name','-of','json',str(path)]))
+              assert abs(float(info['format']['duration'])-68)<.1, path
+              assert info['streams'][0]['codec_name']=='h264', path
+          print('Verified all 190 MP4 guides')
+          PY
+      - name: Publish videos to the connected website repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/videos/recipe-cards
+          git diff --cached --quiet || (git commit -m "Publish all 190 chef recipe instruction videos" && git push)
