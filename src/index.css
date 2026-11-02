@@ -1662,3 +1662,15 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 
 /* Restore the original single-photo mobile hero; no repeated background tiles. */
 @media(max-width:800px){.reference-hero .hero-food-photo{background-size:cover!important;background-repeat:no-repeat!important;background-position:center center!important;min-height:280px!important}.reference-hero{overflow:hidden!important}}
+
+/* Lisa-inspired presentation for interactive meals; original 95 cards remain unchanged. */
+.lisa-inspired-meal-card{background:#4b0918!important;border:2px solid #d4a64f!important;border-radius:20px!important;padding:clamp(14px,3vw,30px)!important;color:#fff4dc!important;overflow:hidden}
+.lisa-inspired-banner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:18px;padding:12px 10px;background:linear-gradient(100deg,#4a0713,#7b1d21,#4a0713);border:1px solid #d9ae62;color:#fff1d5;font:600 clamp(10px,1.6vw,16px) Georgia,serif;text-align:center;letter-spacing:.06em}
+.lisa-inspired-banner strong{border:1px solid #d4ae66;border-radius:50%;padding:12px 7px;background:#fff3d6;color:#601126;font:italic 600 clamp(12px,2vw,21px) Georgia,serif;letter-spacing:0}
+.lisa-inspired-meal-card .section-head{text-align:center;margin:20px auto}.lisa-inspired-meal-card .section-head h2{font:700 clamp(32px,5vw,58px)/1.1 Georgia,serif!important;color:#fff2d6!important}
+.lisa-inspired-recipe-columns{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;margin-top:20px!important}
+.lisa-inspired-recipe-columns>div{min-width:0;padding:18px;background:#fff2d9;color:#411321;border:2px solid #d7a65a;border-radius:14px}
+.lisa-inspired-recipe-columns h3{margin:-18px -18px 15px!important;padding:12px 18px;background:#650e21;color:#fff5dc!important;font:700 22px Georgia,serif!important;text-align:center}
+.lisa-inspired-recipe-columns li{line-height:1.65;padding-bottom:8px;overflow-wrap:anywhere}.lisa-inspired-recipe-columns ul,.lisa-inspired-recipe-columns ol{padding-left:24px}
+.lisa-inspired-meal-card .recipe-hero-photo{min-height:260px;background-size:cover!important;background-repeat:no-repeat!important;background-position:center!important;border-radius:14px}
+@media(max-width:650px){.lisa-inspired-recipe-columns{grid-template-columns:minmax(0,1fr)!important}.lisa-inspired-banner{gap:4px;padding:8px 4px;letter-spacing:0}.lisa-inspired-banner strong{padding:8px 4px}.lisa-inspired-meal-card{padding:12px!important}}
