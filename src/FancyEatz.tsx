@@ -958,7 +958,7 @@ export default function FancyEatz() {
             <RecipeVersionSelector value={recipeVersion} onChange={setRecipeVersion} />
             <div className="section-head"><p className="eyebrow">{displayedRecipe.category || displayedRecipe.mealType}</p><h2>{displayedRecipe.title}</h2><p>{displayedRecipe.note}</p></div>
             <div className="meta"><span><Clock3 size={16}/>{displayedRecipe.time}</span>{displayedRecipe.servings && <span><Users size={16}/>{displayedRecipe.servings}</span>}</div>
-            <CookingWalkthrough key={selectedRecipe?.title} title={selectedRecipe?.title || ''} version={recipeVersion} />
+            <CookingWalkthrough key={(selectedRecipe?.title || '') + recipeVersion} title={selectedRecipe?.title || ''} version={recipeVersion} steps={displayedRecipe.method || []} />
             <div className="generator-grid lisa-inspired-recipe-columns">
               <div><h3>Ingredients</h3>{displayedRecipe.ingredients?.length ? <ul>{displayedRecipe.ingredients.map(x => <li key={x}>{x}</li>)}</ul> : <p>Ingredients have not yet been converted from the source cookbook.</p>}</div>
               <div><h3>Method / Directions</h3>{displayedRecipe.method?.length ? <ol>{displayedRecipe.method.map(x => <li key={x}>{x}</li>)}</ol> : <p>Directions have not yet been converted from the source cookbook.</p>}</div>
