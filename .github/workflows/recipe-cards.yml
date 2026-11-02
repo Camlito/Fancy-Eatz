@@ -14,7 +14,7 @@ jobs:
       - name: Install image converter
         run: pip install pymupdf gdown
       - name: Retrieve original cookbook
-        run: gdown 1FdEh8jvzhyfwXVgxwOUzZ69UTmlGCdp5 -O /tmp/recipes.pdf
+        run: gdown --fuzzy 'https://drive.google.com/file/d/1FdEh8jvzhyfwXVgxwOUzZ69UTmlGCdp5/view' -O /tmp/recipes.pdf
       - name: Export matching card images
         run: |
           python - <<'PY'
