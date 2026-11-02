@@ -1709,3 +1709,13 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .original-card-step-view p{font-size:14px;line-height:1.5;margin:10px 4px 2px;color:#56362f}
 .lisa-recipe-collection button{max-width:100%;overflow-wrap:anywhere}
 .lisa-recipe-collection button:not(.primary){color:#421927;background:#fff6e8;border:1px solid #c6a56c}
+
+/* Fancy Eatz recipe accessibility and mobile QA fixes */
+.lisa-recipe-collection .recipe-lesson-pending p{color:#4b2530!important;opacity:1!important}
+.lisa-recipe-collection .lisa-individual-card{display:block;width:100%;max-width:100%;height:auto;border-radius:14px;margin:18px auto;object-fit:contain}
+.lisa-recipe-collection #lisa-card-preview>div:first-child{align-items:flex-start!important}
+.lisa-recipe-collection #lisa-card-preview>div:first-child button{background:#fff3de!important;color:#4b1427!important;border:2px solid #c79a56!important;border-radius:12px!important;padding:11px 16px!important;min-height:46px!important;font-weight:700!important}
+.lisa-recipe-collection .walkthrough-transport button[aria-pressed=true]{background:#5b1023!important;color:#fff5dd!important;border-color:#5b1023!important}
+.lisa-recipe-collection .walkthrough-transport button:focus-visible,.lisa-recipe-collection button:focus-visible{outline:3px solid #e5b968!important;outline-offset:3px}
+.lisa-recipe-collection .recipe-guided-lesson .eyebrow{color:#865022!important}
+@media(max-width:600px){.lisa-recipe-collection{padding:12px!important}.lisa-recipe-collection .cooking-walkthrough{padding:16px!important}.lisa-recipe-collection .recipe-guided-lesson{padding:15px!important}.lisa-recipe-collection .walkthrough-intro h4{font-size:clamp(26px,7vw,38px)!important}.lisa-recipe-collection #lisa-card-preview h3{font-size:clamp(22px,6vw,30px)!important}}
