@@ -1583,3 +1583,28 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .human-chef-photo.leon{background-image:url('/chefs/leon.webp');background-position:center}
 .human-chef-photo.rachel{background-image:url('/chefs/rachel.webp');background-position:center}
 .human-chef-photo.simone{background-image:url('/chefs/simone.webp');background-position:center}
+
+
+/* Fancy Eatz tasting polish: clean cards, clear actions, mobile-first layout. */
+.recipe-tasting{max-width:1180px;margin-inline:auto;scroll-margin-top:90px}
+.tasting-heading{display:flex;align-items:start;justify-content:space-between;gap:24px}
+.tasting-heading>div:first-child{min-width:0}
+.tasting-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:stretch}
+.tasting-card{min-width:0;overflow:hidden;border-radius:16px}
+.tasting-card>div:last-child{display:flex;flex-direction:column;gap:10px;padding:20px}
+.tasting-card h3,.tasting-card p{overflow-wrap:anywhere}
+.tasting-card .tasting-preview-button{margin-top:auto}
+.tasting-image-button{display:block;width:100%;padding:0;overflow:hidden}
+.tasting-image-button .meal-version-photo{width:100%;aspect-ratio:4/3}
+.tasting-controls{display:flex;flex-wrap:wrap;align-items:end;gap:16px}
+.tasting-controls label{min-width:220px;max-width:420px;flex:1}
+.tasting-controls input{box-sizing:border-box;width:100%;min-height:44px}
+.tasting-filters{display:flex;gap:8px;flex-wrap:wrap}
+.tasting-filters button,.tasting-pagination button,.tasting-back{min-height:44px}
+.tasting-detail-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.tasting-detail-layout>div{min-width:0}
+.tasting-directions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.tasting-directions li{line-height:1.65;margin-bottom:10px}
+@media(max-width:900px){.tasting-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tasting-heading{flex-direction:column}.tasting-detail-layout{grid-template-columns:1fr}}
+@media(max-width:600px){.recipe-tasting{padding-inline:14px}.tasting-grid,.tasting-directions{grid-template-columns:1fr}.tasting-card>div:last-child{padding:16px}.tasting-controls{flex-direction:column;align-items:stretch}.tasting-controls label{width:100%;max-width:none}.tasting-pagination{flex-wrap:wrap;gap:10px}.tasting-detail-layout{gap:16px}.tasting-heading h2{overflow-wrap:anywhere}}
+@media(prefers-reduced-motion:reduce){.tasting-card,.tasting-image-button{transition:none!important}}
