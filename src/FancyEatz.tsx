@@ -343,6 +343,7 @@ export default function FancyEatz() {
   const [search, setSearch] = useState('');
   const [recipeType, setRecipeType] = useState('All');
   const [cookStyleFilter, setCookStyleFilter] = useState('All');
+  const [chosenChef, setChosenChef] = useState<string | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [recipeVersion, setRecipeVersion] = useState<'classic' | 'signature'>('classic');
   const displayedRecipe = selectedRecipe && recipeVersion === 'signature' ? signatureRecipe(selectedRecipe) : selectedRecipe;
@@ -369,6 +370,18 @@ export default function FancyEatz() {
 
 
   const filteredRecipes = useMemo(() => featured.filter(r => {
+    const chefKeywords: Record<string, RegExp> = {
+      'Joy': /family|comfort|chicken|pasta|casserole|soup|mac|potato|sandwich|taco|weeknight|home/i,
+      'Chef Oliver': /filet|steak|risotto|scallop|salmon|sauce|fine|tart|brûlée|chef|elegant/i,
+      'Chef Blaze': /grill|bbq|burger|steak|smok|skewer|barbecue|roast/i,
+      'Chef Dana': /dessert|cake|pie|tart|cookie|chocolate|pastry|croissant|berry|parfait|sweet|crème|apple/i,
+      'Chef Dom': /taco|curry|stir.fry|noodle|rice|pasta|orzo|international|asian|mediterranean|mexican|italian/i,
+      'Chef Leon': /seafood|crab|shrimp|salmon|fish|scallop|tuna|lobster|cod/i,
+      'Chef Rachel': /vegetable|salad|plant|vegan|vegetarian|healthy|grain|quinoa|lentil|bean|roasted vegetable/i,
+      'Chef Simone': /southern|smothered|mac|corn|biscuit|comfort|fried|casserole|soul|chowder/i
+    };
+    const chefText = [r.title,r.note,r.category,r.mealType,r.tag,r.style,...(r.ingredients || [])].join(' ');
+    if (chosenChef && !chefKeywords[chosenChef]?.test(chefText)) return false;
     const q = search.toLowerCase();
     const styleText=(r.title+' '+r.tag+' '+r.note+' '+r.category+' '+r.mealType).toLowerCase();
     const styleMatch = cookStyleFilter === 'All' || r.style === cookStyleFilter ||
@@ -380,7 +393,7 @@ export default function FancyEatz() {
     return styleMatch && (recipeType === 'All' || r.mealType === recipeType || r.category === recipeType) &&
       (recipeLetter === 'All' || r.title.toUpperCase().startsWith(recipeLetter)) &&
       (!q || (r.title + ' ' + r.tag + ' ' + r.note).toLowerCase().includes(q));
-  }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType, recipeLetter, cookStyleFilter]);
+  }).sort((a, b) => a.title.localeCompare(b.title)), [search, recipeType, recipeLetter, cookStyleFilter, chosenChef]);
 
   const filteredDrinks = drinks.filter(d => {
               const q=drinkSearch.trim().toLowerCase();
@@ -930,6 +943,7 @@ export default function FancyEatz() {
         <section className="page">
           {!selectedRecipe && <><div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>One growing Fancy Eatz cookbook for every kind of meal — family favorites, grilling, fine dining, chef techniques, desserts, pastries, seafood and more.</p><div className="vault-stats"><span><b>{featured.length}</b><small>complete interactive recipes</small></span><span><b>All Styles</b><small>one unified cookbook</small></span><span><b>A–Z</b><small>recipe browsing</small></span></div></div>
           
+          {chosenChef && <div className='chef-recipe-banner' role='status'><div><small>YOUR SELECTED AI CHEF</small><h3>{chosenChef}'s cookbook picks</h3><p>Showing {filteredRecipes.length} matching recipes from the Fancy Eatz cookbook.</p></div><button type='button' className='ghost' onClick={()=>{setChosenChef(null);setCookStyleFilter('All');setRecipeType('All');setRecipeLetter('All');setSearch('')}}>View All Recipes</button><button type='button' className='ghost' onClick={()=>navigate('styles')}>Change Chef</button></div>}
           <div className="cook-style-filter">
             {['All','Fancy Dining','Grill Master','Everyday Mom',"Chef's Kitchen",'Pastry Chef'].map(x=><button key={x} className={cookStyleFilter===x?'active':''} onClick={()=>setCookStyleFilter(x)}>{x}{x!=='All' && styleRecipeCounts[x] ? ` (${styleRecipeCounts[x]})` : ''}</button>)}
           </div>
@@ -982,13 +996,13 @@ export default function FancyEatz() {
 
       {tab === 'styles' && (
         <section className="page">
-          <div className="section-head"><p className="eyebrow">MEET YOUR FANCY EATZ CHEFS</p><h2>Choose your cooking companion.</h2><p>Meet our human-style AI chef characters. Choose a specialty to start creating a meal with Pantry Chef.</p></div>
+          <div className="section-head"><p className="eyebrow">MEET YOUR FANCY EATZ CHEFS</p><h2>Choose your cooking companion.</h2><p>Meet our human-style AI chef characters. Choose a chef to browse matching meals from the Fancy Eatz cookbook. You can still create personalized meals with Pantry Chef.</p></div>
           <div className="human-chef-grid">
-            {cookingStyles.map(x=><button className="human-chef-card" key={x.name} onClick={()=>{setStyle(x.style);setOccasion(x.occasion);setMealType(x.name==='Chef Dana'?'Dessert':'Dinner');setPantry('');navigate('pantry')}}>
+            {cookingStyles.map(x=><button className="human-chef-card" key={x.name} onClick={()=>{setChosenChef(x.name);setCookStyleFilter('All');setRecipeType('All');setRecipeLetter('All');setSearch('');setSelectedRecipe(null);setStyle(x.style);setOccasion(x.occasion);setMealType(x.name==='Chef Dana'?'Dessert':'Dinner');navigate('recipes')}}>
               <span className={'human-chef-photo '+x.position} role="img" aria-label={x.name+' AI character portrait'} />
               <span className="human-chef-copy"><small>{x.specialty}</small><b>{x.name}</b><span>{x.desc}</span><strong>Cook with {x.name} →</strong></span>
             </button>)}
-          </div><p className="human-chef-note">AI-created characters · Choose a chef to set your cooking style.</p>
+          </div><p className="human-chef-note">AI-created characters · Your chef opens matching cookbook recipes.</p>
         </section>
       )}
 
