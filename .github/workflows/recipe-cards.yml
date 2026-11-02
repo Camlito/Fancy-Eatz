@@ -1,8 +1,35 @@
-name: Recipe card assets
-on: workflow_dispatch
+name: Publish Lisa recipe cards
+on:
+  push:
+    paths:
+      - '.github/workflows/recipe-cards.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo 'Ready for recipe card assets'
+      - name: Install image converter
+        run: pip install pymupdf gdown
+      - name: Retrieve original cookbook
+        run: gdown 1FdEh8jvzhyfwXVgxwOUzZ69UTmlGCdp5 -O /tmp/recipes.pdf
+      - name: Export matching card images
+        run: |
+          python - <<'PY'
+          import fitz
+          from pathlib import Path
+          pdf=fitz.open('/tmp/recipes.pdf')
+          assert len(pdf)==95
+          out=Path('public/recipe-cards')
+          out.mkdir(parents=True,exist_ok=True)
+          for i,page in enumerate(pdf,1):
+              page.get_pixmap(matrix=fitz.Matrix(1.2,1.2)).save(str(out/f'recipe-card-{i:03d}.jpg'),jpg_quality=75)
+          PY
+      - name: Save recipe card images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/recipe-cards
+          git diff --cached --quiet || (git commit -m "Add Lisa original 95 recipe cards" && git push)
