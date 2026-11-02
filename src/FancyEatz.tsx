@@ -913,7 +913,7 @@ export default function FancyEatz() {
             <p>Search the bartender collection by drink name or by an ingredient you already have. Recipes below are converted from the Fancy Eatz source bartender book.</p>
           </div>
           <div className="panel">
-            {recipeCollectionView==='interactive' && <><div className="recipe-tools">
+            <div className="recipe-tools">
               <label className="search-box"><Search size={18}/><input value={drinkSearch} onChange={e=>setDrinkSearch(e.target.value)} placeholder="Search vodka, lime, martini, rum..." /></label>
               <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option><option>Mocktails & Punches</option></select></label>
               <label>What do you have?<input value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="vodka, lime, cranberry juice..." /></label>
