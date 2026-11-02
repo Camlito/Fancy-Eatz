@@ -974,7 +974,7 @@ export default function FancyEatz() {
             </div>
           </div>}
           {!selectedRecipe && <>
-          <div className="recipe-tools">
+          {recipeCollectionView==='interactive' && <><div className="recipe-tools">
             <label className="search-box"><Search size={18} /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search chicken, steak, pasta, seafood, dessert..." /></label>
             <label>Category<select value={recipeType} onChange={e => setRecipeType(e.target.value)}><option>All</option><option>Appetizers</option><option>Entrées</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Dessert</option></select></label>
           {!chosenChef && <details className="alphabet-filter"><summary>Browse by letter · {recipeLetter}</summary><div className="filter-row">{['All',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(x => <button className={recipeLetter === x ? 'active' : ''} key={x} onClick={() => setRecipeLetter(x)}>{x}</button>)}</div></details>}
