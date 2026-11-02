@@ -1,4 +1,5 @@
 import CookingWalkthrough from './CookingWalkthrough';
+import LisaRecipeCollection from './LisaRecipeCollection';
 import { tastingPhotoPairs } from './tastingPhotography';
 import RecipeTasting, { MealPhoto, RecipeVersionSelector, signatureRecipe } from './RecipeVersions';
 import { useEffect, useMemo, useState } from 'react';
@@ -943,6 +944,7 @@ export default function FancyEatz() {
         <section className="page">
           {!selectedRecipe && <><div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>One growing Fancy Eatz cookbook for every kind of meal — family favorites, grilling, fine dining, chef techniques, desserts, pastries, seafood and more.</p><div className="vault-stats"><span><b>{featured.length}</b><small>complete interactive recipes</small></span><span><b>All Styles</b><small>one unified cookbook</small></span><span><b>A–Z</b><small>recipe browsing</small></span></div></div>
           
+          <LisaRecipeCollection />
           {chosenChef && <div className='chef-recipe-banner' role='status'><div><small>YOUR SELECTED AI CHEF</small><h3>{chosenChef}'s cookbook picks</h3><p>Showing {filteredRecipes.length} matching recipes from the Fancy Eatz cookbook.</p></div><button type='button' className='ghost' onClick={()=>{setChosenChef(null);setCookStyleFilter('All');setRecipeType('All');setRecipeLetter('All');setSearch('')}}>View All Recipes</button><button type='button' className='ghost' onClick={()=>navigate('styles')}>Change Chef</button></div>}
           <div className="cook-style-filter">
             {['All','Fancy Dining','Grill Master','Everyday Mom',"Chef's Kitchen",'Pastry Chef'].map(x=><button key={x} className={cookStyleFilter===x?'active':''} onClick={()=>setCookStyleFilter(x)}>{x}{x!=='All' && styleRecipeCounts[x] ? ` (${styleRecipeCounts[x]})` : ''}</button>)}
