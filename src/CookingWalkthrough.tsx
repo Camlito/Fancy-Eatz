@@ -11,7 +11,7 @@ export default function CookingWalkthrough({ title, version }: {
   const [activeStep, setActiveStep] = useState(0);
   const [error, setError] = useState('');
   const [showCaptions, setShowCaptions] = useState(false);
-  if (!guide) return null;
+  if (!guide) return <section className='cooking-walkthrough' aria-label='Guided cooking instructions'><div className='walkthrough-intro'><div><p className='eyebrow'>COOK ALONG WITH FANCY EATZ</p><h4>Step-by-step cooking lesson</h4><p>A filmed instructional video for this specific meal is not yet available. Follow the complete measured ingredients and directions below; we will not substitute unrelated footage.</p></div></div></section>;
 
   async function playStep(index: number) {
     const video = videoRef.current;
