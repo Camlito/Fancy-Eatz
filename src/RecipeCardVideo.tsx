@@ -19,19 +19,53 @@ export default function RecipeCardVideo({ index, title, chef }: { index: number;
     'Transfer to a 9 by 13 inch baking dish. Cover with foil and bake at 350 degrees Fahrenheit for one hour.',
     'Remove the foil and bake 20 to 30 minutes more until caramelized. Rest for 10 minutes, then garnish and serve.'
   ];
+  const detailedSteps: Record<string, {classic:string[];signature:string[]}> = {
+    'Baked Banana Pudding': {
+      classic: [
+        'In a medium saucepan, whisk sugar, flour, and salt. Slowly add milk, stirring constantly. Cook over medium heat until thickened and smooth. Remove from heat.',
+        'Gradually whisk a small amount of the hot mixture into the beaten egg yolks, then whisk back into the saucepan. Cook for 2 to 3 minutes until thick. Remove from heat and stir in vanilla and butter.',
+        'In a greased 2-quart baking dish, layer vanilla wafers, sliced bananas, and warm custard. Repeat layers, ending with custard on top.',
+        'In a bowl, whip heavy cream and powdered sugar until soft peaks form. Spread over the top of the pudding.',
+        'Bake at 350°F for 20 to 25 minutes, or until the top is golden brown. Allow to cool slightly. Serve warm or chilled.'
+      ],
+      signature: [
+        'In a skillet, melt butter and brown sugar over medium heat. Add sliced bananas and cinnamon. Cook for 2 to 3 minutes until lightly caramelized. Set aside.',
+        'Whisk together sugar, flour, and salt. Slowly add milk and cook until thickened. Temper in egg yolks, return to heat, and cook 2 to 3 minutes. Remove from heat and stir in vanilla and butter.',
+        'In a greased 2-quart baking dish, layer vanilla wafers, caramelized bananas, and custard. Repeat layers, ending with custard on top.',
+        'Beat cream cheese until smooth. Add powdered sugar and vanilla. In a separate bowl, whip heavy cream until stiff peaks form, then fold into the cream cheese mixture.',
+        'Spread the cream cheese topping over the pudding. Sprinkle with crushed wafers. Bake at 350°F for 20 to 25 minutes or until golden. Drizzle with caramel sauce if desired.'
+      ]
+    },
+    'Baked Spaghetti': {
+      classic: [
+        'In a large skillet, cook ground beef and diced onions over medium heat until browned. Add garlic and cook for 1 minute. Drain excess grease if needed.',
+        'Stir in spaghetti sauce, diced tomatoes if using, Italian seasoning, salt, and pepper. Simmer for 10 to 15 minutes.',
+        'Cook spaghetti according to package directions until al dente. Drain and toss with butter if desired.',
+        'Spread a layer of noodles in a greased 9 by 13 inch baking dish. Add meat sauce, mozzarella, and Parmesan. Repeat layers, ending with cheese.',
+        'Cover with foil and bake at 350°F for 25 minutes. Remove foil and bake 10 more minutes until the cheese is melted and golden.'
+      ],
+      signature: [
+        'In a large skillet, heat olive oil over medium heat. Cook ground beef and Italian sausage until browned. Add onions and cook until soft. Add garlic and cook for 1 minute.',
+        'Stir in marinara sauce, fire-roasted tomatoes, tomato paste, Italian seasoning, red pepper flakes, salt, and pepper. Simmer for 15 to 20 minutes.',
+        'In a bowl, combine ricotta cheese, cream cheese, Parmesan cheese, and mozzarella. Mix well.',
+        'In a greased 9 by 13 inch baking dish, layer spaghetti, meat sauce, ricotta mixture, and mozzarella. Repeat layers, ending with sauce and a generous topping of mozzarella and Parmesan.',
+        'Cover with foil and bake at 350°F for 25 minutes. Remove foil and bake another 15 to 20 minutes until bubbly and golden brown. Rest for 5 to 10 minutes before serving.'
+      ]
+    }
+  };
   const isBakedBeans = title === 'Baked Beans';
   function narrate() { if (!('speechSynthesis' in window)) return; window.speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(steps[lessonStep]); utterance.rate = 0.9; window.speechSynthesis.speak(utterance); }
   const cardSrc = '/recipe-cards/recipe-card-' + String(index + 1).padStart(3, '0') + '.jpg';
-  const steps = isBakedBeans ? bakedBeansSteps : ['Gather and measure the ingredients shown in this recipe version.', 'Read and complete illustrated instruction 1 on Lisa’s original card, using the exact ingredients listed.', 'Read and complete illustrated instruction 2 on Lisa’s original card.', 'Continue with illustrated instructions 3 and 4, following the card's stated temperatures and timing.', 'Complete illustrated instruction 5, then review the serving suggestions and tips.'];
+  const steps = isBakedBeans ? bakedBeansSteps : detailedSteps[title]?.[version] || ['Gather and measure the ingredients shown in this recipe version.', 'Read and complete illustrated instruction 1 on Lisa’s original card, using the exact ingredients listed.', 'Read and complete illustrated instruction 2 on Lisa’s original card.', 'Continue with illustrated instructions 3 and 4, following the card's stated temperatures and timing.', 'Complete illustrated instruction 5, then review the serving suggestions and tips.'];
   const lessonStep = Math.min(step, steps.length - 1);
   return <section className="cooking-walkthrough" aria-label={title + ' guided cooking lesson'}>
     <div className="walkthrough-intro"><div><p className="eyebrow">{chef ? chef.toUpperCase() + "'S COOK-ALONG" : 'FANCY EATZ COOK-ALONG'}</p><h4>Cook {title} step by step</h4><p>Explore the original illustrated instructions in Classic or Signature mode.</p></div><button type="button" className="primary" aria-expanded={open} onClick={() => setOpen(v => !v)}>{open ? 'Close Cooking Lesson' : 'Start Cooking Lesson'}</button></div>
     {open && <div className="recipe-guided-lesson">
       <div className="walkthrough-transport" role="group" aria-label="Choose cooking version">{(['classic','signature'] as const).map(value=><button type="button" key={value} aria-pressed={version===value} onClick={()=>{setVersion(value);setStep(0);if('speechSynthesis' in window)window.speechSynthesis.cancel();}}>{value==='classic'?'Classic':'Fancy Eatz Signature'}</button>)}</div>
-      {!isBakedBeans && <div className="original-card-step-view"><div className="original-card-step-image"><img src={cardSrc} alt={`${title} ${version} original illustrated directions, step ${step+1}`} style={{transform:`scale(2.05)`,transformOrigin:`${version==='classic'?'24%':'76%'} ${52+step*8}%`}} /></div><p>Enlarged view of Lisa’s original {version === 'classic' ? 'Classic' : 'Signature'} illustrated directions. Use the full card below for the exact written steps.</p></div>}
+      {!isBakedBeans && !detailedSteps[title] && <div className="original-card-step-view"><div className="original-card-step-image"><img src={cardSrc} alt={`${title} ${version} original illustrated directions, step ${step+1}`} style={{transform:`scale(2.05)`,transformOrigin:`${version==='classic'?'24%':'76%'} ${52+step*8}%`}} /></div><p>Enlarged view of Lisa’s original {version === 'classic' ? 'Classic' : 'Signature'} illustrated directions. Use the full card below for the exact written steps.</p></div>}
       <p className="eyebrow">GUIDED COOKING LESSON · {version==='classic'?'CLASSIC':'SIGNATURE'}</p><h4>Step {step+1} of {steps.length}</h4><p className="recipe-guided-instruction" aria-live="polite">{steps[lessonStep]}</p>
       <div className="walkthrough-transport"><button type="button" disabled={step===0} onClick={()=>setStep(i=>Math.max(0,i-1))}>Previous</button><button type="button" onClick={narrate}>Listen to Step</button><button type="button" disabled={step===steps.length-1} onClick={()=>setStep(i=>Math.min(steps.length-1,i+1))}>Next</button></div>
-      <p className="walkthrough-disclosure">Use Lisa's original illustrated card below for precise ingredient quantities and cooking times. For recipes other than Baked Beans, the step viewer highlights the original artwork; detailed spoken transcription is still being prepared. This is not a filmed video.</p>
+      <p className="walkthrough-disclosure">Use Lisa's original illustrated card below for precise ingredient quantities and cooking times. For recipes without individually transcribed instructions, the step viewer highlights the original artwork while detailed narration is being prepared. This is not a filmed video.</p>
     </div>}
   </section>;
 }
