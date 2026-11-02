@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react';
 import { cookingWalkthroughs } from './cookingWalkthroughs';
 
-export default function CookingWalkthrough({ title, version }: {
+export default function CookingWalkthrough({ title, version, steps = [] }: {
   title: string;
   version: 'classic' | 'signature';
+  steps?: string[];
 }) {
   const guide = cookingWalkthroughs[title.replace(/^Fancy Eatz Signature /, '')]?.[version];
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -11,7 +12,19 @@ export default function CookingWalkthrough({ title, version }: {
   const [activeStep, setActiveStep] = useState(0);
   const [error, setError] = useState('');
   const [showCaptions, setShowCaptions] = useState(false);
-  if (!guide) return <section className='cooking-walkthrough' aria-label='Guided cooking instructions'><div className='walkthrough-intro'><div><p className='eyebrow'>COOK ALONG WITH FANCY EATZ</p><h4>Step-by-step cooking lesson</h4><p>A filmed instructional video for this specific meal is not yet available. Follow the complete measured ingredients and directions below; we will not substitute unrelated footage.</p></div></div></section>;
+  if (!guide) return <section className='cooking-walkthrough guided-cook-mode' aria-label='Interactive cooking lesson'>
+    <div className='walkthrough-intro'><div><p className='eyebrow'>FANCY EATZ COOK-ALONG</p><h4>{title}</h4><p>{version === 'classic' ? 'Classic preparation' : 'Signature preparation'} · Guided steps based on this recipe's actual instructions.</p></div>
+    <button type='button' className='primary' onClick={()=>setExpanded(v=>!v)} aria-expanded={expanded}>{expanded ? 'Close Lesson' : 'Start Cooking Lesson'}</button></div>
+    {expanded && <div className='guided-cook-panel'>
+      {steps.length ? <><p className='walkthrough-version'>Step {Math.min(activeStep+1,steps.length)} of {steps.length}</p>
+        <div className='guided-step-content' aria-live='polite'><span className='guided-step-number'>{activeStep+1}</span><p>{steps[Math.min(activeStep,steps.length-1)]}</p></div>
+        <div className='guided-progress' role='progressbar' aria-valuemin={0} aria-valuemax={steps.length} aria-valuenow={Math.min(activeStep+1,steps.length)} aria-label='Cooking lesson progress'><span style={{width:`${Math.min((activeStep+1)/steps.length*100,100)}%`}} /></div>
+        <div className='walkthrough-transport'><button type='button' disabled={activeStep===0} onClick={()=>setActiveStep(i=>Math.max(0,i-1))}>Previous Step</button><button type='button' onClick={()=>setActiveStep(0)}>Restart</button><button type='button' disabled={activeStep>=steps.length-1} onClick={()=>setActiveStep(i=>Math.min(steps.length-1,i+1))}>Next Step</button></div>
+        <details className='walkthrough-text-steps'><summary>View all {steps.length} instructions</summary><ol>{steps.map((step,i)=><li key={i}>{step}</li>)}</ol></details>
+      </> : <p>Detailed instructions for this meal are being prepared. No unrelated video will be shown.</p>}
+      <p className='walkthrough-disclosure'>Interactive written cook-along, not a filmed video. Follow food safety temperatures and the recipe's actual cooking times.</p>
+    </div>}
+  </section>;
 
   async function playStep(index: number) {
     const video = videoRef.current;
