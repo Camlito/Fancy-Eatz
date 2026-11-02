@@ -1608,3 +1608,7 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 @media(max-width:900px){.tasting-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tasting-heading{flex-direction:column}.tasting-detail-layout{grid-template-columns:1fr}}
 @media(max-width:600px){.recipe-tasting{padding-inline:14px}.tasting-grid,.tasting-directions{grid-template-columns:1fr}.tasting-card>div:last-child{padding:16px}.tasting-controls{flex-direction:column;align-items:stretch}.tasting-controls label{width:100%;max-width:none}.tasting-pagination{flex-wrap:wrap;gap:10px}.tasting-detail-layout{gap:16px}.tasting-heading h2{overflow-wrap:anywhere}}
 @media(prefers-reduced-motion:reduce){.tasting-card,.tasting-image-button{transition:none!important}}
+
+/* Accessible fallback when a recipe-specific image is unavailable. */
+.meal-photo-placeholder{display:flex;align-items:center;justify-content:center;min-height:180px;padding:20px;box-sizing:border-box;text-align:center;background:linear-gradient(145deg,#4b1420,#7d4c39);color:#fff4dc;font:500 22px/1.35 Georgia,serif;overflow-wrap:anywhere}
+.meal-photo-placeholder span{max-width:24ch}
