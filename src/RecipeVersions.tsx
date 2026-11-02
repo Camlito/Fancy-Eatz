@@ -52,17 +52,18 @@ export function RecipeVersionSelector({ value, onChange }: {
   );
 }
 
-export function MealPhoto({ title, version = 'classic', className = '' }: {
+export function MealPhoto({ title, version = 'classic', className = '', fallbackImage }: {
   title: string;
   version?: 'classic' | 'signature';
   className?: string;
+  fallbackImage?: string;
 }) {
   const originalTitle = title.replace(/^Fancy Eatz Signature /, '');
   const src = tastingPhotoPairs[originalTitle];
-  if (!src) return null;
+  if (!src && !fallbackImage) return <div className={`meal-version-photo meal-photo-placeholder ${className}`} role='img' aria-label={`Photo coming soon for ${originalTitle}`}><span>Fancy Eatz · {originalTitle}</span></div>;
   return <div className={`meal-version-photo ${className}`} role='img'
     aria-label={`${originalTitle}, ${version === 'classic' ? 'Classic' : 'Fancy Eatz Signature'} serving illustration`}
-    style={{ backgroundImage: `url("${src}")`, backgroundPosition: version === 'classic' ? 'left center' : 'right center' }} />;
+    style={{ backgroundImage: `url("${src || fallbackImage}")`, backgroundPosition: src ? (version === 'classic' ? 'left center' : 'right center') : 'center', backgroundSize: src ? undefined : 'cover' }} />;
 }
 
 type TastingState = { startedAt: number; picks: string[] };
@@ -91,7 +92,7 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
       const previous = localStorage.getItem(storageKey);
       const normalized = JSON.stringify(trial);
       if (previous !== normalized) {
-        if (!localStorage.getItem(backupKey)) localStorage.setItem(backupKey, previous);
+        if (previous && !localStorage.getItem(backupKey)) localStorage.setItem(backupKey, previous);
         localStorage.setItem(storageKey, normalized);
       }
     } catch { /* Selection controls still handle storage failures visibly. */ }
@@ -149,7 +150,7 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
       {activeRecipe && preview ? <article className='tasting-detail' aria-label='Tasting recipe detail'>
         <button className='tasting-back' onClick={() => setPreview(null)}>← Back to the 12 tasting recipes</button>
         <div className='tasting-detail-layout'>
-          <div><MealPhoto title={preview.title} version={version} /><small className='photo-caption'>AI-created serving illustration</small></div>
+          <div><MealPhoto title={preview.title} version={version} fallbackImage={preview.image} /><small className='photo-caption'>AI-created serving illustration</small></div>
           <div><RecipeVersionSelector value={version} onChange={setVersion} /><p className='eyebrow'>{activeRecipe.mealType} · {activeRecipe.time}</p><h3>{activeRecipe.title}</h3><p>{activeRecipe.note}</p><p>Servings: {activeRecipe.servings || 'See ingredients'}</p>
             <button className='primary' disabled={expired || (!picks.includes(preview.title) && picks.length >= pickLimit)} onClick={() => picks.includes(preview.title) ? remove(preview) : choose(preview)}>{picks.includes(preview.title) ? 'Remove from My 3' : 'Add to My 3'}</button>
           </div>
@@ -162,7 +163,7 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
         <div className='tasting-grid'>{filtered.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map(recipe => {
           const selected = picks.includes(recipe.title);
           return <article className={`tasting-card${selected ? ' picked' : ''}`} key={recipe.title}>
-            <button className='tasting-image-button' aria-label={`Preview ${recipe.title}`} onClick={() => openPreview(recipe)}><MealPhoto title={recipe.title} />{selected && <span className='picked-label'>✓ In My 3</span>}</button>
+            <button className='tasting-image-button' aria-label={`Preview ${recipe.title}`} onClick={() => openPreview(recipe)}><MealPhoto title={recipe.title} fallbackImage={recipe.image} />{selected && <span className='picked-label'>✓ In My 3</span>}</button>
             <div><small>{recipe.mealType} · {recipe.time}</small><h3>{recipe.title}</h3><p>{recipe.note}</p><span className='two-versions'>Classic + Signature included</span><button className='tasting-preview-button' onClick={() => openPreview(recipe)}>Preview Both Versions</button><button className={selected ? 'ghost' : 'primary'} disabled={expired || (!selected && picks.length >= pickLimit)} onClick={() => selected ? remove(recipe) : choose(recipe)}>{selected ? 'Remove from My 3' : 'Add to My 3'}</button></div>
           </article>;
         })}</div>
