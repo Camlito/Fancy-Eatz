@@ -1635,3 +1635,9 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .chef-picked-recipes .card-body button{margin-top:auto;width:100%;justify-content:center}
 .chef-recipe-banner{flex-wrap:wrap;gap:12px}
 @media(max-width:600px){.chef-picked-recipes{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.chef-picked-recipes .food-art{height:125px;min-height:125px}.chef-picked-recipes .card-body{padding:12px}.chef-picked-recipes .card-body h3{font-size:1rem}.chef-picked-recipes .card-body p{font-size:.82rem}}
+
+.recipe-collection-switch{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 10px;padding:6px;border-radius:16px;background:rgba(130,102,69,.09)}
+.recipe-collection-switch button{flex:1;min-width:145px;padding:13px 16px;border-radius:12px;border:1px solid transparent;background:transparent;color:inherit;font-weight:700;cursor:pointer;transition:background .15s ease,box-shadow .15s ease}
+.recipe-collection-switch button.active{background:#fff;color:#392c24;box-shadow:0 2px 12px rgba(45,30,15,.12)}
+.recipe-collection-switch button:focus-visible{outline:3px solid #a26d38;outline-offset:2px}
+@media(max-width:600px){.recipe-collection-switch{position:sticky;top:0;z-index:5;box-shadow:0 5px 14px rgba(30,20,10,.08)}.recipe-collection-switch button{min-width:0;padding:12px 8px;font-size:.9rem}}
