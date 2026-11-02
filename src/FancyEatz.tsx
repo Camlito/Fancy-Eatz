@@ -353,6 +353,7 @@ export default function FancyEatz() {
   type CookedMeal = { title:string; description:string; ingredients:string[]; steps:string[]; plating?:string; cookedAt:string; source:'Pantry Chef'|'Recipe Vault'; image?:string; time?:string; budget?:string };
   const [cookedHistory, setCookedHistory] = useState<CookedMeal[]>(()=>{try{return JSON.parse(localStorage.getItem('fancy-cooked-history')||'[]') as CookedMeal[]}catch{return []}});
   const [recipePage, setRecipePage] = useState(0);
+  const [recipeCollectionView, setRecipeCollectionView] = useState<'lisa'|'interactive'>('lisa');
   const [drinkPage, setDrinkPage] = useState(0);
   useEffect(()=>setDrinkPage(0),[drinkSearch,drinkCategory,drinkPantryOnly,pantry]);
   const [recipeLetter, setRecipeLetter] = useState('All');
@@ -912,7 +913,7 @@ export default function FancyEatz() {
             <p>Search the bartender collection by drink name or by an ingredient you already have. Recipes below are converted from the Fancy Eatz source bartender book.</p>
           </div>
           <div className="panel">
-            <div className="recipe-tools">
+            {recipeCollectionView==='interactive' && <><div className="recipe-tools">
               <label className="search-box"><Search size={18}/><input value={drinkSearch} onChange={e=>setDrinkSearch(e.target.value)} placeholder="Search vodka, lime, martini, rum..." /></label>
               <label>Category<select value={drinkCategory} onChange={e=>setDrinkCategory(e.target.value)}><option>All</option><option>Cocktails</option><option>Martinis</option><option>Mocktails & Punches</option></select></label>
               <label>What do you have?<input value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="vodka, lime, cranberry juice..." /></label>
@@ -944,9 +945,10 @@ export default function FancyEatz() {
         <section className="page">
           {!selectedRecipe && <><div className="section-head"><p className="eyebrow">THE RECIPE VAULT</p><h2>Find your next Fancy Eatz moment.</h2><p>One growing Fancy Eatz cookbook for every kind of meal — family favorites, grilling, fine dining, chef techniques, desserts, pastries, seafood and more.</p><div className="vault-stats"><span><b>{featured.length}</b><small>complete interactive recipes</small></span><span><b>All Styles</b><small>one unified cookbook</small></span><span><b>A–Z</b><small>recipe browsing</small></span></div></div>
           
-          {!chosenChef && <LisaRecipeCollection />}
-          {chosenChef && <div className='chef-recipe-banner' role='status'><div><small>YOUR SELECTED AI CHEF</small><h3>{chosenChef}'s cookbook picks</h3><p>Showing {filteredRecipes.length} matching recipes from the Fancy Eatz cookbook.</p></div><button type='button' className='ghost' onClick={()=>{setChosenChef(null);setCookStyleFilter('All');setRecipeType('All');setRecipeLetter('All');setSearch('')}}>View All Recipes</button><button type='button' className='ghost' onClick={()=>navigate('styles')}>Change Chef</button></div>}
-          {!chosenChef && <div className="cook-style-filter">
+          <div className='recipe-collection-switch' role='group' aria-label='Choose recipe collection'><button type='button' className={recipeCollectionView==='lisa'?'active':''} onClick={()=>{setRecipeCollectionView('lisa');setSelectedRecipe(null)}}>Lisa's Recipe Cards</button><button type='button' className={recipeCollectionView==='interactive'?'active':''} onClick={()=>{setRecipeCollectionView('interactive');setSelectedRecipe(null);setRecipePage(0)}}>Interactive Recipes</button></div>
+          {recipeCollectionView==='lisa' && <LisaRecipeCollection chef={chosenChef} />}
+          {chosenChef && <div className='chef-recipe-banner' role='status'><div><small>YOUR SELECTED AI CHEF</small><h3>{chosenChef}'s cookbook picks</h3><p>Showing {filteredRecipes.length} matching recipes from the Fancy Eatz cookbook.</p></div><button type='button' className='ghost' onClick={()=>{setChosenChef(null);setRecipePage(0);setCookStyleFilter('All');setRecipeType('All');setRecipeLetter('All');setSearch('')}}>View All Recipes</button><button type='button' className='ghost' onClick={()=>navigate('styles')}>Change Chef</button></div>}
+          {recipeCollectionView==='interactive' && !chosenChef && <div className="cook-style-filter">
             {['All','Fancy Dining','Grill Master','Everyday Mom',"Chef's Kitchen",'Pastry Chef'].map(x=><button key={x} className={cookStyleFilter===x?'active':''} onClick={()=>setCookStyleFilter(x)}>{x}{x!=='All' && styleRecipeCounts[x] ? ` (${styleRecipeCounts[x]})` : ''}</button>)}
           </div>}
           </>}
@@ -983,6 +985,7 @@ export default function FancyEatz() {
           </div>
           <nav className="collection-pagination" aria-label="Cookbook pages"><button disabled={recipePage===0} onClick={()=>{setRecipePage(p=>p-1);window.scrollTo({top:0})}}>← Previous</button><span>{filteredRecipes.length ? recipePage*12+1 : 0}–{Math.min((recipePage+1)*12,filteredRecipes.length)} of {filteredRecipes.length}</span><button disabled={(recipePage+1)*12>=filteredRecipes.length} onClick={()=>{setRecipePage(p=>p+1);window.scrollTo({top:0})}}>Next →</button></nav>
           {filteredRecipes.length === 0 && <div className="empty panel"><Search size={36} /><h3>No exact match yet</h3><p>Try another search, or use Pantry Chef to generate the meal you have in mind.</p></div>}
+          </>}
           <div className="source-note"><BookOpen size={20} /><div><b>Ultimate Collection of Seafood Recipes</b><p>The seafood collection is available as a source library alongside Fancy Eatz generated ideas.</p><a href="./resources/seafood-recipes.pdf" target="_blank" rel="noreferrer">Open source collection</a></div></div>
           </>}
         </section>
@@ -1000,7 +1003,7 @@ export default function FancyEatz() {
         <section className="page">
           <div className="section-head"><p className="eyebrow">MEET YOUR FANCY EATZ CHEFS</p><h2>Choose your cooking companion.</h2><p>Meet our human-style AI chef characters. Choose a chef to browse matching meals from the Fancy Eatz cookbook. You can still create personalized meals with Pantry Chef.</p></div>
           <div className="human-chef-grid">
-            {cookingStyles.map(x=><button className="human-chef-card" key={x.name} onClick={()=>{setChosenChef(x.name);setCookStyleFilter('All');setRecipeType('All');setRecipeLetter('All');setSearch('');setSelectedRecipe(null);setStyle(x.style);setOccasion(x.occasion);setMealType(x.name==='Chef Dana'?'Dessert':'Dinner');navigate('recipes')}}>
+            {cookingStyles.map(x=><button className="human-chef-card" key={x.name} onClick={()=>{setChosenChef(x.name);setRecipeCollectionView('lisa');setRecipePage(0);setCookStyleFilter('All');setRecipeType('All');setRecipeLetter('All');setSearch('');setSelectedRecipe(null);setStyle(x.style);setOccasion(x.occasion);setMealType(x.name==='Chef Dana'?'Dessert':'Dinner');navigate('recipes')}}>
               <span className={'human-chef-photo '+x.position} role="img" aria-label={x.name+' AI character portrait'} />
               <span className="human-chef-copy"><small>{x.specialty}</small><b>{x.name}</b><span>{x.desc}</span><strong>Cook with {x.name} →</strong></span>
             </button>)}
