@@ -57,7 +57,8 @@ export default function RecipeCardVideo({ index, title, chef }: { index: number;
   function narrate() { if (!hasLesson || !('speechSynthesis' in window)) return; window.speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(steps[lessonStep]); utterance.rate = 0.9; window.speechSynthesis.speak(utterance); }
   const steps = isBakedBeans ? bakedBeansSteps : detailedSteps[title]?.[version] || [];
   const hasLesson = steps.length > 0;
-  const lessonStep = Math.min(step, steps.length - 1);
+  const lessonStep = Math.min(step, Math.max(0, steps.length - 1));
+  if (!hasLesson) return null;
   return <section className="cooking-walkthrough" aria-label={title + ' guided cooking lesson'}>
     <div className="walkthrough-intro"><div><p className="eyebrow">{chef ? chef.toUpperCase() + "'S COOK-ALONG" : 'FANCY EATZ COOK-ALONG'}</p><h4>Cook {title} step by step</h4><p>Choose Classic or Signature and follow Lisa's cooking directions.</p></div><button type="button" className="primary" aria-expanded={open} onClick={() => setOpen(v => !v)}>{open ? 'Close Cooking Lesson' : 'Start Cooking Lesson'}</button></div>
     {open && <div className="recipe-guided-lesson">
