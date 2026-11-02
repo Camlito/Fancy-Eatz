@@ -929,7 +929,7 @@ export default function FancyEatz() {
           <nav className="collection-pagination" aria-label="Drink pages"><button disabled={drinkPage===0} onClick={()=>{setDrinkPage(p=>p-1);window.scrollTo({top:0})}}>← Previous</button><span>{filteredDrinks.length ? drinkPage*12+1 : 0}–{Math.min((drinkPage+1)*12,filteredDrinks.length)} of {filteredDrinks.length}</span><button disabled={(drinkPage+1)*12>=filteredDrinks.length} onClick={()=>{setDrinkPage(p=>p+1);window.scrollTo({top:0})}}>Next →</button></nav>
           {filteredDrinks.length===0 && <p className="empty">No drinks match. Try another ingredient or category.</p>}
           </>}
-          {selectedDrink && <div id="full-drink-recipe" className="panel recipe-detail" style={{marginTop:24}}>
+          {selectedDrink && <div id="full-drink-recipe" className="panel recipe-detail lisa-inspired-meal-card" style={{marginTop:24}}>
             <div className="section-head"><p className="eyebrow">{selectedDrink.category}</p><h2>{selectedDrink.title}</h2><p>Glassware: {selectedDrink.glassware}{selectedDrink.garnish ? ' · Garnish: '+selectedDrink.garnish : ''}</p></div>
             <div className="generator-grid">
               <div><h3>Ingredients / Measurements</h3><ul>{selectedDrink.ingredients.map(x=><li key={x}>{x}</li>)}</ul></div>
@@ -954,11 +954,12 @@ export default function FancyEatz() {
           </>}
           {displayedRecipe && <div id="full-recipe" className="panel recipe-detail" style={{marginTop:24}}>
             {tastingPhotoPairs[selectedRecipe?.title || ''] ? <MealPhoto title={selectedRecipe?.title || ''} version={recipeVersion} className='vault-meal-photo' /> : displayedRecipe.image && <div className="recipe-hero-photo" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.48)),url("${displayedRecipe.image}")`}}><span>{recipeVersion === 'classic' ? 'CLASSIC RECIPE' : 'FANCY EATZ SIGNATURE'} · Serving inspiration</span></div>}
+            <div className="lisa-inspired-banner"><span>SIMPLE DISHES</span><strong>Fancy Eatz</strong><span>MADE DELICIOUS</span></div>
             <RecipeVersionSelector value={recipeVersion} onChange={setRecipeVersion} />
             <div className="section-head"><p className="eyebrow">{displayedRecipe.category || displayedRecipe.mealType}</p><h2>{displayedRecipe.title}</h2><p>{displayedRecipe.note}</p></div>
             <div className="meta"><span><Clock3 size={16}/>{displayedRecipe.time}</span>{displayedRecipe.servings && <span><Users size={16}/>{displayedRecipe.servings}</span>}</div>
             <CookingWalkthrough key={selectedRecipe?.title} title={selectedRecipe?.title || ''} version={recipeVersion} />
-            <div className="generator-grid">
+            <div className="generator-grid lisa-inspired-recipe-columns">
               <div><h3>Ingredients</h3>{displayedRecipe.ingredients?.length ? <ul>{displayedRecipe.ingredients.map(x => <li key={x}>{x}</li>)}</ul> : <p>Ingredients have not yet been converted from the source cookbook.</p>}</div>
               <div><h3>Method / Directions</h3>{displayedRecipe.method?.length ? <ol>{displayedRecipe.method.map(x => <li key={x}>{x}</li>)}</ol> : <p>Directions have not yet been converted from the source cookbook.</p>}</div>
             </div>
