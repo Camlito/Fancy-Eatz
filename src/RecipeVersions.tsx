@@ -67,6 +67,7 @@ export function MealPhoto({ title, version = 'classic', className = '' }: {
 
 type TastingState = { startedAt: number; picks: string[] };
 const storageKey = 'fancy-eatz-tasting-v1';
+const backupKey = storageKey + '-before-12-recipes';
 const trialDuration = 7 * 24 * 60 * 60 * 1000;
 const pickLimit = 3;
 const pageSize = 6;
@@ -89,8 +90,7 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
     try {
       const previous = localStorage.getItem(storageKey);
       const normalized = JSON.stringify(trial);
-      if (previous && previous !== normalized) {
-        const backupKey = storageKey + '-before-12-recipes';
+      if (previous !== normalized) {
         if (!localStorage.getItem(backupKey)) localStorage.setItem(backupKey, previous);
         localStorage.setItem(storageKey, normalized);
       }
@@ -155,7 +155,7 @@ export default function RecipeTasting({ recipes, onJoin, onAddGroceries }: {
           </div>
         </div>
         <CookingWalkthrough key={preview.title} title={preview.title} version={version} />
-        <div className='tasting-directions'><div><h4>Ingredients</h4><ul>{activeRecipe.ingredients?.map(item => <li key={item}>{item}</li>)}</ul></div><div><h4>Step-by-step directions</h4><ol>{activeRecipe.method?.map(step => <li key={step}>{step}</li>)}</ol>{version === 'signature' && <div className='tasting-finish'><b>Your Signature finish</b><p>{signatureRecipe(preview).finish}</p></div>}</div></div>
+        <div className='tasting-directions' aria-label='Illustrated Guide recipe instructions'><div><h4>Illustrated Guide · Ingredients</h4><ul>{activeRecipe.ingredients?.map(item => <li key={item}>{item}</li>)}</ul></div><div><h4>Illustrated Guide · Step-by-step directions</h4><ol>{activeRecipe.method?.map(step => <li key={step}>{step}</li>)}</ol>{version === 'signature' && <div className='tasting-finish'><b>Your Signature finish</b><p>{signatureRecipe(preview).finish}</p></div>}</div></div>
         <button className='primary' onClick={() => onAddGroceries(activeRecipe.ingredients || [], activeRecipe.title)}>Add Ingredients to Grocery List</button>
       </article> : <>
         <div className='tasting-controls'><label><span>Search these 12 dishes</span><input value={query} placeholder='Chicken, pasta, dessert…' onChange={event => { setQuery(event.target.value); setPage(0); }} /></label><div className='tasting-filters' role='group' aria-label='Tasting recipe filter'>{['All', ...Array.from(new Set(collection.map(recipe => recipe.mealType))), 'My 3'].map(name => <button key={name} aria-pressed={filter === name} onClick={() => { setFilter(name); setPage(0); }}>{name}</button>)}</div></div>
