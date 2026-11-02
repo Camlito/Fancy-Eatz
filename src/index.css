@@ -1674,3 +1674,13 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .lisa-inspired-recipe-columns li{line-height:1.65;padding-bottom:8px;overflow-wrap:anywhere}.lisa-inspired-recipe-columns ul,.lisa-inspired-recipe-columns ol{padding-left:24px}
 .lisa-inspired-meal-card .recipe-hero-photo{min-height:260px;background-size:cover!important;background-repeat:no-repeat!important;background-position:center!important;border-radius:14px}
 @media(max-width:650px){.lisa-inspired-recipe-columns{grid-template-columns:minmax(0,1fr)!important}.lisa-inspired-banner{gap:4px;padding:8px 4px;letter-spacing:0}.lisa-inspired-banner strong{padding:8px 4px}.lisa-inspired-meal-card{padding:12px!important}}
+
+/* Mobile cookbook clarity: remove abstract fake-food artwork and improve controls. */
+.recipe-card .recipe-art-placeholder{background:linear-gradient(145deg,#5a1326,#301019)!important;background-image:linear-gradient(145deg,#5a1326,#301019)!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:170px!important;padding:20px!important;box-sizing:border-box!important}
+.recipe-card .recipe-art-placeholder:before,.recipe-card .recipe-art-placeholder:after{display:none!important;content:none!important}
+.recipe-card .recipe-art-placeholder span{position:static!important;display:block!important;max-width:100%;padding:0!important;background:none!important;border:0!important;box-shadow:none!important;color:#fff1d6!important;text-align:center!important;font:600 clamp(19px,2.5vw,29px)/1.25 Georgia,serif!important;overflow-wrap:anywhere}
+.chef-recipe-banner .ghost,.chef-recipe-banner button{color:#521324!important;background:#fffaf1!important;border:2px solid #7a4b2d!important;font-weight:700!important;text-shadow:none!important;opacity:1!important}
+.chef-recipe-banner .ghost:hover,.chef-recipe-banner button:hover{background:#f1d9b0!important;color:#411020!important}
+.recipe-collection-switch button{color:#fff5df!important}
+.recipe-card .card-body p{overflow:hidden!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:3!important}
+@media(max-width:650px){.cards.chef-picked-recipes{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:16px!important}.chef-picked-recipes .recipe-card{width:100%!important;max-width:100%!important}.chef-picked-recipes .recipe-art-placeholder{min-height:150px!important}.chef-recipe-banner button{width:100%!important;min-height:48px!important}}
