@@ -1,0 +1,8 @@
+name: Recipe card assets
+on: workflow_dispatch
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo 'Ready for recipe card assets'
