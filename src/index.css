@@ -1684,3 +1684,7 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .recipe-collection-switch button{color:#fff5df!important}
 .recipe-card .card-body p{overflow:hidden!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:3!important}
 @media(max-width:650px){.cards.chef-picked-recipes{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:16px!important}.chef-picked-recipes .recipe-card{width:100%!important;max-width:100%!important}.chef-picked-recipes .recipe-art-placeholder{min-height:150px!important}.chef-recipe-banner button{width:100%!important;min-height:48px!important}}
+
+/* Recipe-card affordance on all interactive cookbook meals. */
+.mini-recipe-card-label{margin:10px 0 6px;color:#e2b968;font:700 11px/1.4 Georgia,serif;letter-spacing:.08em;overflow-wrap:anywhere}
+.chef-picked-recipes .recipe-card .ghost,.recipe-card .ghost{min-height:46px!important;white-space:normal!important;line-height:1.25!important}
