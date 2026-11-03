@@ -1737,3 +1737,15 @@ button:focus-visible { outline: 3px solid #b9892a; outline-offset: 3px; }
 .reno-inspired-steps p{margin:0;line-height:1.55;color:#654a4f}
 .reno-inspired-how>.primary{border-radius:12px;padding:13px 24px}
 @media(max-width:600px){.reno-inspired-quick-grid{width:calc(100% - 24px);border-radius:20px;margin:12px auto 22px}.reno-inspired-quick-grid button{min-height:116px;padding:16px 6px;gap:9px;font-size:14px}.reno-inspired-quick-grid button svg{width:28px;height:28px}.reno-inspired-how{width:calc(100% - 24px);padding:25px 20px;border-radius:20px}.reno-inspired-steps>div{gap:14px}.reno-inspired-steps>div>span{width:44px;height:44px;font-size:21px}.reno-inspired-steps h3{font-size:17px}}
+
+/* Refined hero shortcuts: editorial cards instead of oversized circular icons */
+.home-showcase .reference-benefits{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;max-width:660px!important;margin:28px 0 0!important;align-items:stretch!important}
+.home-showcase .reference-benefits>button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:10px!important;min-width:0!important;min-height:115px!important;padding:16px 9px!important;border:1px solid rgba(224,181,108,.65)!important;border-radius:16px!important;background:rgba(255,245,225,.08)!important;box-shadow:none!important;color:#fff4e3!important;text-align:center!important;cursor:pointer!important}
+.home-showcase .reference-benefits>button svg{display:block!important;flex:none!important;width:27px!important;height:27px!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:#e9c17c!important;box-shadow:none!important}
+.home-showcase .reference-benefits>button span{display:block!important;width:auto!important;min-height:0!important;font-size:clamp(12px,1.4vw,15px)!important;line-height:1.35!important;font-weight:750!important;color:#fff4e3!important}
+.home-showcase .reference-benefits>button:hover,.home-showcase .reference-benefits>button:focus-visible{background:rgba(255,245,225,.17)!important;border-color:#f0cb8a!important}
+@media(max-width:520px){.home-showcase .reference-benefits{gap:8px!important;margin-top:22px!important}.home-showcase .reference-benefits>button{min-height:104px!important;padding:12px 5px!important;border-radius:12px!important}.home-showcase .reference-benefits>button svg{width:24px!important;height:24px!important}.home-showcase .reference-benefits>button span{font-size:12px!important}}
+/* Branded text remains visible when a header image cannot load */
+.topbar .brand-logo-button .luxe-brand-name{display:block!important;visibility:visible!important;opacity:1!important;color:#5a1026!important;font-weight:900!important;letter-spacing:.07em!important;white-space:normal!important}
+.topbar .brand-logo-button .luxe-brand-name small{display:block!important;color:#916b44!important;letter-spacing:.06em!important}
+.topbar .brand-logo-button img.official-brand-logo{object-fit:contain!important}
