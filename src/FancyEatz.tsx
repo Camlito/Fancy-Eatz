@@ -710,6 +710,24 @@ export default function FancyEatz() {
             </div>
             <div className="hero-food-photo" aria-label="Fancy Eatz plated salmon"></div>
           </div>
+          <section className="reno-inspired-quick-grid" aria-label="Explore Fancy Eatz">
+            <button onClick={()=>navigate('styles')}><ChefHat size={32}/><span>Choose an<br/>AI Chef</span></button>
+            <button onClick={()=>navigate('recipes')}><BookOpen size={32}/><span>Recipe<br/>Cards</span></button>
+            <button onClick={()=>navigate('ideas')}><Sparkles size={32}/><span>Meal<br/>Ideas</span></button>
+            <button onClick={()=>navigate('planner')}><CalendarDays size={32}/><span>Meal<br/>Planning</span></button>
+            <button onClick={()=>navigate('grocery')}><ShoppingBasket size={32}/><span>Grocery<br/>Lists</span></button>
+            <button onClick={()=>navigate('desserts')}><Heart size={32}/><span>Desserts<br/>& More</span></button>
+          </section>
+          <section className="reno-inspired-how" aria-label="How Fancy Eatz works">
+            <p className="eyebrow">SIMPLE, PERSONAL, DELICIOUS</p>
+            <h2>How Fancy Eatz Works</h2>
+            <div className="reno-inspired-steps">
+              <div><span>1</span><div><h3>Choose Your Experience</h3><p>Pick an AI chef or explore Lisa's original recipe collection.</p></div></div>
+              <div><span>2</span><div><h3>Find Your Next Meal</h3><p>Browse, search, and select the recipe that fits your kitchen.</p></div></div>
+              <div><span>3</span><div><h3>Cook Your Way</h3><p>Choose Classic or Fancy Eatz Signature and follow the available recipe directions.</p></div></div>
+            </div>
+            <button className="primary" onClick={()=>navigate('recipes')}>Explore Recipes →</button>
+          </section>
           <section className="chef-invite"><div><small>YOUR KITCHEN, YOUR STYLE</small><h2>Meet your Fancy Eatz chefs</h2><p>Choose a cooking companion for family favorites, fine dining, grilling or desserts.</p></div><button className="primary" onClick={()=>navigate('styles')}>Meet Your AI Chefs →</button></section>
           <RecipeTasting recipes={tastingCollection} onAddGroceries={addItems} onJoin={() => openMembership('Keep the inspiration coming. Join our membership launch list.')} />
           <section className="luxe-kitchen"><p className="eyebrow">USE WHAT YOU HAVE</p><h2>What’s in your kitchen?</h2><p>Add your ingredients to explore meal ideas.</p><form onSubmit={e=>{e.preventDefault();navigate('pantry')}}><label className="search-box"><Search size={20}/><input aria-label="Ingredients in your kitchen" value={pantry} onChange={e=>setPantry(e.target.value)} placeholder="Chicken, spinach, rice…"/></label><button className="primary" type="submit">Generate Meal Ideas</button></form><div className="luxe-categories">{['Breakfast','Lunch','Dinner','Desserts'].map(x=><button key={x} onClick={()=>{if(x==='Desserts')navigate('desserts');else{setMealType(x);navigate('ideas')}}}>{x}</button>)}</div></section>
