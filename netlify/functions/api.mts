@@ -70,7 +70,7 @@ export default async (req: Request) => {
   }
   if (url.pathname === '/api/early-access-stats' && req.method === 'POST') {
     const code=req.headers.get('x-owner-code')||'';
-    if(code!=='FANCY2026') return send({error:'Unauthorized'},401);
+    if(!process.env.FANCY_EATZ_OWNER_CODE || code!==process.env.FANCY_EATZ_OWNER_CODE) return send({error:'Unauthorized'},401);
     const base='https://flnplmywkukyejisbnyd.supabase.co';
     const key='sb_publishable_LE5sDW4xAwQSp_ElCSzVFA_wJEUwJbR';
     const r=await fetch(base+'/rest/v1/early_access?select=id,email,source,status,created_at,launch_invited_at,converted_at&order=created_at.desc',{headers:{'apikey':key,'Authorization':'Bearer '+key}});
